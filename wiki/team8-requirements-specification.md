@@ -1,8 +1,4 @@
-# Project Proposal: Rent book Service
-
-
-
-## Service Name : “BookVillage”
+# Service Name : “BookVillage”
 
 ## Project Requirements and Specification
 
