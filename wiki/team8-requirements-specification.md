@@ -31,79 +31,141 @@ Feature : Book register
 
 Actors: A user who wants to register a book
 Precondition: The user is signed up and signed in.
+
 Trigger: The user clicks the ‘register’ button in main page (scenario 1), or clicks the ‘register’ button in the book list page (scenario 2).
+
 Scenario:
-(Scenario 1) .
+
+(Scenario 1) 
+
 The user is sent to the ‘book register’ page, where the user has to fill in book information.
+
 The user writes book information and selects tags of the book and uploads an image of the book.
+
 User clicks the ‘submit’ button. This will navigate the user to the ‘book detail’ page.
+
+
 (Scenario 2)
+
 Same as scenario 1.
+
 Exceptions:
 The input must not be empty.
+
 Acceptance Test:
+
 (Scenario 1)
+
 After triggered, the user is in /book/register.
+
 The content will be filled in by the user.
+
 Upon clicking ‘submit’ button, the user is redirected to /books/:book_id/
+
 (Scenario 2)
+
 Everything is the same with scenario 1.
  
 Feature :  & search & borrow & watch
+
 Actors: A user who wants to borrow a book
+
 Precondition: The user is signed up and signed in.
+
 Trigger: The user is on the main page, writes a book title to search and clicks the ‘search’ button.
+
 Scenario:
-(Scenario 1) .
-The user is sent to the ‘book list’ page, which lists up books of the searched title.
-The user clicks the book and is redirected to the ‘book detail’ page which shows the book information.
-User clicks the ‘request’ button. This will navigate the user to the ‘request’ page.
-(Scenario 2) .
-The user is sent to the ‘book list’ page, which lists up books of the searched title.
-The user clicks the book, and is redirected to the ‘book detail’ page which shows book information.
-If the book status is ‘borrowed’, the ‘request’ button becomes disabled and the user clicks the 'watch’ button. 
-When the other one returns the book, the book status becomes ‘available’ and the user can receive an alarm for the book.
-Exceptions:
-If someone borrows the book while the other one is writing in the ‘request’ page, after clicking the ‘send’ button, the other one must receive the alert ‘It is already borrowed!’.
-Acceptance Test:
+
 (Scenario 1)
-After triggered, the user is in /book.
-After the user clicks the book, the user is in /book/detail.
-Upon clicking ‘borrow’ button, the user is redirected to /chat/:chat_id
+
+The user is sent to the ‘book list’ page, which lists up books of the searched title.
+
+The user clicks the book and is redirected to the ‘book detail’ page which shows the book information.
+
+User clicks the ‘request’ button. This will navigate the user to the ‘request’ page.
+
 (Scenario 2)
+
+The user is sent to the ‘book list’ page, which lists up books of the searched title.
+
+The user clicks the book, and is redirected to the ‘book detail’ page which shows book information.
+
+If the book status is ‘borrowed’, the ‘request’ button becomes disabled and the user clicks the 'watch’ button. 
+
+When the other one returns the book, the book status becomes ‘available’ and the user can receive an alarm for the book.
+
+Exceptions:
+
+If someone borrows the book while the other one is writing in the ‘request’ page, after clicking the ‘send’ button, the other one must receive the alert ‘It is already borrowed!’.
+
+Acceptance Test:
+
+(Scenario 1)
+
 After triggered, the user is in /book.
+
 After the user clicks the book, the user is in /book/detail.
+
+Upon clicking ‘borrow’ button, the user is redirected to /chat/:chat_id
+
+(Scenario 2)
+
+After triggered, the user is in /book.
+
+After the user clicks the book, the user is in /book/detail.
+
 Upon clicking ‘reserve’ button, the book is added to reservation_list of the book and reservation_list of user
  
  
 Feature :  Chatting
+
 Actors: User who wants to borrow a book and user who is lending the book.
 Precondition: The users are signed up and signed in.
+
 Trigger:  borrower clicked ‘borrow’ button in book detail page and redirected to ‘chat’ page.
-(Scenario 1) .
-The borrower sends a message, and the message is displayed on the lender's screen.
-The lender sends a message, and the message is displayed on the borrower’s screen.
-Exceptions:
-None.
-Acceptance Test:
+
 (Scenario 1)
+
+The borrower sends a message, and the message is displayed on the lender's screen.
+
+The lender sends a message, and the message is displayed on the borrower’s screen.
+
+Exceptions: None.
+
+Acceptance Test:
+
+(Scenario 1)
+
 After being triggered, the user is in /chat/:chat_id.
+
 After users send a message, a speech bubble is displayed on each users’ screen.
  
- 
 Feature :  ML recommendation
+
 Actors: A user who wants to get book recommendations.
+
 Precondition: The user is signed up and signed in.
+
 Trigger:  On the main page, recommended books are displayed automatically.
+
 Scenario:
+
 (Scenario 1) .
+
 The user is on the main page, and recommended books are displayed automatically under the search engine.
+
 The user clicks the book, and is redirected to the ‘book detail’ page which shows book information.
+
 Exceptions:
+
 User’s ‘preference tag’ should always exist.
+
 Acceptance Test:
+
 (Scenario 1)
+
 After being triggered, the user is in /main.
+
 After the user clicks a book, the user is navigated to /book/:book_id.
 
 ### User Interface Requirements
