@@ -109,3 +109,6 @@ Acceptance Test:
 (Scenario 1)
 After being triggered, the user is in /main.
 After the user clicks a book, the user is navigated to /book/:book_id.
+
+### User Interface Requirements
+![KakaoTalk_20221013_160330467](https://user-images.githubusercontent.com/107753635/195527927-f5cf6237-d5e0-411d-b943-3b7f1369e8d7.png)
