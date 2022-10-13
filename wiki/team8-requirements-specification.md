@@ -1,4 +1,4 @@
-### Project Proposal: Rent book Service
+# Project Proposal: Rent book Service
 
 
 
@@ -6,22 +6,22 @@
 
 ## Project Requirements and Specification
 
-# 13/10/2022, Rev. 1.0 - initial version
+### 13/10/2022, Rev. 1.0 - initial version
 
-# Abstract
+### Abstract
 
  Nowadays, we can borrow many books from a library. However, there are some books that we cannot rent from a library such as recently released books or comic books. Also, there are some books which we really want to read, but are too expensive to buy.
  These problems can be solved by “BookVillage”. This service provides members a platform to share their books. Once after we read a book, that book is mostly stuck in the corner of a bookshelf. But someone might need that book immediately. “BookVillage” connects these two users and makes a win-win situation for all.
 
-# Purpose
+### Purpose
 
 The purpose of this service is to stimulate the culture of lending books and provide a platform for it.
 
-# Customer
+### Customer
 
 Customers of our service are every individual who wants to lend or borrow a book. They can use our service when there is no book which they want to borrow in the local library or it is too expensive to buy. After we finish the book, we don’t read it anymore and keep it on the bookshelf. We can supply our service to those who want to make use of books which have been on the bookshelf for a long time.
 
-# Competitive Landscape
+### Competitive Landscape
 
 1. Competitivity against libraries. 
 The type of books are limited in local libraries. For example, we can not easily find comic books, textbooks or magazines in libraries. Moreover, the book which I wanted to read is likely to have been borrowed already by someone. Such books which are produced personally not officially would be impossible to borrow in libraries. 
@@ -29,7 +29,7 @@ The type of books are limited in local libraries. For example, we can not easily
 2. Recommendation System for Users.
 When we buy a book in online bookstores, such as YES24 or Aladin, they recommend other books which people who bought it bought together. It is a recommendation system based on the book. However, our service focuses on users. We recommend books based on tags which users prefer, users don’t have to select or buy specific books to receive a recommendation. Unlike existing online bookstores, we can provide a better experience even if the user doesn’t know what he wants to read. 
 
-# User Story
+### User Story
 
 Feature : Book register
 
