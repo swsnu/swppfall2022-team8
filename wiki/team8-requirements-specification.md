@@ -31,7 +31,7 @@ When we buy a book in online bookstores, such as YES24 or Aladin, they recommend
 
 ### User Story
 
-Feature : Book register
+#### Feature : Book register
 
 Actors: A user who wants to register a book
 Precondition: The user is signed up and signed in.
@@ -70,7 +70,7 @@ Upon clicking ‘submit’ button, the user is redirected to /books/:book_id/
 Everything is the same with scenario 1.
 
 
-Feature :  & search & borrow & watch
+#### Feature :  & search & borrow & watch
 
 Actors: A user who wants to borrow a book
 
@@ -121,7 +121,7 @@ After the user clicks the book, the user is in /book/detail.
 Upon clicking ‘reserve’ button, the book is added to reservation_list of the book and reservation_list of user
  
  
-Feature :  Chatting
+#### Feature :  Chatting
 
 Actors: User who wants to borrow a book and user who is lending the book.
 Precondition: The users are signed up and signed in.
@@ -145,7 +145,7 @@ After being triggered, the user is in /chat/:chat_id.
 After users send a message, a speech bubble is displayed on each users’ screen.
  
 
-Feature :  ML recommendation
+#### Feature :  ML recommendation
 
 Actors: A user who wants to get book recommendations.
 
