@@ -8,14 +8,17 @@
 
  Nowadays, we can borrow many books from a library. However, there are some books that we cannot rent from a library such as recently released books or comic books. Also, there are some books which we really want to read, but are too expensive to buy.
  These problems can be solved by “BookVillage”. This service provides members a platform to share their books. Once after we read a book, that book is mostly stuck in the corner of a bookshelf. But someone might need that book immediately. “BookVillage” connects these two users and makes a win-win situation for all.
+ 
 
 ### Purpose
 
 The purpose of this service is to stimulate the culture of lending books and provide a platform for it.
 
+
 ### Customer
 
 Customers of our service are every individual who wants to lend or borrow a book. They can use our service when there is no book which they want to borrow in the local library or it is too expensive to buy. After we finish the book, we don’t read it anymore and keep it on the bookshelf. We can supply our service to those who want to make use of books which have been on the bookshelf for a long time.
+
 
 ### Competitive Landscape
 
@@ -24,6 +27,7 @@ The type of books are limited in local libraries. For example, we can not easily
 
 2. Recommendation System for Users.
 When we buy a book in online bookstores, such as YES24 or Aladin, they recommend other books which people who bought it bought together. It is a recommendation system based on the book. However, our service focuses on users. We recommend books based on tags which users prefer, users don’t have to select or buy specific books to receive a recommendation. Unlike existing online bookstores, we can provide a better experience even if the user doesn’t know what he wants to read. 
+
 
 ### User Story
 
@@ -43,7 +47,6 @@ The user is sent to the ‘book register’ page, where the user has to fill in 
 The user writes book information and selects tags of the book and uploads an image of the book.
 
 User clicks the ‘submit’ button. This will navigate the user to the ‘book detail’ page.
-
 
 (Scenario 2)
 
@@ -65,7 +68,8 @@ Upon clicking ‘submit’ button, the user is redirected to /books/:book_id/
 (Scenario 2)
 
 Everything is the same with scenario 1.
- 
+
+
 Feature :  & search & borrow & watch
 
 Actors: A user who wants to borrow a book
@@ -140,6 +144,7 @@ After being triggered, the user is in /chat/:chat_id.
 
 After users send a message, a speech bubble is displayed on each users’ screen.
  
+
 Feature :  ML recommendation
 
 Actors: A user who wants to get book recommendations.
@@ -167,6 +172,7 @@ Acceptance Test:
 After being triggered, the user is in /main.
 
 After the user clicks a book, the user is navigated to /book/:book_id.
+
 
 ### User Interface Requirements
 ![KakaoTalk_20221013_160330467](https://user-images.githubusercontent.com/107753635/195527927-f5cf6237-d5e0-411d-b943-3b7f1369e8d7.png)
