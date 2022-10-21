@@ -1,0 +1,8 @@
+.book-list-entity {
+  height: 50px;
+  border: 1px solid black;
+}
+.book-list-entity:hover {
+  background-color: skyblue;
+  cursor: pointer;
+}
