@@ -68,6 +68,11 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     # DELETE /api/lend/{lend_info_id}
     def destroy(self, request, pk=None):
         lend_info = self.get_object()
+        if lend_info.owner != request.user:
+            return Response(
+                {"error": "You can't delete other's book"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         lend_info.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
