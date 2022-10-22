@@ -19,13 +19,19 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         title = request.GET.get("title", "")
         author = request.GET.get("author", "")
         tag = request.GET.get("tag", "")
-        lend_infos = self.get_queryset().filter(
-            book__title__icontains=title,
-            book__author__icontains=author,
-            book__tag__icontains=tag,
+        lend_infos = (
+            self.get_queryset()
+            .filter(
+                book__title__icontains=title,
+                book__author__icontains=author,
+                book__tags__name__icontains=tag,
+            )
+            .distinct()
         )
-        data = self.get_serializer(lend_infos, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        datas = self.get_serializer(lend_infos, many=True).data
+        for data in datas:
+            data["status"] = "borrowed" if data["status"] else None
+        return Response(datas, status=status.HTTP_200_OK)
 
     # POST /api/lend/
     def create(self, request):
@@ -40,12 +46,20 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     # GET /api/lend/{lend_info_id}
     def retrieve(self, request, pk=None):
         lend_info = self.get_object()
-        return Response(self.get_serializer(lend_info).data, status=status.HTTP_200_OK)
+        data = self.get_serializer(lend_info).data
+        if lend_info.owner != request.user:
+            data["status"] = "borrowed" if data["status"] else None
+        return Response(data, status=status.HTTP_200_OK)
 
     # PUT /api/lend/{lend_info_id}
     def update(self, request, pk=None):
-        data = request.data.copy()
+        data = request.data
         lend_info = self.get_object()
+        if lend_info.owner != request.user:
+            return Response(
+                {"error": "You can't update other's book"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         serializer = self.get_serializer(lend_info, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -61,6 +75,6 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=["GET"])
     def user(self, request):
         user = request.user
-        lend_infos = self.get_queryset().filter(owner=user)
+        lend_infos = user.lend_infos
         data = self.get_serializer(lend_infos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
