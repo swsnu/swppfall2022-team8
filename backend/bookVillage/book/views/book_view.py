@@ -28,7 +28,7 @@ class BookViewSet(viewsets.GenericViewSet):
             .distinct()
         )
         data = self.get_serializer(books, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(data[:1000], status=status.HTTP_200_OK)
 
     # POST /api/book/
     def create(self, request):

@@ -17,7 +17,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
         return self.permission_classes
 
     # POST /api/borrow/
-    def create(self, request, pk=None):
+    def create(self, request):
         data = request.data.copy()
         user = request.user
         data["borrower"] = user.id
