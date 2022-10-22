@@ -1,16 +1,17 @@
 from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import datetime
 from book.models.book import Book
-from django.shortcuts import get_object_or_404
 from book.serializers.book_serializers import BookSerializer
 
 
 class BookViewSet(viewsets.GenericViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = (IsAuthenticated(),)
+
+    def get_permissions(self):
+        return self.permission_classes
 
     # GET /api/book/
     def list(self, request):
@@ -21,7 +22,6 @@ class BookViewSet(viewsets.GenericViewSet):
             title__icontains=title, author__icontains=author, tag__icontains=tag
         )
         data = self.get_serializer(books, many=True).data
-        print(data)
         return Response(data, status=status.HTTP_200_OK)
 
     # POST /api/book/

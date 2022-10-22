@@ -12,10 +12,10 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = [
+        fields = (
             "id",
             "title",
             "author",
             "tag",
             "brief",
-        ]
+        )
