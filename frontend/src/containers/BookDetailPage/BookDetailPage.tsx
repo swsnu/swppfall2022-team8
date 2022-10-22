@@ -8,7 +8,6 @@ const testBookDetail = {
   owner: "mizuhara",
   status: "borrowed",
   cost: 3000,
-  reserved: true,
   info: "\"Until now, I've always had a five star rating! Give me back my five star rating right now, got it!?\"",
   tags: ["light_novel", "love_comedy"],
   questions: ["You should give me a five star rating."]
@@ -40,14 +39,6 @@ const BookDetailPage = () => {
       <p>Book title: {testBookDetail.title}</p>
       <p>Status: {testBookDetail.status}</p>
       <p>Borrowing cost: {testBookDetail.cost}</p>
-      {testBookDetail.reserved ? (
-        <>
-          <span className="reserved-icon">
-            reserved!
-          </span>
-          <br/>
-        </>
-      ) : null}
       <br/>
       <button
         type="button"
