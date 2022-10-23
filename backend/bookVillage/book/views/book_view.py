@@ -17,23 +17,25 @@ class BookViewSet(viewsets.GenericViewSet):
     def list(self, request):
         title = request.GET.get("title", "")
         author = request.GET.get("author", "")
-        tag = request.GET.get("tag", "")
+        tags = request.GET.getlist("tag[]", [])
+        print(tags)
         books = (
             self.get_queryset()
             .filter(
                 title__icontains=title,
                 author__icontains=author,
-                tags__name__icontains=tag,
             )
             .distinct()
         )
+        if tags:
+            books = books.filter(tags__name__in=tags).distinct()
         data = self.get_serializer(books, many=True).data
         return Response(data[:1000], status=status.HTTP_200_OK)
 
     # POST /api/book/
     def create(self, request):
         data = request.data.copy()
-        tag_data = data.pop("tags")
+        tag_data = data.pop("tags", [])
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         book = serializer.save()
@@ -52,13 +54,15 @@ class BookViewSet(viewsets.GenericViewSet):
     def update(self, request, pk=None):
         book = self.get_object()
         data = request.data.copy()
-        tag_data = data.pop("tags")
+        tag_data = data.pop("tags", [])
         serializer = self.get_serializer(book, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        for name in tag_data:
-            tag, created = Tag.objects.get_or_create(name=name)
-            BookTag.objects.create(book=book, tag=tag)
+        if tag_data:
+            BookTag.objects.filter(book=book).delete()
+            for name in tag_data:
+                tag, created = Tag.objects.get_or_create(name=name)
+                BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # DELETE /api/book/{book_id}

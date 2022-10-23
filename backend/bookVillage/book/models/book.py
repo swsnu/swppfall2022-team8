@@ -15,5 +15,5 @@ class Book(models.Model):
 
 
 class BookTag(models.Model):
-    book = models.ForeignKey(Book, related_name="BookTag", on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, related_name="BookTag", on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, related_name="booktag", on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, related_name="booktag", on_delete=models.CASCADE)
