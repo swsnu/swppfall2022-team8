@@ -12,7 +12,7 @@ export interface BookType {
   id: number;
   title: string;
   author: string;
-  tag: string[];
+  tags: string[];
   brief: string;
 };
 
