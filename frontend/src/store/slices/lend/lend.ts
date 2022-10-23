@@ -3,7 +3,6 @@ import axios from "axios";
 
 import { RootState } from "../..";
 import { BookType } from "../book/book";
-import { BorrowType } from "../borrow/borrow";
 import { UserType } from "../user/user";
 
 
@@ -19,7 +18,7 @@ export interface LendType {
   questions: string[];
   cost: number;
   additional: number;
-  status: BorrowType | null;
+  status: string | null;
 };
 
 export interface LendState {
