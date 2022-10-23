@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import MainPage from './containers/MainPage/MainPage';
 import BookListPage from './containers/BookListPage/BookListPage';
@@ -22,6 +22,8 @@ function App() {
           <Route path="/book/:id/edit" element={<BookEditPage />} />
           <Route path="/book/:id/request" element={<BookRequestPage />} />
           <Route path="/chatting" element={<ChattingPage />} />
+          <Route path="" element={<Navigate to="/main" replace />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </BrowserRouter>
     </div>

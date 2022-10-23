@@ -1,7 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+
 import { RootState } from "../..";
 import { LendType } from "../lend/lend";
+import { UserType } from "../user/user";
 
 
 /*
@@ -10,7 +12,7 @@ import { LendType } from "../lend/lend";
 
 export interface BorrowType {
   id: number;
-  borrower: number;
+  borrower: UserType;
   book_borrowed: LendType;
   active: boolean;
   lend_start_time: Date;
@@ -18,7 +20,7 @@ export interface BorrowType {
 };
 
 export interface BorrowState {
-  borrows: BorrowType[];
+  userBorrows: BorrowType[];
   selectedBorrow: BorrowType | null;
 };
 
@@ -26,6 +28,23 @@ export interface BorrowState {
 /*
  * Async thunks
  */
+
+export const createBorrow = createAsyncThunk(
+  "borrow/createBorrow",
+  async (data: Omit<BorrowType, "id">, { dispatch }) => {
+    const response = await axios.post("/api/borrow/", data);
+    dispatch(borrowActions.addBorrow(response.data));
+  }
+);
+
+export const updateBorrow = createAsyncThunk(
+  "borrow/updateBorrow",
+  async (borrow: BorrowType, { dispatch }) => {
+    const { id, ...data } = borrow;
+    await axios.put(`/api/borrow/${id}/`, data);
+    dispatch(borrowActions.updateBorrow(borrow));
+  }
+);
 
 export const fetchUserBorrows = createAsyncThunk(
   "borrow/fetchUserBorrows",
@@ -37,11 +56,11 @@ export const fetchUserBorrows = createAsyncThunk(
 
 
 /*
- * Article reducer
+ * Borrow reducer
  */
 
 const initialState: BorrowState = {
-  borrows: [],
+  userBorrows: [],
   selectedBorrow: null,
 };
 
@@ -49,16 +68,34 @@ export const borrowSlice = createSlice({
   name: "borrow",
   initialState,
   reducers: {
-
+    addBorrow: (
+      state,
+      action: PayloadAction<BorrowType>
+    ) => {
+      const newBorrow: BorrowType = { ...action.payload };
+      state.userBorrows.push(newBorrow);
+      state.selectedBorrow = newBorrow;
+    },
+    updateBorrow: (
+      state,
+      action: PayloadAction<BorrowType>
+    ) => {
+      state.userBorrows = state.userBorrows.map(
+        borrow => (borrow.id === action.payload.id) ? action.payload : borrow
+      );
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserBorrows.fulfilled, (state, action) => {
-      state.borrows = action.payload;
+      state.userBorrows = action.payload;
     });
+    builder.addCase(createBorrow.rejected, (_state, action) => {
+      console.error(action.error);
+    })
   },
 });
 
 export const borrowActions = borrowSlice.actions;
-export const selectBook = (state: RootState) => state.book;
+export const selectBorrow = (state: RootState) => state.borrow;
 
 export default borrowSlice.reducer;
