@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { RootState } from "../..";
 import { BookType } from "../book/book";
+import { BorrowType } from "../borrow/borrow";
 import { UserType } from "../user/user";
 
 
@@ -18,7 +19,7 @@ export interface LendType {
   questions: string[];
   cost: number;
   additional: number;
-  status: string | null;
+  status: BorrowType | string | null;
 };
 
 export interface LendState {
@@ -36,7 +37,10 @@ export const fetchQueryLends = createAsyncThunk(
   "lend/fetchQueryLends",
   async (data: { title?: string, tag?: string, author?: string }) => {
     const response = await axios.get<LendType[]>("/api/lend/", { params: data });
-    return response.data;
+    return response.data.map(lend => ({
+      ...lend,
+      status: lend.status ?? null,
+    }));
   }
 );
 
@@ -44,7 +48,10 @@ export const createLend = createAsyncThunk(
   "lend/createLend",
   async (data: Omit<LendType, "id" | "status">, { dispatch }) => {
     const response = await axios.post("/api/lend/", data);
-    dispatch(lendActions.addLend(response.data));
+    dispatch(lendActions.addLend({
+      ...response.data,
+      status: response.data.status ?? null,
+    }));
   }
 );
 
@@ -52,16 +59,22 @@ export const fetchLend = createAsyncThunk(
   "lend/fetchLend",
   async (id: LendType["id"]) => {
     const response = await axios.get(`/api/lend/${id}/`);
-    return response.data ?? null;
+    return response.data ? { 
+      ...response.data, 
+      status: response.data.status ?? null,
+    } : null;
   }
 );
 
 export const updateLend = createAsyncThunk(
   "lend/updateLend",
-  async (lend: LendType, { dispatch }) => {
+  async (lend: Omit<LendType, "status">, { dispatch }) => {
     const { id, ...data } = lend;
-    await axios.put(`/api/lend/${id}/`, data);
-    dispatch(lendActions.updateLend(lend));
+    const response = await axios.put(`/api/lend/${id}/`, data);
+    dispatch(lendActions.updateLend({
+      ...response.data,
+      status: response.data.status ?? null,
+    }));
   }
 );
 
@@ -77,7 +90,10 @@ export const fetchUserLends = createAsyncThunk(
   "lend/fetchUserLend",
   async () => {
     const response = await axios.get<LendType[]>("/api/lend/user/");
-    return response.data;
+    return response.data.map(lend => ({
+      ...lend,
+      status: lend.status ?? null,
+    }));
   }
 );
 

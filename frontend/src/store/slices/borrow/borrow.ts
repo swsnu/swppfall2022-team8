@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { RootState } from "../..";
-import { LendType } from "../lend/lend";
 import { UserType } from "../user/user";
 
 
@@ -13,10 +12,10 @@ import { UserType } from "../user/user";
 export interface BorrowType {
   id: number;
   borrower: UserType;
-  book_borrowed: LendType;
+  book_borrowed: number;
   active: boolean;
   lend_start_time: Date;
-  lend_end_time: Date;
+  lend_end_time: Date | null;
 };
 
 export interface BorrowState {
@@ -33,7 +32,10 @@ export const createBorrow = createAsyncThunk(
   "borrow/createBorrow",
   async (data: Omit<BorrowType, "id">, { dispatch }) => {
     const response = await axios.post("/api/borrow/", data);
-    dispatch(borrowActions.addBorrow(response.data));
+    dispatch(borrowActions.addBorrow({
+      ...response.data,
+      lend_end_time: response.data.lend_end_time ?? null,
+    }));
   }
 );
 
@@ -50,7 +52,10 @@ export const fetchUserBorrows = createAsyncThunk(
   "borrow/fetchUserBorrows",
   async () => {
     const response = await axios.get<BorrowType[]>("/api/borrow/user/");
-    return response.data;
+    return response.data.map(borrow => ({
+      ...borrow,
+      lend_end_time: borrow.lend_end_time ?? null,
+    }));
   }
 );
 
