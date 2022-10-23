@@ -18,16 +18,17 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     def list(self, request):
         title = request.GET.get("title", "")
         author = request.GET.get("author", "")
-        tag = request.GET.get("tag", "")
+        tags = request.GET.getlist("tag[]", [])
         lend_infos = (
             self.get_queryset()
             .filter(
                 book__title__icontains=title,
                 book__author__icontains=author,
-                book__tags__name__icontains=tag,
             )
             .distinct()
         )
+        if tags:
+            lend_infos = lend_infos.filter(book__tags__name__in=tags)
         datas = self.get_serializer(lend_infos, many=True).data
         for data in datas:
             data["status"] = "borrowed" if data["status"] else None

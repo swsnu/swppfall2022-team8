@@ -1,10 +1,12 @@
+from json import JSONDecodeError
+
 from rest_framework import serializers
 
 from book.models.lend_info import LendInfo
 
 
 class LendInfoSerializer(serializers.ModelSerializer):
-    questions = serializers.JSONField(required=False)
+    questions = serializers.JSONField(required=False, default=list)
     cost = serializers.IntegerField(required=True)
     additional = serializers.CharField(required=False)
     book_info = serializers.SerializerMethodField()
@@ -22,6 +24,20 @@ class LendInfoSerializer(serializers.ModelSerializer):
             "additional",
             "status",
         )
+
+    def validate_questions(self, questions):
+
+        if isinstance(questions, list):
+            for question in questions:
+                if not isinstance(question, str):
+                    raise serializers.ValidationError(
+                        "questions is list. But must be list string input"
+                    )
+            return questions
+        else:
+            raise serializers.ValidationError(
+                "questions must be list string input or nothing"
+            )
 
     def get_book_info(self, lend_info):
         from book.serializers.book_serializers import BookSerializer
