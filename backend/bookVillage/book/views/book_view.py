@@ -18,7 +18,6 @@ class BookViewSet(viewsets.GenericViewSet):
         title = request.GET.get("title", "")
         author = request.GET.get("author", "")
         tags = request.GET.getlist("tag[]", [])
-        print(tags)
         books = (
             self.get_queryset()
             .filter(
@@ -54,11 +53,11 @@ class BookViewSet(viewsets.GenericViewSet):
     def update(self, request, pk=None):
         book = self.get_object()
         data = request.data.copy()
-        tag_data = data.pop("tags", [])
+        tag_data = data.pop("tags", 0)
         serializer = self.get_serializer(book, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        if tag_data:
+        if isinstance(tag_data, list):
             BookTag.objects.filter(book=book).delete()
             for name in tag_data:
                 tag, created = Tag.objects.get_or_create(name=name)
