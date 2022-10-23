@@ -12,7 +12,7 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "borrower",
-            "book_borrowed",
+            "lend_id",
             "active",
             "lend_start_time",
             "lend_end_time",

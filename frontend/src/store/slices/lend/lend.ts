@@ -37,10 +37,7 @@ export const fetchQueryLends = createAsyncThunk(
   "lend/fetchQueryLends",
   async (data: { title?: string, tag?: string, author?: string }) => {
     const response = await axios.get<LendType[]>("/api/lend/", { params: data });
-    return response.data.map(lend => ({
-      ...lend,
-      status: lend.status ?? null,
-    }));
+    return response.data;
   }
 );
 
@@ -48,10 +45,7 @@ export const createLend = createAsyncThunk(
   "lend/createLend",
   async (data: Omit<LendType, "id" | "status">, { dispatch }) => {
     const response = await axios.post("/api/lend/", data);
-    dispatch(lendActions.addLend({
-      ...response.data,
-      status: response.data.status ?? null,
-    }));
+    dispatch(lendActions.addLend(response.data));
   }
 );
 
@@ -59,10 +53,7 @@ export const fetchLend = createAsyncThunk(
   "lend/fetchLend",
   async (id: LendType["id"]) => {
     const response = await axios.get(`/api/lend/${id}/`);
-    return response.data ? { 
-      ...response.data, 
-      status: response.data.status ?? null,
-    } : null;
+    return response.data ?? null;
   }
 );
 
@@ -71,10 +62,7 @@ export const updateLend = createAsyncThunk(
   async (lend: Omit<LendType, "status">, { dispatch }) => {
     const { id, ...data } = lend;
     const response = await axios.put(`/api/lend/${id}/`, data);
-    dispatch(lendActions.updateLend({
-      ...response.data,
-      status: response.data.status ?? null,
-    }));
+    dispatch(lendActions.updateLend(response.data));
   }
 );
 
@@ -90,10 +78,7 @@ export const fetchUserLends = createAsyncThunk(
   "lend/fetchUserLend",
   async () => {
     const response = await axios.get<LendType[]>("/api/lend/user/");
-    return response.data.map(lend => ({
-      ...lend,
-      status: lend.status ?? null,
-    }));
+    return response.data;
   }
 );
 

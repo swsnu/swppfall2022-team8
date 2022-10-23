@@ -7,7 +7,7 @@ class BorrowInfo(models.Model):
     borrower = models.ForeignKey(
         User, related_name="borrow_history", on_delete=models.CASCADE
     )
-    book_borrowed = models.ForeignKey(
+    lend_id = models.ForeignKey(
         LendInfo, related_name="history", on_delete=models.CASCADE
     )
     active = models.BooleanField(default=True)
@@ -15,4 +15,4 @@ class BorrowInfo(models.Model):
     lend_end_time = models.DateTimeField(default=None, null=True)
 
     def is_accesible(self, user):
-        return self.borrower != user and self.book_borrowed.owner != user
+        return self.borrower == user or self.lend_id.owner == user
