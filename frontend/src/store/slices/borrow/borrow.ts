@@ -12,10 +12,10 @@ import { UserType } from "../user/user";
 export interface BorrowType {
   id: number;
   borrower: UserType;
-  book_borrowed: number;
+  lend_id: number;
   active: boolean;
-  lend_start_time: Date;
-  lend_end_time: Date | null;
+  lend_start_time: string; // serialized Date object
+  lend_end_time: string | null; // serialized Date object | null
 };
 
 export interface BorrowState {
@@ -30,21 +30,17 @@ export interface BorrowState {
 
 export const createBorrow = createAsyncThunk(
   "borrow/createBorrow",
-  async (data: Omit<BorrowType, "id">, { dispatch }) => {
+  async (data: Pick<BorrowType, "borrower" | "lend_id">, { dispatch }) => {
     const response = await axios.post("/api/borrow/", data);
-    dispatch(borrowActions.addBorrow({
-      ...response.data,
-      lend_end_time: response.data.lend_end_time ?? null,
-    }));
+    dispatch(borrowActions.addBorrow(response.data));
   }
 );
 
-export const updateBorrow = createAsyncThunk(
-  "borrow/updateBorrow",
-  async (borrow: BorrowType, { dispatch }) => {
-    const { id, ...data } = borrow;
-    await axios.put(`/api/borrow/${id}/`, data);
-    dispatch(borrowActions.updateBorrow(borrow));
+export const toggleBorrowStatus = createAsyncThunk(
+  "borrow/toggleBorrowStatus",
+  async (id: BorrowType["id"], { dispatch }) => {
+    const response = await axios.put(`/api/borrow/${id}/`);
+    dispatch(borrowActions.updateBorrow(response.data));
   }
 );
 
@@ -52,10 +48,7 @@ export const fetchUserBorrows = createAsyncThunk(
   "borrow/fetchUserBorrows",
   async () => {
     const response = await axios.get<BorrowType[]>("/api/borrow/user/");
-    return response.data.map(borrow => ({
-      ...borrow,
-      lend_end_time: borrow.lend_end_time ?? null,
-    }));
+    return response.data;
   }
 );
 
