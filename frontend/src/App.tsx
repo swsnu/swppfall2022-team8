@@ -21,7 +21,7 @@ function App() {
           <Route path="/book/:id" element={<BookDetailPage />} />
           <Route path="/book/:id/edit" element={<BookEditPage />} />
           <Route path="/book/:id/request" element={<BookRequestPage />} />
-          <Route path="/chatting" element={<ChattingPage />} />
+          <Route path="/chat" element={<ChattingPage />} />
           <Route path="" element={<Navigate to="/main" replace />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
