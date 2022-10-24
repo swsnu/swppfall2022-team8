@@ -2,7 +2,6 @@ import { useNavigate } from "react-router";
 import './BookListEntity.css';
 
 interface IProps {
-  key: string,
   id: number,
   title: string,
 };
@@ -12,7 +11,6 @@ const BookListEntity = (props: IProps) => {
 
   return (
     <div 
-      key={props.key} 
       className="book-list-entity"
       onClick={() => navigate(`/book/${props.id}`)}
     >
