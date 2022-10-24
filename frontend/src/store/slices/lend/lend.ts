@@ -18,7 +18,7 @@ export interface LendType {
   owner: UserType;
   questions: string[];
   cost: number;
-  additional: number;
+  additional: string;
   status: BorrowType | string | null;
 };
 
@@ -35,7 +35,7 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   "lend/fetchQueryLends",
-  async (data: { title?: string, tag?: string, author?: string }) => {
+  async (data: { title?: string, tag?: string[], author?: string }) => {
     const response = await axios.get<LendType[]>("/api/lend/", { params: data });
     return response.data;
   }
