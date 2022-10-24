@@ -1,23 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
+import { AppDispatch } from "../../store";
+import { deleteLend, fetchLend, selectLend } from "../../store/slices/lend/lend";
 import "./BookDetailPage.css";
 
-const testBookDetail = {
-  id: 1,
-  title: "kanokari",
-  owner: "mizuhara",
-  status: "borrowed",
-  cost: 3000,
-  info: "\"Until now, I've always had a five star rating! Give me back my five star rating right now, got it!?\"",
-  tags: ["light_novel", "love_comedy"],
-  questions: ["You should give me a five star rating."]
-}
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const lendState = useSelector(selectLend);
+
+  useEffect(() => {
+    dispatch(fetchLend(Number(id)))
+  }, []);
+
+  const clickDeleteHandler = async () => {
+    await dispatch(deleteLend(Number(id)));
+    navigate("/main");
+  }
 
   return (
     <>
@@ -31,14 +35,18 @@ const BookDetailPage = () => {
       >+</button>
       <button 
         type="button"
-        onClick={() => navigate("/chatting")}
+        onClick={() => navigate("/chat")}
       >chat</button>
       <br/><br/>
       <div className="image-test"><p>image</p></div>
-      <p>Owner: {testBookDetail.owner}</p>
-      <p>Book title: {testBookDetail.title}</p>
-      <p>Status: {testBookDetail.status}</p>
-      <p>Borrowing cost: {testBookDetail.cost}</p>
+
+      <p>Owner: {lendState.selectedLend?.owner}</p>
+      <p>Book title: {lendState.selectedLend?.book_info.title}</p>
+      <p>Author: {lendState.selectedLend?.book_info.author}</p>
+      <p>Brief Summary: {lendState.selectedLend?.book_info.brief}</p>
+
+      <p>Status: {lendState.selectedLend?.status ? lendState.selectedLend?.status.toString() : "Available"}</p>
+      <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
       <br/>
       <button
         type="button"
@@ -46,7 +54,7 @@ const BookDetailPage = () => {
       >Info</button>
       <br/>
       <div className="info-box" hidden={!infoVisible}>
-        {testBookDetail.info}
+        {lendState.selectedLend?.additional}
       </div>
       <button
         type="button"
@@ -58,6 +66,10 @@ const BookDetailPage = () => {
         type="button"
         onClick={() => navigate(`/book/${id}/edit`)}
       >Edit</button>
+      <button 
+        type="button"
+        onClick={() => clickDeleteHandler()}
+      >Delete</button>
     </>
   );
 }

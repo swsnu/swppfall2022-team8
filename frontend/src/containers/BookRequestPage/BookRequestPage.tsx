@@ -11,7 +11,7 @@ const BookRequestPage = () => {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<Array<string>>([...Array(questionsList.length)].map(() => ""));
   const sendButtonHandler = () => {
-    navigate("/chatting");
+    navigate("/chat");
   }
 
   const answerChangeHandler = (id: number, value: string) => {

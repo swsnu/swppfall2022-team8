@@ -1,101 +1,79 @@
-import { SetStateAction, useRef, useState } from "react";
-import { useNavigate } from "react-router"
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router"
+import { AppDispatch } from "../../store";
+import { fetchLend, selectLend, updateLend } from "../../store/slices/lend/lend";
 
 const BookEditPage = () => {
-  //useParams, useEffect로 현재 book정보 fetch받아서 초기값 설정해야함
-  const navigate = useNavigate()
-  const [title, setTitle] = useState("");
-  const [cost, setCost] = useState(0);
-  const [info, setInfo] = useState("");
-  const [tag, setTag] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const {id} = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const lendState = useSelector(selectLend);
+
+  useEffect(() => {
+    dispatch(fetchLend(Number(id)));
+  }, [id, dispatch]);
+  
+  const [cost, setCost] = useState<number>(lendState.selectedLend?.cost ?? 0);
   const [question, setQuestion] = useState("");
-  const [questions, setQuestions] = useState<string[]>([]);
+  const [questions, setQuestions] = useState<string[]>(lendState.selectedLend?.questions ?? []);
+  const [info, setInfo] = useState(lendState.selectedLend?.additional ?? "");
 
-
-  const onChangeTitleHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
-    setTitle(event.currentTarget.value);
-  }
-  const onChangeCostHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
-    setCost(Number(event.currentTarget.value));
-  }
-  const onChangeInfoHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
-    setInfo(event.currentTarget.value);
-  }
-  const onChangeTagHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
-    setTag(event.currentTarget.value);
-  }
-  const onChangeQuestionHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
-    setQuestion(event.currentTarget.value);
-  }
-
-  const addTagHandler = ()=>{
-    const new_tags : string[] = [...tags, tag]
-    setTags(new_tags)
-    setTag("")
-  }
-  const addQuestionHandler = ()=>{
+  const addQuestionHandler = () => {
     const new_questions : string[] = [...questions, question]
-    setQuestions(new_questions)
-    setQuestion("")
-  }
+    setQuestions(new_questions);
+    setQuestion("");
+  };
+  const deleteQuestionHandler = (index: number)=>{
+    const new_questions = questions.filter((tag, idx) => idx !== index);
+    setQuestions(new_questions);
+  };
 
-  const deleteTagHandler = (index:number)=>{
-    const new_tags = tags.filter((tag, idx)=>idx!==index)
-    setTags(new_tags)
-  }
-  const deleteQuestionHandler = (index:number)=>{
-    const new_questions = questions.filter((tag, idx)=>idx!==index)
-    setQuestions(new_questions)
-  }
+  const onConfirmHanler = async () => {
+    if(lendState.selectedLend){
+      const lend_data = {
+        id: lendState.selectedLend.id,
+        book: lendState.selectedLend.book,
+        book_info: lendState.selectedLend.book_info,
+        owner: lendState.selectedLend.owner,
+        questions: questions,
+        cost: cost,
+        additional: info,
+      };
+      await dispatch(updateLend(lend_data));
+      navigate(`/book/${lendState.selectedLend.id}`);
+    }
 
-  const onConfirmHanler = ()=>{
-    if(tags.length === 0){
-      alert("Should have at least one tag!")
-    }
-    else{
-      // backend 위해 일단 비워둠
-    }
-  }
+  };
 
   return (
     <div className="BookEditPage">
       <h1>BookEditPage</h1>
 
-      {/* image 일단 생략 */}
+      <p>Can only edit lend info.</p>
 
-      <br />
+      <div>title : {lendState.selectedLend?.book_info.title}</div>
+      <div>author : {lendState.selectedLend?.book_info.author}</div>
+      <div>brief summary : {lendState.selectedLend?.book_info.brief}</div>
+      <div>tags : {lendState.selectedLend?.book_info.tags}</div>
 
-      <label>title<input type="text" value={title} onChange={onChangeTitleHandler} required /></label>
+      <label>borrowing cost<input type="number" min="0" step="100" value={cost} onChange={event => setCost(Number(event.target.value))} /></label>
       <br />
-      <label>borrowing cost<input type="number" min="0" step="100" value={cost} onChange={onChangeCostHandler} required /></label>
-      <br />
-      <label>additional info<input type="text" value={info} onChange={onChangeInfoHandler} required /></label>
-      <br />
-      
-      <label>tags
-      <input type="text" value={tag} onChange={onChangeTagHandler}/>
-      <button onClick={addTagHandler} disabled={tag===""}>add</button>
-      </label>
-      {/* list tags */}
-      {tags.map((tag, index)=>{
-        return (<div key={index}>{tag} <button onClick={()=>deleteTagHandler(index)}>x</button></div>)
-      })}
-
+      <label>additional info (optional)<input type="text" value={info} onChange={event => setInfo(event.target.value)} /></label>
       <br />
 
       <label>questions
-      <input type="text" value={question} onChange={onChangeQuestionHandler}/>
+      <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
       <button onClick={addQuestionHandler} disabled={question===""}>add</button>
       </label>
-      {/* list questions */}
       {questions.map((question, index)=>{
         return (<div key={index}>{question} <button onClick={()=>deleteQuestionHandler(index)}>x</button></div>)
       })}
+      <br />
 
-      <button onClick={onConfirmHanler}>Register!</button>
+      <button onClick={onConfirmHanler}>Edit</button>
     </div>
   );
 }
 
-export default BookEditPage
+export default BookEditPage;
