@@ -1,10 +1,19 @@
-import { SetStateAction, useRef, useState } from "react";
+import { SetStateAction, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router"
+import { AppDispatch } from "../../store";
+import { selectBook } from "../../store/slices/book/book";
+import { createLend, selectLend } from "../../store/slices/lend/lend";
 
 const BookRegisterPage = () => {
 
-  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const bookState = useSelector(selectBook);
+  const lendState = useSelector(selectLend);
+
   const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
   const [cost, setCost] = useState(0);
   const [info, setInfo] = useState("");
   const [tag, setTag] = useState("");
@@ -15,6 +24,9 @@ const BookRegisterPage = () => {
 
   const onChangeTitleHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
     setTitle(event.currentTarget.value);
+  }
+  const onChangeAuthorHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
+    setAuthor(event.currentTarget.value);
   }
   const onChangeCostHandler = (event: { currentTarget: { value: SetStateAction<string>; }; }) =>{
     setCost(Number(event.currentTarget.value));
@@ -49,12 +61,32 @@ const BookRegisterPage = () => {
     setQuestions(new_questions)
   }
 
-  const onConfirmHanler = ()=>{
+  const onConfirmHanler = async ()=>{
     if(tags.length === 0){
       alert("Should have at least one tag!")
     }
     else{
       // backend 위해 일단 비워둠
+      const book_data = {
+        title: title,
+        author: author,
+        tags: tags,
+        brief: info,
+      }
+
+      await dispatch(creaetBook(book_data))
+
+      const lend_data = {
+        book: bookState.selectedBook!.id,
+        book_info: book_data,
+        owner: 1,///////////////////
+        questions: questions,
+        cost: cost,
+        additional: 1,////////////////////////
+      }
+      await dispatch(createLend(lend_data))
+
+      navigate(`book/${lendState.selectedLend!.id}`)
     }
   }
 
@@ -66,13 +98,13 @@ const BookRegisterPage = () => {
 
       <br />
 
-      <label>title<input type="text" value={title} onChange={onChangeTitleHandler} required /></label>
+      <label>title<input type="text" value={title} onChange={onChangeTitleHandler} /></label>
       <br />
-      <label>borrowing cost<input type="number" min="0" step="100" value={cost} onChange={onChangeCostHandler} required /></label>
+      <label>author<input type="text" value={author} onChange={onChangeAuthorHandler} /></label>
       <br />
-      <label>additional info<input type="text" value={info} onChange={onChangeInfoHandler} required /></label>
+      <label>additional info<input type="text" value={info} onChange={onChangeInfoHandler} /></label>
       <br />
-      
+
       <label>tags
       <input type="text" value={tag} onChange={onChangeTagHandler}/>
       <button onClick={addTagHandler} disabled={tag===""}>add</button>
@@ -81,7 +113,10 @@ const BookRegisterPage = () => {
       {tags.map((tag, index)=>{
         return (<div key={index}>{tag} <button onClick={()=>deleteTagHandler(index)}>x</button></div>)
       })}
+      <br />
+      <br />
 
+      <label>borrowing cost<input type="number" min="0" step="100" value={cost} onChange={onChangeCostHandler} /></label>
       <br />
 
       <label>questions
@@ -92,6 +127,7 @@ const BookRegisterPage = () => {
       {questions.map((question, index)=>{
         return (<div key={index}>{question} <button onClick={()=>deleteQuestionHandler(index)}>x</button></div>)
       })}
+      <br />
 
       <button onClick={onConfirmHanler}>Register!</button>
     </div>
@@ -99,3 +135,7 @@ const BookRegisterPage = () => {
 }
 
 export default BookRegisterPage
+
+function creaetBook(book_data: { title: string; author: string; tags: string[]; brief: string; }): any {
+  throw new Error("Function not implemented.");
+}

@@ -1,0 +1,53 @@
+{
+    "book":[
+        {
+            "id": 0,
+            "title": "Harry Potter",
+            "author": "JK Rolling",
+            "tags": ["Fantasy", "Magic"],
+            "brief": "Harry Potter series"
+        },
+        {
+            "id": 1,
+            "title": "Sherlock Holmes",
+            "author": "Konan",
+            "tags": ["Mistery"],
+            "brief": "Detective series"
+        }
+    ],
+    "lend":[
+        {
+            "id": 0,
+            "book": 0,
+            "book_info": {
+                "title": "Harry Potter",
+                "author": "JK Rolling",
+                "tags": ["Fantasy", "Magic"],
+                "brief": "Harry Potter series"
+            },
+            "owner": 0,
+            "questions": ["Where do you live?", "Are you able to send posts?"],
+            "cost": 1000,
+            "additional": null,
+            "status": null
+        },
+        {
+            "id": 1,
+            "book": 0,
+            "book_info": {
+                "title": "Harry Potter",
+                "author": "JK Rolling",
+                "tags": ["Fantasy", "Magic"],
+                "brief": "Harry Potter series"
+            },
+            "owner": 0,
+            "questions": ["Where do you live?", "Are you able to send posts?"],
+            "cost": 1000,
+            "additional": null,
+            "status": null
+        }
+    ],
+    "borrow":[
+
+    ]
+}

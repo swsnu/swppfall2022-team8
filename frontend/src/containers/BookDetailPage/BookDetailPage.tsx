@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
+import { AppDispatch } from "../../store";
+import { fetchLend, selectLend } from "../../store/slices/lend/lend";
 import "./BookDetailPage.css";
 
 const testBookDetail = {
@@ -18,6 +21,12 @@ const BookDetailPage = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const lendState = useSelector(selectLend);
+
+  useEffect(() => {
+    dispatch(fetchLend(Number(id)))
+  },[]);
 
   return (
     <>
@@ -35,10 +44,14 @@ const BookDetailPage = () => {
       >chat</button>
       <br/><br/>
       <div className="image-test"><p>image</p></div>
-      <p>Owner: {testBookDetail.owner}</p>
+      {/* <p>Owner: {testBookDetail.owner}</p>
       <p>Book title: {testBookDetail.title}</p>
       <p>Status: {testBookDetail.status}</p>
-      <p>Borrowing cost: {testBookDetail.cost}</p>
+      <p>Borrowing cost: {testBookDetail.cost}</p> */}
+      <p>Owner: {lendState.selectedLend!.owner}</p>
+      <p>Book title: {lendState.selectedLend!.book_info.title}</p>
+      <p>Status: {lendState.selectedLend!.status?.toString?.()}</p>
+      <p>Borrowing cost: {lendState.selectedLend!.cost}</p>
       <br/>
       <button
         type="button"
@@ -46,7 +59,7 @@ const BookDetailPage = () => {
       >Info</button>
       <br/>
       <div className="info-box" hidden={!infoVisible}>
-        {testBookDetail.info}
+        {lendState.selectedLend!.book_info.brief}
       </div>
       <button
         type="button"
