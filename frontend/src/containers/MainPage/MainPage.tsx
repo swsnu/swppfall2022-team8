@@ -6,15 +6,15 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 const MainPage = () => {
   return (
     <>
-      <h1>MainPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
       <br/>
+      <h1>MainPage</h1>
+      <br/>
 
       <SearchBar initContent="" />
-      
+
       {/* TODO: add ML recommendation feature */}
     </>
   );

@@ -22,11 +22,11 @@ const BookListPage = () => {
 
   return (
     <>
-      <h1>BookListPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
+      <br/>
+      <h1>BookListPage</h1>
       <br/>
 
       <SearchBar initContent={key ?? ""} />

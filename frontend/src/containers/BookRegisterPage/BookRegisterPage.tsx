@@ -101,11 +101,11 @@ const BookRegisterPage = () => {
   else {
     return (
       <>
-        <h1>BookRegisterPage</h1>
-        <br/>
         <LogoButton />
         <RegisterButton />
         <ChattingButton />
+        <br/>
+        <h1>BookRegisterPage</h1>
         <br/>
 
         {/* TODO: add image upload field */}

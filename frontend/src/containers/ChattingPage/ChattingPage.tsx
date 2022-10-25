@@ -5,11 +5,11 @@ import RegisterButton from "../../components/RegisterButton/RegisterButton";
 const ChattingPage = () => {
   return (
     <>
-      <h1>ChattingPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
+      <br/>
+      <h1>ChattingPage</h1>
       <br/>
     </>
   );

@@ -51,11 +51,11 @@ const BookEditPage = () => {
 
   return (
     <>
-      <h1>BookEditPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
+      <br/>
+      <h1>BookEditPage</h1>
       <br/>
 
       <p>Can only edit lend info.</p>

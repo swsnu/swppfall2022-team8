@@ -29,11 +29,11 @@ const BookDetailPage = () => {
 
   return (
     <>
-      <h1>BookDetailPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
+      <br/>
+      <h1>BookDetailPage</h1>
       <br/>
 
       {/* TODO: add image field */}

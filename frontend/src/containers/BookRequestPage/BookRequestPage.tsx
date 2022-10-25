@@ -44,11 +44,11 @@ const BookRequestPage = () => {
 
   return (
     <>
-      <h1>MainPage</h1>
-      <br/>
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
+      <br/>
+      <h1>MainPage</h1>
       <br/>
 
       <h3>Book Name:&nbsp;{lendState.selectedLend ? lendState.selectedLend.book_info.title : ""}</h3> 
