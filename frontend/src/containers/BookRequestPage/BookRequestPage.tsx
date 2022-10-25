@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
+
+import ChattingButton from "../../components/ChattingButton/ChattingButton";
+import LogoButton from "../../components/LogoButton/LogoButton";
+import RegisterButton from "../../components/RegisterButton/RegisterButton";
 import { AppDispatch } from "../../store";
 import { fetchLend, selectLend } from "../../store/slices/lend/lend";
 
@@ -8,41 +12,59 @@ const BookRequestPage = () => {
   const [answers, setAnswers] = useState<string[]>([]);
 
   const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const lendState = useSelector(selectLend);
 
   useEffect(() => {
     dispatch(fetchLend(Number(id)));
   }, [id, dispatch]);
 
-  const sendButtonHandler = () => {
+  const clickSendButtonHandler = () => {
+    if(!lendState.selectedLend) {
+      return;
+    }
+
+    const { questions } = lendState.selectedLend;
+    if(questions.length !== answers.length || answers.some(val => !val)) {
+      alert("You should fill in all answers.");
+      return;
+    }
+
     // TODO: send answers to chatting room
+
     navigate("/chat");
   };
 
-  const answerChangeHandler = (idx: number, value: string) => {
+  const changeAnswerHandler = (idx: number, value: string) => {
     const newAnswers = [...answers];
     newAnswers[idx] = value;
-    setAnswers(newAnswers);
+    setAnswers([...newAnswers]);
   };
 
   return (
     <>
+      <h1>MainPage</h1>
+      <br/>
+      <LogoButton />
+      <RegisterButton />
+      <ChattingButton />
+      <br/>
+
       <h3>Book Name:&nbsp;{lendState.selectedLend ? lendState.selectedLend.book_info.title : ""}</h3> 
 
-      {lendState.selectedLend ? lendState.selectedLend.questions.map((q, i) => (
-        <div key={`question_${i}`}>
-          <h3>Question: {q}</h3>
+      {lendState.selectedLend ? lendState.selectedLend.questions.map((question, idx) => (
+        <div key={`question_${idx}`}>
+          <h3>Question: {question}</h3>
           <h3>Answer:</h3>
           <input
-            value={answers[i] ?? ""}
-            onChange={event => answerChangeHandler(i, event.target.value)}></input>
+            value={answers[idx] ?? ""}
+            onChange={event => changeAnswerHandler(idx, event.target.value)}></input>
         </div>
       )) : null}
 
       <br/>
-      <button onClick={() => sendButtonHandler()}>send to lender</button>
+      <button onClick={() => clickSendButtonHandler()}>send to lender</button>
     </>
   );
 }

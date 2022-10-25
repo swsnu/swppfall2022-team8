@@ -12,6 +12,7 @@ const SearchBar = (props: IProps) => {
 
   return (
     <>
+      {/* TODO: add tag search, author search feature */}
       <input 
         id="search-bar"
         value={content}
