@@ -29,7 +29,7 @@ const BookEditPage = () => {
     setQuestion("");
   };
   const clickDeleteQuestionHandler = (index: number)=>{
-    const new_questions = questions.filter((_tag, idx) => idx !== index);
+    const new_questions = questions.filter((_question, idx) => idx !== index);
     setQuestions(new_questions);
   };
 
