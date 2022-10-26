@@ -23,7 +23,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
         data["borrower"] = user.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        lend_info = LendInfo.objects.get(id=data["book_borrowed"])
+        lend_info = LendInfo.objects.get(id=data["lend_id"])
         if lend_info.current_borrow:
             return Response(
                 {"error": "Book is already borrowed"},
