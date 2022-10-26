@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../..";
 
@@ -38,7 +38,9 @@ export const createBook = createAsyncThunk(
   "book/createBook",
   async (data: Omit<BookType, "id">, { dispatch }) => {
     const response = await axios.post("/api/book/", data);
+    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(bookActions.addBook(response.data));
+    return response.data;
   }
 );
 
@@ -54,8 +56,10 @@ export const updateBook = createAsyncThunk(
   "book/updateBook",
   async (book: BookType, { dispatch }) => {
     const { id, ...data } = book;
-    await axios.put(`/api/book/${id}/`, data);
-    dispatch(bookActions.updateBook(book));
+    const response = await axios.put(`/api/book/${id}/`, data);
+    // TODO: modify here (in our backend, response.data cannot be null)
+    dispatch(bookActions.updateBook(response.data));
+    return response.data;
   }
 );
 

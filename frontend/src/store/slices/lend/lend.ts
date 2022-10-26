@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../..";
 import { BookType } from "../book/book";
@@ -45,7 +45,9 @@ export const createLend = createAsyncThunk(
   "lend/createLend",
   async (data: Omit<LendType, "id" | "status">, { dispatch }) => {
     const response = await axios.post("/api/lend/", data);
+    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(lendActions.addLend(response.data));
+    return response.data;
   }
 );
 
@@ -62,7 +64,9 @@ export const updateLend = createAsyncThunk(
   async (lend: Omit<LendType, "status">, { dispatch }) => {
     const { id, ...data } = lend;
     const response = await axios.put(`/api/lend/${id}/`, data);
+    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(lendActions.updateLend(response.data));
+    return response.data;
   }
 );
 

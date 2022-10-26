@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router"
+
+import ChattingButton from "../../components/ChattingButton/ChattingButton";
+import LogoButton from "../../components/LogoButton/LogoButton";
+import RegisterButton from "../../components/RegisterButton/RegisterButton";
 import { AppDispatch } from "../../store";
-import { createBook, selectBook } from "../../store/slices/book/book";
+import { BookType, createBook } from "../../store/slices/book/book";
 import { createLend, selectLend } from "../../store/slices/lend/lend";
 
 const BookRegisterPage = () => {
-
-  const dispatch = useDispatch<AppDispatch>();
-  const bookState = useSelector(selectBook);
-  const lendState = useSelector(selectLend);
-
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [cost, setCost] = useState(0);
@@ -22,111 +21,165 @@ const BookRegisterPage = () => {
   const [questions, setQuestions] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const lendState = useSelector(selectLend);
 
-  const addTagHandler = () => {
+  const clickAddTagHandler = () => {
     const new_tags : string[] = [...tags, tag];
     setTags(new_tags);
     setTag("");
   };
 
-  const addQuestionHandler = () => {
+  const clickAddQuestionHandler = () => {
     const new_questions : string[] = [...questions, question];
     setQuestions(new_questions);
     setQuestion("");
   };
 
-  const deleteTagHandler = (index: number) => {
+  const clickDeleteTagHandler = (index: number) => {
     const new_tags = tags.filter((tag, idx) => idx !== index);
     setTags(new_tags);
   };
   
-  const deleteQuestionHandler = (index: number) => {
-    const new_questions = questions.filter((tag, idx) => idx !== index);
+  const clickDeleteQuestionHandler = (index: number) => {
+    const new_questions = questions.filter((_question, idx) => idx !== index);
     setQuestions(new_questions);
   };
 
-  const onConfirmHanler = async () => {
-    if(!title || !author || !brief || tags.length === 0) {
-      let msg = "Should fill in :\n";
-      if(!title) msg += "\ntitle";
-      if(!author) msg += "\nauthor";
-      if(!brief) msg += "\nbrief summary";
-      if(tags.length === 0) msg += "\nat least one tag";
-      alert(msg);
+  const clickConfirmRegisterHanler = async () => {
+    const validationCheckList = [title, author, brief, tags.length];
+    const validationMessages = ["title", "author", "brief summary", "at least one tag"];
+
+    if(validationCheckList.some(val => !val)) {
+      const messageBuffer = ["Should fill in :"];
+      validationCheckList.forEach((val, idx) => {
+        if(!val) {
+          messageBuffer.push(validationMessages[idx]);
+        }
+      });
+      alert(messageBuffer.join('\n'));
+      return;
     }
-    else{
-      const book_data = {
-        title: title,
-        author: author,
-        tags: tags,
-        brief: brief,
+
+    const bookData = {
+      title: title,
+      author: author,
+      tags: tags,
+      brief: brief,
+    };
+
+    const responseBook = await dispatch(createBook(bookData));
+
+    if (responseBook.type === `${createBook.typePrefix}/fulfilled`) {
+      const { id } = responseBook.payload as BookType
+      const lendData = {
+        book: id,
+        book_info: bookData,
+        owner: 1, // TODO: implement User
+        questions: questions,
+        cost: cost,
+        additional: info,
       };
 
-      const response_book = await dispatch(createBook(book_data));
+      const responseLend = await dispatch(createLend(lendData));
 
-      if (response_book.type === `${createBook.typePrefix}/fulfilled`) {
-        const lend_data = {
-          book: bookState.selectedBook?.id ?? NaN,
-          book_info: book_data,
-          owner: 1, // TODO: implement User
-          questions: questions,
-          cost: cost,
-          additional: info,
-        };
-
-        const response_lend = await dispatch(createLend(lend_data));
-        if (response_lend.type === `${createLend.typePrefix}/fulfilled`) {
-          setSubmitted(true);
-        }
+      if (responseLend.type === `${createLend.typePrefix}/fulfilled`) {
+        setSubmitted(true);
       }
-
+      else {
+        alert("Error on Register a book (lend)");
+      }
+    }
+    else {
+      alert("Error on Register a book (book)");
     }
   }
 
   if (submitted) {
-    return <Navigate to={`/book/${lendState.selectedLend?.id}`} />;
-  } else {
+    return <Navigate to={`/book${lendState.selectedLend ? `/${lendState.selectedLend.id}` : ""}`} />;
+  } 
+  else {
     return (
-      <div className="BookRegisterPage">
+      <>
+        <LogoButton />
+        <RegisterButton />
+        <ChattingButton />
+        <br/>
         <h1>BookRegisterPage</h1>
+        <br/>
 
-        {/* TODO: add image to backend */}
-
-        <br />
-
-        <label>title<input type="text" value={title} onChange={event => setTitle(event.target.value)} /></label>
-        <br />
-        <label>author<input type="text" value={author} onChange={event => setAuthor(event.target.value)} /></label>
-        <br />
-        <label>Brief summary<input type="text" value={brief} onChange={event => setBrief(event.target.value)} /></label>
-        <br />
-
-        <label>tags
-        <input type="text" value={tag} onChange={event => setTag(event.target.value)}/>
-        <button onClick={() => addTagHandler()} disabled={tag===""}>add</button>
+        {/* TODO: add image upload field */}
+        
+        <label>
+          title
+          <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
         </label>
-        {tags.map((tag, index)=>{
-          return (<div key={index}>{tag} <button onClick={() => deleteTagHandler(index)}>x</button></div>)
-        })}
         <br />
+        <label>
+          author
+          <input type="text" value={author} onChange={event => setAuthor(event.target.value)} />
+        </label>
+        <br />
+        <label>
+          Brief summary
+          <input type="text" value={brief} onChange={event => setBrief(event.target.value)} />
+        </label>
         <br />
 
-        <label>borrowing cost<input type="number" min="0" step="100" value={cost} onChange={event => setCost(Number(event.target.value))} /></label>
+        <label>
+          tags
+          <input type="text" value={tag} onChange={event => setTag(event.target.value)}/>
+          <button 
+            type="button"
+            onClick={() => clickAddTagHandler()} 
+            disabled={!tag}
+          >add</button>
+        </label>
+        {tags.map((tag, index) => (
+          <div key={index}>
+            {tag}
+            <button type="button" onClick={() => clickDeleteTagHandler(index)}>x</button>
+          </div>
+        ))}
+
         <br />
-        <label>additional info (optional)<input type="text" value={info} onChange={event => setInfo(event.target.value)} /></label>
+        <br />
+        <label>
+          borrowing cost
+          <input 
+            type="number" 
+            min="0" 
+            step="100" 
+            value={cost} 
+            onChange={event => setCost(Number(event.target.value))}
+          />
+        </label>
+        <br />
+        <label>
+          additional info (optional)
+          <input type="text" value={info} onChange={event => setInfo(event.target.value)} />
+        </label>
         <br />
         
-        <label>questions (optional)
-        <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
-        <button onClick={addQuestionHandler} disabled={question===""}>add</button>
+        <label>
+          questions (optional)
+          <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
+          <button 
+            type="button"
+            onClick={() => clickAddQuestionHandler()} 
+            disabled={!question}
+          >add</button>
         </label>
-        {questions.map((question, index)=>{
-          return (<div key={index}>{question} <button onClick={()=>deleteQuestionHandler(index)}>x</button></div>)
-        })}
+        {questions.map((question, index) => (
+          <div key={index}>
+            {question}
+            <button type="button" onClick={() => clickDeleteQuestionHandler(index)}>x</button>
+          </div>
+        ))}
         <br />
 
-        <button onClick={() => onConfirmHanler()}>Register</button>
-      </div>
+        <button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</button>
+      </>
     );
   }
 }
