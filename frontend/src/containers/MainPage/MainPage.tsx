@@ -1,7 +1,7 @@
-import ChattingButton from "../../components/ChattingButton/ChattingButton";
-import LogoButton from "../../components/LogoButton/LogoButton";
-import RegisterButton from "../../components/RegisterButton/RegisterButton";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import ChattingButton from '../../components/ChattingButton/ChattingButton'
+import LogoButton from '../../components/LogoButton/LogoButton'
+import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import SearchBar from '../../components/SearchBar/SearchBar'
 
 const MainPage = () => {
   return (
@@ -17,7 +17,7 @@ const MainPage = () => {
 
       {/* TODO: add ML recommendation feature */}
     </>
-  );
+  )
 }
 
 export default MainPage

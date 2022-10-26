@@ -1,16 +1,15 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
-import MainPage from './containers/MainPage/MainPage';
-import BookListPage from './containers/BookListPage/BookListPage';
-import BookRegisterPage from './containers/BookRegisterPage/BookRegisterPage';
-import BookDetailPage from './containers/BookDetailPage/BookDetailPage';
-import BookEditPage from './containers/BookEditPage/BookEditPage';
-import BookRequestPage from './containers/BookRequestPage/BookRequestPage';
-import ChattingPage from './containers/ChattingPage/ChattingPage';
-import './App.css';
+import MainPage from './containers/MainPage/MainPage'
+import BookListPage from './containers/BookListPage/BookListPage'
+import BookRegisterPage from './containers/BookRegisterPage/BookRegisterPage'
+import BookDetailPage from './containers/BookDetailPage/BookDetailPage'
+import BookEditPage from './containers/BookEditPage/BookEditPage'
+import BookRequestPage from './containers/BookRequestPage/BookRequestPage'
+import ChattingPage from './containers/ChattingPage/ChattingPage'
+import './App.css'
 
-
-function App() {
+function App () {
   return (
     <div className="App">
       <BrowserRouter>
@@ -27,7 +26,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

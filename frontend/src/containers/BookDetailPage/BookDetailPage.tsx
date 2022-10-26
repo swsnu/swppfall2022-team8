@@ -1,31 +1,30 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router'
 
-import ChattingButton from "../../components/ChattingButton/ChattingButton";
-import LogoButton from "../../components/LogoButton/LogoButton";
-import RegisterButton from "../../components/RegisterButton/RegisterButton";
-import { AppDispatch } from "../../store";
-import { deleteLend, fetchLend, selectLend } from "../../store/slices/lend/lend";
-import "./BookDetailPage.css";
-
+import ChattingButton from '../../components/ChattingButton/ChattingButton'
+import LogoButton from '../../components/LogoButton/LogoButton'
+import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import { AppDispatch } from '../../store'
+import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
+import './BookDetailPage.css'
 
 const BookDetailPage = () => {
-  const [infoVisible, setInfoVisible] = useState<boolean>(false);
+  const [infoVisible, setInfoVisible] = useState<boolean>(false)
 
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const lendState = useSelector(selectLend);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const lendState = useSelector(selectLend)
 
   useEffect(() => {
-    dispatch(fetchLend(Number(id)));
-  }, [id, dispatch]);
+    dispatch(fetchLend(Number(id)))
+  }, [id, dispatch])
 
   const clickDeleteHandler = async () => {
-    await dispatch(deleteLend(Number(id)));
-    navigate("/main");
-  };
+    await dispatch(deleteLend(Number(id)))
+    navigate('/main')
+  }
 
   return (
     <>
@@ -44,7 +43,7 @@ const BookDetailPage = () => {
       <p>Author: {lendState.selectedLend?.book_info.author}</p>
       <p>Brief Summary: {lendState.selectedLend?.book_info.brief}</p>
 
-      <p>Status: {lendState.selectedLend?.status ? "Borrowed" : "Available"}</p>
+      <p>Status: {lendState.selectedLend?.status ? 'Borrowed' : 'Available'}</p>
       <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
       <br/>
       <button
@@ -62,20 +61,20 @@ const BookDetailPage = () => {
         type="button"
         onClick={() => navigate(`/book/${id}/request`)}
       >Request</button>
-      <button 
+      <button
         type="button"
-        onClick={() => alert("TODO: implement user feature")}>Watch</button>
+        onClick={() => alert('TODO: implement user feature')}>Watch</button>
       <br/>
-      <button 
+      <button
         type="button"
         onClick={() => navigate(`/book/${id}/edit`)}
       >Edit</button>
-      <button 
+      <button
         type="button"
-        onClick={() => clickDeleteHandler()}
+        onClick={async () => await clickDeleteHandler()}
       >Delete</button>
     </>
-  );
+  )
 }
 
 export default BookDetailPage
