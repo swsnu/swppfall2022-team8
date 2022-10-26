@@ -7,6 +7,7 @@ import LogoButton from "../../components/LogoButton/LogoButton";
 import RegisterButton from "../../components/RegisterButton/RegisterButton";
 import { AppDispatch } from "../../store";
 import { deleteLend, fetchLend, selectLend } from "../../store/slices/lend/lend";
+import Button from 'react-bootstrap/Button';
 import "./BookDetailPage.css";
 
 
@@ -47,10 +48,10 @@ const BookDetailPage = () => {
       <p>Status: {lendState.selectedLend?.status ? "Borrowed" : "Available"}</p>
       <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
       <br/>
-      <button
+      <Button variant="outline-primary"
         type="button"
         onClick={() => setInfoVisible(!infoVisible)}
-      >Info</button>
+      >Info</Button>
       <br/>
       <div className="info-box" hidden={!infoVisible}>
         {lendState.selectedLend?.additional}
@@ -58,22 +59,26 @@ const BookDetailPage = () => {
 
       {/* TODO: implement borrow related feature in sprint3 */}
 
-      <button
+
+      <Button variant="outline-primary"
+      id="detail-request-button"
+      onClick={() => navigate(`/book/${id}/request`)}>
+        Request
+      </Button>
+      <Button variant="outline-primary"
         type="button"
-        onClick={() => navigate(`/book/${id}/request`)}
-      >Request</button>
-      <button 
-        type="button"
-        onClick={() => alert("TODO: implement user feature")}>Watch</button>
+        id="detail-watch-button"
+        onClick={() => alert("TODO: implement user feature")}>Watch</Button>
       <br/>
-      <button 
+      <Button variant="outline-primary"
         type="button"
+        id="detail-edit-button"
         onClick={() => navigate(`/book/${id}/edit`)}
-      >Edit</button>
-      <button 
+      >Edit</Button>
+      <Button variant="outline-primary"
         type="button"
         onClick={() => clickDeleteHandler()}
-      >Delete</button>
+      >Delete</Button>
     </>
   );
 }
