@@ -1,53 +1,53 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router"
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router'
 
-import ChattingButton from "../../components/ChattingButton/ChattingButton";
-import LogoButton from "../../components/LogoButton/LogoButton";
-import RegisterButton from "../../components/RegisterButton/RegisterButton";
-import { AppDispatch } from "../../store";
-import { fetchLend, selectLend, updateLend } from "../../store/slices/lend/lend";
+import ChattingButton from '../../components/ChattingButton/ChattingButton'
+import LogoButton from '../../components/LogoButton/LogoButton'
+import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import { AppDispatch } from '../../store'
+import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
 
 const BookEditPage = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const lendState = useSelector(selectLend);
+  const { id } = useParams()
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const lendState = useSelector(selectLend)
 
   useEffect(() => {
-    dispatch(fetchLend(Number(id)));
-  }, [id, dispatch]);
-  
-  const [cost, setCost] = useState<number>(lendState.selectedLend?.cost ?? 0);
-  const [question, setQuestion] = useState("");
-  const [questions, setQuestions] = useState<string[]>(lendState.selectedLend?.questions ?? []);
-  const [info, setInfo] = useState(lendState.selectedLend?.additional ?? "");
+    dispatch(fetchLend(Number(id)))
+  }, [id, dispatch])
+
+  const [cost, setCost] = useState<number>(lendState.selectedLend?.cost ?? 0)
+  const [question, setQuestion] = useState('')
+  const [questions, setQuestions] = useState<string[]>(lendState.selectedLend?.questions ?? [])
+  const [info, setInfo] = useState(lendState.selectedLend?.additional ?? '')
 
   const clickAddQuestionHandler = () => {
-    const new_questions : string[] = [...questions, question]
-    setQuestions(new_questions);
-    setQuestion("");
-  };
-  const clickDeleteQuestionHandler = (index: number)=>{
-    const new_questions = questions.filter((_question, idx) => idx !== index);
-    setQuestions(new_questions);
-  };
+    const newQuestions: string[] = [...questions, question]
+    setQuestions(newQuestions)
+    setQuestion('')
+  }
+  const clickDeleteQuestionHandler = (index: number) => {
+    const newQuestions = questions.filter((_question, idx) => idx !== index)
+    setQuestions(newQuestions)
+  }
 
   const clickConfirmEditHanler = async () => {
-    if(lendState.selectedLend){
-      const lend_data = {
+    if (lendState.selectedLend != null) {
+      const lendData = {
         id: lendState.selectedLend.id,
         book: lendState.selectedLend.book,
         book_info: lendState.selectedLend.book_info,
         owner: lendState.selectedLend.owner,
-        questions: questions,
-        cost: cost,
-        additional: info,
-      };
-      await dispatch(updateLend(lend_data));
-      navigate(`/book/${lendState.selectedLend.id}`);
+        questions,
+        cost,
+        additional: info
+      }
+      await dispatch(updateLend(lendData))
+      navigate(`/book/${lendState.selectedLend.id}`)
     }
-  };
+  }
 
   return (
     <>
@@ -67,12 +67,12 @@ const BookEditPage = () => {
 
       <label>
         borrowing cost
-        <input 
-          type="number" 
-          min="0" 
-          step="100" 
-          value={cost} 
-          onChange={event => setCost(Number(event.target.value))} 
+        <input
+          type="number"
+          min="0"
+          step="100"
+          value={cost}
+          onChange={event => setCost(Number(event.target.value))}
         />
       </label>
       <br />
@@ -85,23 +85,23 @@ const BookEditPage = () => {
       <label>
         questions
         <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
-        <button 
+        <button
           type="button"
-          onClick={() => clickAddQuestionHandler()} 
+          onClick={() => clickAddQuestionHandler()}
           disabled={!question}
         >add</button>
       </label>
       {questions.map((question, index) => (
         <div key={index}>
-          {question} 
+          {question}
           <button type="button" onClick={() => clickDeleteQuestionHandler(index)}>x</button>
         </div>
       ))}
       <br />
 
-      <button type="button" onClick={() => clickConfirmEditHanler()}>Edit</button>
+      <button type="button" onClick={async () => await clickConfirmEditHanler()}>Edit</button>
     </>
-  );
+  )
 }
 
-export default BookEditPage;
+export default BookEditPage

@@ -1,6 +1,6 @@
-import ChattingButton from "../../components/ChattingButton/ChattingButton";
-import LogoButton from "../../components/LogoButton/LogoButton";
-import RegisterButton from "../../components/RegisterButton/RegisterButton";
+import ChattingButton from '../../components/ChattingButton/ChattingButton'
+import LogoButton from '../../components/LogoButton/LogoButton'
+import RegisterButton from '../../components/RegisterButton/RegisterButton'
 
 const ChattingPage = () => {
   return (
@@ -12,7 +12,7 @@ const ChattingPage = () => {
       <h1>ChattingPage</h1>
       <br/>
     </>
-  );
+  )
 }
 
 export default ChattingPage

@@ -1,16 +1,16 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from 'react-router'
 
 const ChattingButton = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <>
-      <button 
+      <button
         type="button"
-        onClick={() => navigate("/chat")}
+        onClick={() => navigate('/chat')}
       >Chat</button>
     </>
   )
-};
+}
 
-export default ChattingButton;
+export default ChattingButton

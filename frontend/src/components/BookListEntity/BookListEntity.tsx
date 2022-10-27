@@ -1,22 +1,22 @@
-import { useNavigate } from "react-router";
-import './BookListEntity.css';
+import { useNavigate } from 'react-router'
+import './BookListEntity.css'
 
 interface IProps {
-  id: number,
-  title: string,
+  id: number
+  title: string
 };
 
 const BookListEntity = (props: IProps) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
-    <div 
+    <div
       className="book-list-entity"
       onClick={() => navigate(`/book/${props.id}`)}
     >
       <p>{props.title}</p>
     </div>
-  );
-};
+  )
+}
 
-export default BookListEntity;
+export default BookListEntity

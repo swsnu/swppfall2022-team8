@@ -1,61 +1,58 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from 'axios'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from "../..";
-import { UserType } from "../user/user";
-
+import { RootState } from '../..'
+import { UserType } from '../user/user'
 
 /*
  * Type definitions
  */
 
 export interface BorrowType {
-  id: number;
-  borrower: UserType;
-  lend_id: number;
-  active: boolean;
-  lend_start_time: string; // serialized Date object
-  lend_end_time: string | null; // serialized Date object | null
+  id: number
+  borrower: UserType
+  lend_id: number
+  active: boolean
+  lend_start_time: string // serialized Date object
+  lend_end_time: string | null // serialized Date object | null
 };
 
 export interface BorrowState {
-  userBorrows: BorrowType[];
-  selectedBorrow: BorrowType | null;
+  userBorrows: BorrowType[]
+  selectedBorrow: BorrowType | null
 };
-
 
 /*
  * Async thunks
  */
 
 export const createBorrow = createAsyncThunk(
-  "borrow/createBorrow",
-  async (data: Pick<BorrowType, "borrower" | "lend_id">, { dispatch }) => {
-    const response = await axios.post("/api/borrow/", data);
+  'borrow/createBorrow',
+  async (data: Pick<BorrowType, 'borrower' | 'lend_id'>, { dispatch }) => {
+    const response = await axios.post('/api/borrow/', data)
     // TODO: modify here (in our backend, response.data cannot be null)
-    dispatch(borrowActions.addBorrow(response.data));
-    return response.data;
+    dispatch(borrowActions.addBorrow(response.data))
+    return response.data
   }
-);
+)
 
 export const toggleBorrowStatus = createAsyncThunk(
-  "borrow/toggleBorrowStatus",
-  async (id: BorrowType["id"], { dispatch }) => {
-    const response = await axios.put(`/api/borrow/${id}/`);
+  'borrow/toggleBorrowStatus',
+  async (id: BorrowType['id'], { dispatch }) => {
+    const response = await axios.put(`/api/borrow/${id}/`)
     // TODO: modify here (in our backend, response.data cannot be null)
-    dispatch(borrowActions.updateBorrow(response.data));
-    return response.data;
+    dispatch(borrowActions.updateBorrow(response.data))
+    return response.data
   }
-);
+)
 
 export const fetchUserBorrows = createAsyncThunk(
-  "borrow/fetchUserBorrows",
+  'borrow/fetchUserBorrows',
   async () => {
-    const response = await axios.get<BorrowType[]>("/api/borrow/user/");
-    return response.data;
+    const response = await axios.get<BorrowType[]>('/api/borrow/user/')
+    return response.data
   }
-);
-
+)
 
 /*
  * Borrow reducer
@@ -63,20 +60,20 @@ export const fetchUserBorrows = createAsyncThunk(
 
 const initialState: BorrowState = {
   userBorrows: [],
-  selectedBorrow: null,
-};
+  selectedBorrow: null
+}
 
 export const borrowSlice = createSlice({
-  name: "borrow",
+  name: 'borrow',
   initialState,
   reducers: {
     addBorrow: (
       state,
       action: PayloadAction<BorrowType>
     ) => {
-      const newBorrow: BorrowType = { ...action.payload };
-      state.userBorrows.push(newBorrow);
-      state.selectedBorrow = newBorrow;
+      const newBorrow: BorrowType = { ...action.payload }
+      state.userBorrows.push(newBorrow)
+      state.selectedBorrow = newBorrow
     },
     updateBorrow: (
       state,
@@ -84,20 +81,20 @@ export const borrowSlice = createSlice({
     ) => {
       state.userBorrows = state.userBorrows.map(
         borrow => (borrow.id === action.payload.id) ? action.payload : borrow
-      );
+      )
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserBorrows.fulfilled, (state, action) => {
-      state.userBorrows = action.payload;
-    });
-    builder.addCase(createBorrow.rejected, (_state, action) => {
-      console.error(action.error);
+      state.userBorrows = action.payload
     })
-  },
-});
+    builder.addCase(createBorrow.rejected, (_state, action) => {
+      console.error(action.error)
+    })
+  }
+})
 
-export const borrowActions = borrowSlice.actions;
-export const selectBorrow = (state: RootState) => state.borrow;
+export const borrowActions = borrowSlice.actions
+export const selectBorrow = (state: RootState) => state.borrow
 
-export default borrowSlice.reducer;
+export default borrowSlice.reducer
