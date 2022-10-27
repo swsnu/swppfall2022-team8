@@ -1,76 +1,73 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from 'axios'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from "../..";
-
+import { RootState } from '../..'
 
 /*
  * Type definitions
  */
 
 export interface BookType {
-  id: number;
-  title: string;
-  author: string;
-  tags: string[];
-  brief: string;
+  id: number
+  title: string
+  author: string
+  tags: string[]
+  brief: string
 };
 
 export interface BookState {
-  books: BookType[];
-  selectedBook: BookType | null;
+  books: BookType[]
+  selectedBook: BookType | null
 };
-
 
 /*
  * Async thunks
  */
 
 export const fetchQueryBooks = createAsyncThunk(
-  "book/fetchQueryBooks",
+  'book/fetchQueryBooks',
   async (data: { title?: string, tag?: string[], author?: string }) => {
-    const response = await axios.get<BookType[]>("/api/book/", { params: data });
-    return response.data;
+    const response = await axios.get<BookType[]>('/api/book/', { params: data })
+    return response.data
   }
-);
+)
 
 export const createBook = createAsyncThunk(
-  "book/createBook",
-  async (data: Omit<BookType, "id">, { dispatch }) => {
-    const response = await axios.post("/api/book/", data);
+  'book/createBook',
+  async (data: Omit<BookType, 'id'>, { dispatch }) => {
+    const response = await axios.post('/api/book/', data)
     // TODO: modify here (in our backend, response.data cannot be null)
-    dispatch(bookActions.addBook(response.data));
-    return response.data;
+    dispatch(bookActions.addBook(response.data))
+    return response.data
   }
-);
+)
 
 export const fetchBook = createAsyncThunk(
-  "book/fetchBook",
-  async (id: BookType["id"]) => {
-    const response = await axios.get(`/api/book/${id}/`);
-    return response.data ?? null;
+  'book/fetchBook',
+  async (id: BookType['id']) => {
+    const response = await axios.get(`/api/book/${id}/`)
+    return response.data ?? null
   }
-);
+)
 
 export const updateBook = createAsyncThunk(
-  "book/updateBook",
+  'book/updateBook',
   async (book: BookType, { dispatch }) => {
-    const { id, ...data } = book;
-    const response = await axios.put(`/api/book/${id}/`, data);
+    const { id, ...data } = book
+    const response = await axios.put(`/api/book/${id}/`, data)
     // TODO: modify here (in our backend, response.data cannot be null)
-    dispatch(bookActions.updateBook(response.data));
-    return response.data;
+    dispatch(bookActions.updateBook(response.data))
+    return response.data
   }
-);
+)
 
 export const deleteBook = createAsyncThunk(
-  "book/deleteBook",
-  async (id: BookType["id"], { dispatch }) => {
-    await axios.delete(`/api/book/${id}/`);
-    dispatch(bookActions.deleteBook(id));
+  'book/deleteBook',
+  async (id: BookType['id'], { dispatch }) => {
+    await axios.delete(`/api/book/${id}/`)
+    dispatch(bookActions.deleteBook(id))
   }
-);
-
+)
 
 /*
  * Book reducer
@@ -78,20 +75,20 @@ export const deleteBook = createAsyncThunk(
 
 const initialState: BookState = {
   books: [],
-  selectedBook: null,
-};
+  selectedBook: null
+}
 
 export const bookSlice = createSlice({
-  name: "book",
+  name: 'book',
   initialState,
   reducers: {
     addBook: (
       state,
       action: PayloadAction<BookType>
     ) => {
-      const newBook = { ...action.payload };
-      state.books.push(newBook);
-      state.selectedBook = newBook;
+      const newBook = { ...action.payload }
+      state.books.push(newBook)
+      state.selectedBook = newBook
     },
     updateBook: (
       state,
@@ -99,32 +96,32 @@ export const bookSlice = createSlice({
     ) => {
       state.books = state.books.map(
         book => (book.id === action.payload.id) ? action.payload : book
-      );
+      )
     },
     deleteBook: (
       state,
-      action: PayloadAction<BookType["id"]>
+      action: PayloadAction<BookType['id']>
     ) => {
       state.books = state.books.filter(
         book => book.id !== action.payload
-      );
-      state.selectedBook = null;
-    },
+      )
+      state.selectedBook = null
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQueryBooks.fulfilled, (state, action) => {
-      state.books = action.payload;
-    });
+      state.books = action.payload
+    })
     builder.addCase(fetchBook.fulfilled, (state, action) => {
-      state.selectedBook = action.payload;
-    });
+      state.selectedBook = action.payload
+    })
     builder.addCase(createBook.rejected, (_state, action) => {
-      console.error(action.error);
-    });
+      console.error(action.error)
+    })
   }
-});
+})
 
-export const bookActions = bookSlice.actions;
-export const selectBook = (state: RootState) => state.book;
+export const bookActions = bookSlice.actions
+export const selectBook = (state: RootState) => state.book
 
-export default bookSlice.reducer;
+export default bookSlice.reducer

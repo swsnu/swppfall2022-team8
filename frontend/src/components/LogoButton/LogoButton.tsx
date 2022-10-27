@@ -1,16 +1,16 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from 'react-router'
 
 const LogoButton = () => {
-  const navigate = useNavigate();
-  
+  const navigate = useNavigate()
+
   return (
     <>
-      <button 
+      <button
         type="button"
-        onClick={() => navigate("/main")}
+        onClick={() => navigate('/main')}
       >LOGO</button>
     </>
   )
-};
+}
 
-export default LogoButton;
+export default LogoButton

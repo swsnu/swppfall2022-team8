@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 interface IProps {
-  initContent: string;
+  initContent: string
 };
 
 const SearchBar = (props: IProps) => {
-  const [content, setContent] = useState<string>(props.initContent);
+  const [content, setContent] = useState<string>(props.initContent)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <>
       {/* TODO: add tag search, author search feature */}
-      <input 
+      <input
         id="search-bar"
         value={content}
         onChange={event => setContent(event.target.value)}
-        onKeyDown={event => { if(event.key === 'Enter') navigate(`/search/${content}`)}}
+        onKeyDown={event => { if (event.key === 'Enter') navigate(`/search/${content}`) }}
       />
-      <button 
+      <button
         type="button"
         onClick={() => navigate(`/search/${content}`)}
       >Search</button>
     </>
   )
-};
+}
 
-export default SearchBar;
+export default SearchBar
