@@ -7,6 +7,7 @@ import LogoButton from '../../components/LogoButton/LogoButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
+import Button from 'react-bootstrap/Button'
 import './BookDetailPage.css'
 
 const BookDetailPage = () => {
@@ -31,9 +32,9 @@ const BookDetailPage = () => {
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
-      <br/>
+      <br />
       <h1>BookDetailPage</h1>
-      <br/>
+      <br />
 
       {/* TODO: add image field */}
       <div className="image-test"><p>image</p></div>
@@ -45,34 +46,37 @@ const BookDetailPage = () => {
 
       <p>Status: {lendState.selectedLend?.status ? 'Borrowed' : 'Available'}</p>
       <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
-      <br/>
-      <button
+      <br />
+      <Button variant="outline-primary"
         type="button"
         onClick={() => setInfoVisible(!infoVisible)}
-      >Info</button>
-      <br/>
+      >Info</Button>
+      <br />
       <div className="info-box" hidden={!infoVisible}>
         {lendState.selectedLend?.additional}
       </div>
 
       {/* TODO: implement borrow related feature in sprint3 */}
 
-      <button
+      <Button variant="outline-primary"
+        id="detail-request-button"
+        onClick={() => navigate(`/book/${id}/request`)}>
+        Request
+      </Button>
+      <Button variant="outline-primary"
         type="button"
-        onClick={() => navigate(`/book/${id}/request`)}
-      >Request</button>
-      <button
+        id="detail-watch-button"
+        onClick={() => alert('TODO: implement user feature')}>Watch</Button>
+      <br />
+      <Button variant="outline-primary"
         type="button"
-        onClick={() => alert('TODO: implement user feature')}>Watch</button>
-      <br/>
-      <button
-        type="button"
+        id="detail-edit-button"
         onClick={() => navigate(`/book/${id}/edit`)}
-      >Edit</button>
-      <button
+      >Edit</Button>
+      <Button variant="outline-primary"
         type="button"
         onClick={() => clickDeleteHandler()}
-      >Delete</button>
+      >Delete</Button>
     </>
   )
 }

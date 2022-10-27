@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css?family=Bangers|Cinzel:400,700,900|Lato:100,300,400,700,900|Lobster|Lora:400,700|Mansalva|Muli:200,300,400,600,700,800,900|Open+Sans:300,400,600,700,800|Oswald:200,300,400,500,600,700|Roboto:100,300,400,500,700,900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+  }
+
+#logo-button {
+    border: none;
+    font-weight: bold;
+    border-radius: 0;
+
+}
+
+.logo {
+    text-align: center;
+    float: left;
+    background-color: white;
+    width: 500px !important;
+    border: 4px solid rgb(119, 170, 235);
+    border-style: double;
+}
+
+.logo .book-image{
+    font-size: 60px;
+    display: inline-block;
+    float: left;
+    margin-right: 5px;
+    color: #34495e;
+}
+
+.logo h3{
+    display: inline;
+    color: rgb(119, 170, 235);
+    font-family: 'Muli', sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+    line-height: 1.2;
+    margin:5px;
+    padding:0px;
+}
+
+#logo{
+    float: left;
+}
