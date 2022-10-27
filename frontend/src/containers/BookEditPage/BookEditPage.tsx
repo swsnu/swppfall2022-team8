@@ -24,18 +24,18 @@ const BookEditPage = () => {
   const [info, setInfo] = useState(lendState.selectedLend?.additional ?? '')
 
   const clickAddQuestionHandler = () => {
-    const new_questions: string[] = [...questions, question]
-    setQuestions(new_questions)
+    const newQuestions: string[] = [...questions, question]
+    setQuestions(newQuestions)
     setQuestion('')
   }
   const clickDeleteQuestionHandler = (index: number) => {
-    const new_questions = questions.filter((_question, idx) => idx !== index)
-    setQuestions(new_questions)
+    const newQuestions = questions.filter((_question, idx) => idx !== index)
+    setQuestions(newQuestions)
   }
 
   const clickConfirmEditHanler = async () => {
     if (lendState.selectedLend != null) {
-      const lend_data = {
+      const lendData = {
         id: lendState.selectedLend.id,
         book: lendState.selectedLend.book,
         book_info: lendState.selectedLend.book_info,
@@ -44,7 +44,7 @@ const BookEditPage = () => {
         cost,
         additional: info
       }
-      await dispatch(updateLend(lend_data))
+      await dispatch(updateLend(lendData))
       navigate(`/book/${lendState.selectedLend.id}`)
     }
   }

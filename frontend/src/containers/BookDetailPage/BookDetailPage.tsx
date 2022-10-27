@@ -12,7 +12,7 @@ import './BookDetailPage.css'
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
 
-  const { id } = useParams()
+  const id = useParams().id as string
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const lendState = useSelector(selectLend)
@@ -71,7 +71,7 @@ const BookDetailPage = () => {
       >Edit</button>
       <button
         type="button"
-        onClick={async () => await clickDeleteHandler()}
+        onClick={() => clickDeleteHandler()}
       >Delete</button>
     </>
   )

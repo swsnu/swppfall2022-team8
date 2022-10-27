@@ -25,25 +25,25 @@ const BookRegisterPage = () => {
   const lendState = useSelector(selectLend)
 
   const clickAddTagHandler = () => {
-    const new_tags: string[] = [...tags, tag]
-    setTags(new_tags)
+    const newTags: string[] = [...tags, tag]
+    setTags(newTags)
     setTag('')
   }
 
   const clickAddQuestionHandler = () => {
-    const new_questions: string[] = [...questions, question]
-    setQuestions(new_questions)
+    const newQuestions: string[] = [...questions, question]
+    setQuestions(newQuestions)
     setQuestion('')
   }
 
   const clickDeleteTagHandler = (index: number) => {
-    const new_tags = tags.filter((tag, idx) => idx !== index)
-    setTags(new_tags)
+    const newTags = tags.filter((tag, idx) => idx !== index)
+    setTags(newTags)
   }
 
   const clickDeleteQuestionHandler = (index: number) => {
-    const new_questions = questions.filter((_question, idx) => idx !== index)
-    setQuestions(new_questions)
+    const newQuestions = questions.filter((_question, idx) => idx !== index)
+    setQuestions(newQuestions)
   }
 
   const clickConfirmRegisterHanler = async () => {

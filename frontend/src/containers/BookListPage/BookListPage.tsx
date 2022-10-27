@@ -29,7 +29,7 @@ const BookListPage = () => {
       <br/>
 
       <SearchBar initContent={key ?? ''} />
-      <p>Search Result about "{key}"</p>
+      <p>Search Result about &quot;{key}&quot;</p>
       {lendState.lends.map(lend => (
         <div key={`lendlist_${lend.id}`}>
           <BookListEntity

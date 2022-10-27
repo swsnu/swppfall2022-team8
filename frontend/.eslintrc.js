@@ -22,6 +22,15 @@ module.exports = {
   rules: {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off'
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/promise-function-async': 'off'
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
   }
 }
