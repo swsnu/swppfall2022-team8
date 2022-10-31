@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -60,3 +60,9 @@ class UserViewSet(viewsets.GenericViewSet):
             data["token"] = token.key
             return Response(data)
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+    # PUT /api/user/logout/
+    @action(detail=False, methods=["PUT"])
+    def logout(self, request):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)

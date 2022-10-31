@@ -55,8 +55,13 @@ export const requestLogin = createAsyncThunk(
 export const requestLogout = createAsyncThunk(
   'user/requestLogout',
   async (data: UserType['id'], { dispatch }) => {
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.put('/api/user/logout/', {
+      headers: { Authorization: `Token ${token}` }
+    })
     localStorage.clear()
     dispatch(userActions.logout(data))
+    return response
   }
 )
 
