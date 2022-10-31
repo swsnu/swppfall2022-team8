@@ -12,9 +12,9 @@ import { UserType } from '../user/user'
 
 export interface LendType {
   id: number
-  book: BookType['id']
+  book: BookType['id'] // TODO: remove ['id']
   book_info: Omit<BookType, 'id'>
-  owner: UserType
+  owner: UserType['id']
   questions: string[]
   cost: number
   additional: string
@@ -33,8 +33,12 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
-  async (data: { title?: string, tag?: string[], author?: string }) => {
-    const response = await axios.get<LendType[]>('/api/lend/', { params: data })
+  async (params: { title?: string, tag?: string[], author?: string }) => {
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get<LendType[]>('/api/lend/', {
+      headers: { Authorization: `Token ${token}` },
+      params
+    })
     return response.data
   }
 )
@@ -42,8 +46,10 @@ export const fetchQueryLends = createAsyncThunk(
 export const createLend = createAsyncThunk(
   'lend/createLend',
   async (data: Omit<LendType, 'id' | 'status'>, { dispatch }) => {
-    const response = await axios.post('/api/lend/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.post('/api/lend/', data, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(lendActions.addLend(response.data))
     return response.data
   }
@@ -52,7 +58,10 @@ export const createLend = createAsyncThunk(
 export const fetchLend = createAsyncThunk(
   'lend/fetchLend',
   async (id: LendType['id']) => {
-    const response = await axios.get(`/api/lend/${id}/`)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get(`/api/lend/${id}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
     return response.data ?? null
   }
 )
@@ -60,9 +69,11 @@ export const fetchLend = createAsyncThunk(
 export const updateLend = createAsyncThunk(
   'lend/updateLend',
   async (lend: Omit<LendType, 'status'>, { dispatch }) => {
+    const token = localStorage.getItem('token') ?? ''
     const { id, ...data } = lend
-    const response = await axios.put(`/api/lend/${id}/`, data)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const response = await axios.put(`/api/lend/${id}/`, data, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(lendActions.updateLend(response.data))
     return response.data
   }
@@ -71,7 +82,10 @@ export const updateLend = createAsyncThunk(
 export const deleteLend = createAsyncThunk(
   'lend/deleteLend',
   async (id: LendType['id'], { dispatch }) => {
-    await axios.delete(`/api/lend/${id}/`)
+    const token = localStorage.getItem('token') ?? ''
+    await axios.delete(`/api/lend/${id}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(lendActions.deleteLend(id))
   }
 )
@@ -79,7 +93,10 @@ export const deleteLend = createAsyncThunk(
 export const fetchUserLends = createAsyncThunk(
   'lend/fetchUserLend',
   async () => {
-    const response = await axios.get<LendType[]>('/api/lend/user/')
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get<LendType[]>('/api/lend/user/', {
+      headers: { Authorization: `Token ${token}` }
+    })
     return response.data
   }
 )

@@ -4,18 +4,39 @@ import { useNavigate, useParams } from 'react-router'
 
 import ChattingButton from '../../components/ChattingButton/ChattingButton'
 import LogoButton from '../../components/LogoButton/LogoButton'
+import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
+import { selectUser } from '../../store/slices/user/user'
 
 const BookEditPage = () => {
-  const { id } = useParams()
+  const id = useParams().id as string
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const lendState = useSelector(selectLend)
+  const userState = useSelector(selectUser)
 
   useEffect(() => {
-    dispatch(fetchLend(Number(id)))
+    (async () => {
+      if (!userState.currentUser) {
+        navigate('/login')
+        return
+      }
+
+      const response = await dispatch(fetchLend(Number(id)))
+
+      if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
+        if (response.payload.owner !== userState.currentUser.id) {
+          alert('You can\'t edit other\'s book!')
+          navigate('/main')
+        }
+      } else {
+        const surfix = id ? `/${id}` : ''
+        navigate(`/book${surfix}`)
+      }
+    })()
   }, [id, dispatch])
 
   const [cost, setCost] = useState<number>(lendState.selectedLend?.cost ?? 0)
@@ -54,9 +75,11 @@ const BookEditPage = () => {
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
-      <br/>
+      <UserStatusButton />
+      <LogoutButton />
+      <br />
       <h1>BookEditPage</h1>
-      <br/>
+      <br />
 
       <p>Can only edit lend info.</p>
 
@@ -84,7 +107,7 @@ const BookEditPage = () => {
 
       <label>
         questions
-        <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
+        <input type="text" value={question} onChange={event => setQuestion(event.target.value)} />
         <button
           type="button"
           onClick={() => clickAddQuestionHandler()}

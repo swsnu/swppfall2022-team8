@@ -3,12 +3,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import bookReducer from './slices/book/book'
 import lendReducer from './slices/lend/lend'
 import borrowReducer from './slices/borrow/borrow'
+import userReducer from './slices/user/user'
 
 export const store = configureStore({
   reducer: {
     book: bookReducer,
     lend: lendReducer,
-    borrow: borrowReducer
+    borrow: borrowReducer,
+    user: userReducer
   }
 })
 

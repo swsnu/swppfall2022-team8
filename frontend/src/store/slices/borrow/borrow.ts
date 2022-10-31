@@ -10,7 +10,7 @@ import { UserType } from '../user/user'
 
 export interface BorrowType {
   id: number
-  borrower: UserType
+  borrower: UserType['id'] // TODO: remove ['id']
   lend_id: number
   active: boolean
   lend_start_time: string // serialized Date object
@@ -29,8 +29,10 @@ export interface BorrowState {
 export const createBorrow = createAsyncThunk(
   'borrow/createBorrow',
   async (data: Pick<BorrowType, 'borrower' | 'lend_id'>, { dispatch }) => {
-    const response = await axios.post('/api/borrow/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.post('/api/borrow/', data, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(borrowActions.addBorrow(response.data))
     return response.data
   }
@@ -39,8 +41,10 @@ export const createBorrow = createAsyncThunk(
 export const toggleBorrowStatus = createAsyncThunk(
   'borrow/toggleBorrowStatus',
   async (id: BorrowType['id'], { dispatch }) => {
-    const response = await axios.put(`/api/borrow/${id}/`)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.put(`/api/borrow/${id}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(borrowActions.updateBorrow(response.data))
     return response.data
   }
@@ -49,7 +53,10 @@ export const toggleBorrowStatus = createAsyncThunk(
 export const fetchUserBorrows = createAsyncThunk(
   'borrow/fetchUserBorrows',
   async () => {
-    const response = await axios.get<BorrowType[]>('/api/borrow/user/')
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get<BorrowType[]>('/api/borrow/user/', {
+      headers: { Authorization: `Token ${token}` }
+    })
     return response.data
   }
 )

@@ -26,8 +26,12 @@ export interface BookState {
 
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
-  async (data: { title?: string, tag?: string[], author?: string }) => {
-    const response = await axios.get<BookType[]>('/api/book/', { params: data })
+  async (params: { title?: string, tag?: string[], author?: string }) => {
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get<BookType[]>('/api/book/', {
+      headers: { Authorization: `Token ${token}` },
+      params
+    })
     return response.data
   }
 )
@@ -35,8 +39,10 @@ export const fetchQueryBooks = createAsyncThunk(
 export const createBook = createAsyncThunk(
   'book/createBook',
   async (data: Omit<BookType, 'id'>, { dispatch }) => {
-    const response = await axios.post('/api/book/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.post('/api/book/', data, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(bookActions.addBook(response.data))
     return response.data
   }
@@ -45,7 +51,10 @@ export const createBook = createAsyncThunk(
 export const fetchBook = createAsyncThunk(
   'book/fetchBook',
   async (id: BookType['id']) => {
-    const response = await axios.get(`/api/book/${id}/`)
+    const token = localStorage.getItem('token') ?? ''
+    const response = await axios.get(`/api/book/${id}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
     return response.data ?? null
   }
 )
@@ -53,9 +62,11 @@ export const fetchBook = createAsyncThunk(
 export const updateBook = createAsyncThunk(
   'book/updateBook',
   async (book: BookType, { dispatch }) => {
+    const token = localStorage.getItem('token') ?? ''
     const { id, ...data } = book
-    const response = await axios.put(`/api/book/${id}/`, data)
-    // TODO: modify here (in our backend, response.data cannot be null)
+    const response = await axios.put(`/api/book/${id}/`, data, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(bookActions.updateBook(response.data))
     return response.data
   }
@@ -64,7 +75,10 @@ export const updateBook = createAsyncThunk(
 export const deleteBook = createAsyncThunk(
   'book/deleteBook',
   async (id: BookType['id'], { dispatch }) => {
-    await axios.delete(`/api/book/${id}/`)
+    const token = localStorage.getItem('token') ?? ''
+    await axios.delete(`/api/book/${id}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
     dispatch(bookActions.deleteBook(id))
   }
 )

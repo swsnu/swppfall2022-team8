@@ -5,8 +5,10 @@ import { useParams } from 'react-router'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
 import ChattingButton from '../../components/ChattingButton/ChattingButton'
 import LogoButton from '../../components/LogoButton/LogoButton'
+import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
 import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
 
@@ -24,9 +26,11 @@ const BookListPage = () => {
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
-      <br/>
+      <UserStatusButton />
+      <LogoutButton />
+      <br />
       <h1>BookListPage</h1>
-      <br/>
+      <br />
 
       <SearchBar initContent={key ?? ''} />
       <p>Search Result about &quot;{key}&quot;</p>

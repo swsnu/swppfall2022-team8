@@ -4,7 +4,9 @@ import { Navigate } from 'react-router'
 
 import ChattingButton from '../../components/ChattingButton/ChattingButton'
 import LogoButton from '../../components/LogoButton/LogoButton'
+import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
@@ -101,9 +103,11 @@ const BookRegisterPage = () => {
         <LogoButton />
         <RegisterButton />
         <ChattingButton />
-        <br/>
+        <UserStatusButton />
+        <LogoutButton />
+        <br />
         <h1>BookRegisterPage</h1>
-        <br/>
+        <br />
 
         {/* TODO: add image upload field */}
 
@@ -125,7 +129,7 @@ const BookRegisterPage = () => {
 
         <label>
           tags
-          <input type="text" value={tag} onChange={event => setTag(event.target.value)}/>
+          <input type="text" value={tag} onChange={event => setTag(event.target.value)} />
           <button
             type="button"
             onClick={() => clickAddTagHandler()}
@@ -160,7 +164,7 @@ const BookRegisterPage = () => {
 
         <label>
           questions (optional)
-          <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
+          <input type="text" value={question} onChange={event => setQuestion(event.target.value)} />
           <button
             type="button"
             onClick={() => clickAddQuestionHandler()}

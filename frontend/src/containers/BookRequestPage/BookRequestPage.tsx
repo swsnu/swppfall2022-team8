@@ -4,20 +4,41 @@ import { useNavigate, useParams } from 'react-router'
 
 import ChattingButton from '../../components/ChattingButton/ChattingButton'
 import LogoButton from '../../components/LogoButton/LogoButton'
+import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend } from '../../store/slices/lend/lend'
+import { selectUser } from '../../store/slices/user/user'
 
 const BookRequestPage = () => {
   const [answers, setAnswers] = useState<string[]>([])
 
-  const { id } = useParams()
+  const id = useParams().id as string
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const lendState = useSelector(selectLend)
+  const userState = useSelector(selectUser)
 
   useEffect(() => {
-    dispatch(fetchLend(Number(id)))
+    (async () => {
+      if (!userState.currentUser) {
+        navigate('/login')
+        return
+      }
+
+      const response = await dispatch(fetchLend(Number(id)))
+
+      if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
+        if (response.payload.owner === userState.currentUser.id) {
+          alert('You can\'t borrow your book!')
+          navigate('/main')
+        }
+      } else {
+        const surfix = id ? `/${id}` : ''
+        navigate(`/book${surfix}`)
+      }
+    })()
   }, [id, dispatch])
 
   const clickSendButtonHandler = () => {
@@ -47,25 +68,27 @@ const BookRequestPage = () => {
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
-      <br/>
+      <UserStatusButton />
+      <LogoutButton />
+      <br />
       <h1>MainPage</h1>
-      <br/>
+      <br />
 
       <h3>Book Name:&nbsp;{(lendState.selectedLend != null) ? lendState.selectedLend.book_info.title : ''}</h3>
 
       {(lendState.selectedLend != null)
         ? lendState.selectedLend.questions.map((question, idx) => (
-        <div key={`question_${idx}`}>
-          <h3>Question: {question}</h3>
-          <h3>Answer:</h3>
-          <input
-            value={answers[idx] ?? ''}
-            onChange={event => changeAnswerHandler(idx, event.target.value)}></input>
-        </div>
+          <div key={`question_${idx}`}>
+            <h3>Question: {question}</h3>
+            <h3>Answer:</h3>
+            <input
+              value={answers[idx] ?? ''}
+              onChange={event => changeAnswerHandler(idx, event.target.value)}></input>
+          </div>
         ))
         : null}
 
-      <br/>
+      <br />
       <button onClick={() => clickSendButtonHandler()}>send to lender</button>
     </>
   )

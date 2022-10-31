@@ -1,7 +1,9 @@
 import ChattingButton from '../../components/ChattingButton/ChattingButton'
 import LogoButton from '../../components/LogoButton/LogoButton'
+import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
 
 const MainPage = () => {
   return (
@@ -9,9 +11,11 @@ const MainPage = () => {
       <LogoButton />
       <RegisterButton />
       <ChattingButton />
-      <br/>
+      <UserStatusButton />
+      <LogoutButton />
+      <br />
       <h1>MainPage</h1>
-      <br/>
+      <br />
 
       <SearchBar initContent="" />
 
