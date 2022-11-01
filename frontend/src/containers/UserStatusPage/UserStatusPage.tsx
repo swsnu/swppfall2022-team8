@@ -1,15 +1,13 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+
 import { AppDispatch } from '../../store'
 import { selectUser } from '../../store/slices/user/user'
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
+import NavBar from '../../components/NavBar/NavBar'
 
 const UserStatusPage = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -28,11 +26,7 @@ const UserStatusPage = () => {
   }, [navigate, dispatch])
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <LogoutButton />
-      <br />
+      <NavBar />
       <h1>UserStatusPage</h1>
       <br />
       <p>Lend List</p>
@@ -51,6 +45,7 @@ const UserStatusPage = () => {
           <BookListEntity
             id={borrow.lend_id}
             title={`lend_id: ${borrow.lend_id}`}
+          // TODO: add book info to borrow slice
           />
         </div>
       ))}

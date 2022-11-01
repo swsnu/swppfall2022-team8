@@ -17,9 +17,7 @@ const LoginPage = () => {
 
     const response = await dispatch(requestLogin(data))
 
-    if (response.type === `${requestLogin.typePrefix}/fulfilled`) {
-      navigate('/main')
-    } else {
+    if (response.type === `${requestLogin.typePrefix}/rejected`) {
       alert('Username or Password is wrong')
     }
   }

@@ -1,8 +1,21 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
-import { UserType } from '../user/user'
+import { AppDispatch, RootState } from '../..'
+import { userActions, UserType } from '../user/user'
+import { useDispatch } from 'react-redux'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -29,10 +42,7 @@ export interface BorrowState {
 export const createBorrow = createAsyncThunk(
   'borrow/createBorrow',
   async (data: Pick<BorrowType, 'borrower' | 'lend_id'>, { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.post('/api/borrow/', data, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.post('/api/borrow/', data)
     dispatch(borrowActions.addBorrow(response.data))
     return response.data
   }
@@ -41,10 +51,7 @@ export const createBorrow = createAsyncThunk(
 export const toggleBorrowStatus = createAsyncThunk(
   'borrow/toggleBorrowStatus',
   async (id: BorrowType['id'], { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.put(`/api/borrow/${id}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.put(`/api/borrow/${id}/`)
     dispatch(borrowActions.updateBorrow(response.data))
     return response.data
   }
@@ -53,10 +60,7 @@ export const toggleBorrowStatus = createAsyncThunk(
 export const fetchUserBorrows = createAsyncThunk(
   'borrow/fetchUserBorrows',
   async () => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get<BorrowType[]>('/api/borrow/user/', {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.get<BorrowType[]>('/api/borrow/user/')
     return response.data
   }
 )

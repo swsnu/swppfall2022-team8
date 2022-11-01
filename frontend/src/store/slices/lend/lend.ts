@@ -1,10 +1,23 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
+import { AppDispatch, RootState } from '../..'
 import { BookType } from '../book/book'
 import { BorrowType } from '../borrow/borrow'
-import { UserType } from '../user/user'
+import { userActions, UserType } from '../user/user'
+import { useDispatch } from 'react-redux'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -34,11 +47,7 @@ export interface LendState {
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
   async (params: { title?: string, tag?: string[], author?: string }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get<LendType[]>('/api/lend/', {
-      headers: { Authorization: `Token ${token}` },
-      params
-    })
+    const response = await axios.get<LendType[]>('/api/lend/', { params })
     return response.data
   }
 )
@@ -46,10 +55,7 @@ export const fetchQueryLends = createAsyncThunk(
 export const createLend = createAsyncThunk(
   'lend/createLend',
   async (data: Omit<LendType, 'id' | 'status'>, { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.post('/api/lend/', data, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.post('/api/lend/', data)
     dispatch(lendActions.addLend(response.data))
     return response.data
   }
@@ -58,10 +64,7 @@ export const createLend = createAsyncThunk(
 export const fetchLend = createAsyncThunk(
   'lend/fetchLend',
   async (id: LendType['id']) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get(`/api/lend/${id}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.get(`/api/lend/${id}/`)
     return response.data ?? null
   }
 )
@@ -69,11 +72,8 @@ export const fetchLend = createAsyncThunk(
 export const updateLend = createAsyncThunk(
   'lend/updateLend',
   async (lend: Omit<LendType, 'status'>, { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
     const { id, ...data } = lend
-    const response = await axios.put(`/api/lend/${id}/`, data, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.put(`/api/lend/${id}/`, data)
     dispatch(lendActions.updateLend(response.data))
     return response.data
   }
@@ -82,10 +82,7 @@ export const updateLend = createAsyncThunk(
 export const deleteLend = createAsyncThunk(
   'lend/deleteLend',
   async (id: LendType['id'], { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    await axios.delete(`/api/lend/${id}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    await axios.delete(`/api/lend/${id}/`)
     dispatch(lendActions.deleteLend(id))
   }
 )
@@ -93,10 +90,7 @@ export const deleteLend = createAsyncThunk(
 export const fetchUserLends = createAsyncThunk(
   'lend/fetchUserLend',
   async () => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get<LendType[]>('/api/lend/user/', {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.get<LendType[]>('/api/lend/user/')
     return response.data
   }
 )

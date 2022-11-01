@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
 import { requestSignup } from '../../store/slices/user/user'
@@ -11,7 +10,6 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
-  const navigate = useNavigate()
 
   const clickSubmitHandler = async () => {
     if (password !== confirmPassword) {
@@ -23,9 +21,7 @@ const SignupPage = () => {
 
     const response = await dispatch(requestSignup(data))
 
-    if (response.type === `${requestSignup.typePrefix}/fulfilled`) {
-      navigate('/main')
-    } else {
+    if (response.type === `${requestSignup.typePrefix}/rejected`) {
       alert('Error on signup')
     }
   }

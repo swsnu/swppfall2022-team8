@@ -1,7 +1,20 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
 
-import { RootState } from '../..'
+import { AppDispatch, RootState } from '../..'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -30,8 +43,7 @@ export const requestSignup = createAsyncThunk(
     const response = await axios.post('/api/user/', data)
     const { token, ...userData } = response.data
     if (token) {
-      localStorage.clear()
-      localStorage.setItem('token', token)
+      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
       dispatch(userActions.login(userData))
     }
     return userData
@@ -44,8 +56,15 @@ export const requestLogin = createAsyncThunk(
     const response = await axios.post('/api/user/login/', data)
     const { token, ...userData } = response.data
     if (token) {
-      localStorage.clear()
-      localStorage.setItem('token', token)
+      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
+      axios.interceptors.response.use(
+        response => response,
+        async (error) => {
+          if (error.response.status === 401) {
+            dispatch(userActions.logout())
+          }
+        }
+      )
       dispatch(userActions.login(userData))
     }
     return userData
@@ -54,13 +73,9 @@ export const requestLogin = createAsyncThunk(
 
 export const requestLogout = createAsyncThunk(
   'user/requestLogout',
-  async (data: UserType['id'], { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.put('/api/user/logout/', {
-      headers: { Authorization: `Token ${token}` }
-    })
-    localStorage.clear()
-    dispatch(userActions.logout(data))
+  async (data: never, { dispatch }) => {
+    const response = await axios.put('/api/user/logout/')
+    dispatch(userActions.logout())
     return response
   }
 )
@@ -85,8 +100,7 @@ export const userSlice = createSlice({
       state.currentUser = newUser
     },
     logout: (
-      state,
-      action: PayloadAction<UserType['id']>
+      state
     ) => {
       state.currentUser = null
     }

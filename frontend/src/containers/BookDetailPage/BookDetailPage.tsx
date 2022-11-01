@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
 import Button from 'react-bootstrap/Button'
-import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
-import LogoutButton from '../../components/LogoutButton/LogoutButton'
 import { selectUser } from '../../store/slices/user/user'
 import './BookDetailPage.css'
+import NavBar from '../../components/NavBar/NavBar'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
@@ -33,11 +29,7 @@ const BookDetailPage = () => {
 
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <UserStatusButton />
-      <LogoutButton />
+      <NavBar />
       <br />
       <h1>BookDetailPage</h1>
       <br />

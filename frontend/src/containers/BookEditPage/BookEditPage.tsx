@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import LogoutButton from '../../components/LogoutButton/LogoutButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
-import UserStatusButton from '../../components/UserStatusButton/UserStatusButton'
+import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
@@ -72,12 +68,7 @@ const BookEditPage = () => {
 
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <UserStatusButton />
-      <LogoutButton />
-      <br />
+      <NavBar />
       <h1>BookEditPage</h1>
       <br />
 
@@ -122,7 +113,7 @@ const BookEditPage = () => {
       ))}
       <br />
 
-      <button type="button" onClick={async () => await clickConfirmEditHanler()}>Edit</button>
+      <button type="button" onClick={() => clickConfirmEditHanler()}>Edit</button>
     </>
   )
 }

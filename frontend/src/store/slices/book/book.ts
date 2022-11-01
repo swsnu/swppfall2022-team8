@@ -1,7 +1,21 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
+import { AppDispatch, RootState } from '../..'
+import { useDispatch } from 'react-redux'
+import { userActions } from '../user/user'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -27,11 +41,7 @@ export interface BookState {
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
   async (params: { title?: string, tag?: string[], author?: string }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get<BookType[]>('/api/book/', {
-      headers: { Authorization: `Token ${token}` },
-      params
-    })
+    const response = await axios.get<BookType[]>('/api/book/', { params })
     return response.data
   }
 )
@@ -39,10 +49,7 @@ export const fetchQueryBooks = createAsyncThunk(
 export const createBook = createAsyncThunk(
   'book/createBook',
   async (data: Omit<BookType, 'id'>, { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.post('/api/book/', data, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.post('/api/book/', data)
     dispatch(bookActions.addBook(response.data))
     return response.data
   }
@@ -51,10 +58,7 @@ export const createBook = createAsyncThunk(
 export const fetchBook = createAsyncThunk(
   'book/fetchBook',
   async (id: BookType['id']) => {
-    const token = localStorage.getItem('token') ?? ''
-    const response = await axios.get(`/api/book/${id}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.get(`/api/book/${id}/`)
     return response.data ?? null
   }
 )
@@ -62,11 +66,8 @@ export const fetchBook = createAsyncThunk(
 export const updateBook = createAsyncThunk(
   'book/updateBook',
   async (book: BookType, { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
     const { id, ...data } = book
-    const response = await axios.put(`/api/book/${id}/`, data, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    const response = await axios.put(`/api/book/${id}/`, data)
     dispatch(bookActions.updateBook(response.data))
     return response.data
   }
@@ -75,10 +76,7 @@ export const updateBook = createAsyncThunk(
 export const deleteBook = createAsyncThunk(
   'book/deleteBook',
   async (id: BookType['id'], { dispatch }) => {
-    const token = localStorage.getItem('token') ?? ''
-    await axios.delete(`/api/book/${id}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
+    await axios.delete(`/api/book/${id}/`)
     dispatch(bookActions.deleteBook(id))
   }
 )
