@@ -1,7 +1,21 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
+import { AppDispatch, RootState } from '../..'
+import { useDispatch } from 'react-redux'
+import { userActions } from '../user/user'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -26,8 +40,8 @@ export interface BookState {
 
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
-  async (data: { title?: string, tag?: string[], author?: string }) => {
-    const response = await axios.get<BookType[]>('/api/book/', { params: data })
+  async (params: { title?: string, tag?: string[], author?: string }) => {
+    const response = await axios.get<BookType[]>('/api/book/', { params })
     return response.data
   }
 )
@@ -36,7 +50,6 @@ export const createBook = createAsyncThunk(
   'book/createBook',
   async (data: Omit<BookType, 'id'>, { dispatch }) => {
     const response = await axios.post('/api/book/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(bookActions.addBook(response.data))
     return response.data
   }
@@ -55,7 +68,6 @@ export const updateBook = createAsyncThunk(
   async (book: BookType, { dispatch }) => {
     const { id, ...data } = book
     const response = await axios.put(`/api/book/${id}/`, data)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(bookActions.updateBook(response.data))
     return response.data
   }

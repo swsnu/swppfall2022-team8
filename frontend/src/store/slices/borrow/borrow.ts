@@ -1,8 +1,21 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
-import { UserType } from '../user/user'
+import { AppDispatch, RootState } from '../..'
+import { userActions, UserType } from '../user/user'
+import { useDispatch } from 'react-redux'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -10,7 +23,7 @@ import { UserType } from '../user/user'
 
 export interface BorrowType {
   id: number
-  borrower: UserType
+  borrower: UserType['id'] // TODO: remove ['id']
   lend_id: number
   active: boolean
   lend_start_time: string // serialized Date object
@@ -30,7 +43,6 @@ export const createBorrow = createAsyncThunk(
   'borrow/createBorrow',
   async (data: Pick<BorrowType, 'borrower' | 'lend_id'>, { dispatch }) => {
     const response = await axios.post('/api/borrow/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(borrowActions.addBorrow(response.data))
     return response.data
   }
@@ -40,7 +52,6 @@ export const toggleBorrowStatus = createAsyncThunk(
   'borrow/toggleBorrowStatus',
   async (id: BorrowType['id'], { dispatch }) => {
     const response = await axios.put(`/api/borrow/${id}/`)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(borrowActions.updateBorrow(response.data))
     return response.data
   }

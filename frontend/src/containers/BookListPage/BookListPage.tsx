@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import NavBar from '../../components/NavBar/NavBar'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
@@ -21,12 +19,9 @@ const BookListPage = () => {
 
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <br/>
+      <NavBar />
       <h1>BookListPage</h1>
-      <br/>
+      <br />
 
       <SearchBar initContent={key ?? ''} />
       <p>Search Result about &quot;{key}&quot;</p>

@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
@@ -98,12 +96,9 @@ const BookRegisterPage = () => {
   } else {
     return (
       <>
-        <LogoButton />
-        <RegisterButton />
-        <ChattingButton />
-        <br/>
+        <NavBar />
         <h1>BookRegisterPage</h1>
-        <br/>
+        <br />
 
         {/* TODO: add image upload field */}
 
@@ -125,7 +120,7 @@ const BookRegisterPage = () => {
 
         <label>
           tags
-          <input type="text" value={tag} onChange={event => setTag(event.target.value)}/>
+          <input type="text" value={tag} onChange={event => setTag(event.target.value)} />
           <button
             type="button"
             onClick={() => clickAddTagHandler()}
@@ -160,7 +155,7 @@ const BookRegisterPage = () => {
 
         <label>
           questions (optional)
-          <input type="text" value={question} onChange={event => setQuestion(event.target.value)}/>
+          <input type="text" value={question} onChange={event => setQuestion(event.target.value)} />
           <button
             type="button"
             onClick={() => clickAddQuestionHandler()}
@@ -175,7 +170,7 @@ const BookRegisterPage = () => {
         ))}
         <br />
 
-        <button type="button" onClick={async () => await clickConfirmRegisterHanler()}>Register</button>
+        <button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</button>
       </>
     )
   }

@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
 import Button from 'react-bootstrap/Button'
+import { selectUser } from '../../store/slices/user/user'
 import './BookDetailPage.css'
+import NavBar from '../../components/NavBar/NavBar'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
@@ -17,6 +16,7 @@ const BookDetailPage = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const lendState = useSelector(selectLend)
+  const userState = useSelector(selectUser)
 
   useEffect(() => {
     dispatch(fetchLend(Number(id)))
@@ -29,9 +29,7 @@ const BookDetailPage = () => {
 
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
+      <NavBar />
       <br />
       <h1>BookDetailPage</h1>
       <br />
@@ -46,6 +44,7 @@ const BookDetailPage = () => {
 
       <p>Status: {lendState.selectedLend?.status ? 'Borrowed' : 'Available'}</p>
       <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
+      <p>tags: {lendState.selectedLend?.book_info.tags.join(', ')}</p>
       <br />
       <Button variant="outline-primary"
         type="button"
@@ -58,25 +57,37 @@ const BookDetailPage = () => {
 
       {/* TODO: implement borrow related feature in sprint3 */}
 
-      <Button variant="outline-primary"
-        id="detail-request-button"
-        onClick={() => navigate(`/book/${id}/request`)}>
-        Request
-      </Button>
-      <Button variant="outline-primary"
-        type="button"
-        id="detail-watch-button"
-        onClick={() => alert('TODO: implement user feature')}>Watch</Button>
-      <br />
-      <Button variant="outline-primary"
-        type="button"
-        id="detail-edit-button"
-        onClick={() => navigate(`/book/${id}/edit`)}
-      >Edit</Button>
-      <Button variant="outline-primary"
-        type="button"
-        onClick={() => clickDeleteHandler()}
-      >Delete</Button>
+      {(() => {
+        if (userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner)) {
+          return (
+            <>
+              <Button variant="outline-primary"
+                type="button"
+                id="detail-edit-button"
+                onClick={() => navigate(`/book/${id}/edit`)}
+              >Edit</Button>
+              <Button variant="outline-primary"
+                type="button"
+                onClick={() => clickDeleteHandler()}
+              >Delete</Button>
+            </>
+          )
+        } else {
+          return (
+            <>
+              <Button variant="outline-primary"
+                id="detail-request-button"
+                onClick={() => navigate(`/book/${id}/request`)}
+              >Request</Button>
+              <Button variant="outline-primary"
+                type="button"
+                id="detail-watch-button"
+                onClick={() => alert('TODO: implement user feature')}
+              >Watch</Button>
+            </>
+          )
+        }
+      })()}
     </>
   )
 }

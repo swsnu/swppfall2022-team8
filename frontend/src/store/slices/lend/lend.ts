@@ -1,10 +1,23 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { RootState } from '../..'
+import { AppDispatch, RootState } from '../..'
 import { BookType } from '../book/book'
 import { BorrowType } from '../borrow/borrow'
-import { UserType } from '../user/user'
+import { userActions, UserType } from '../user/user'
+import { useDispatch } from 'react-redux'
+
+// TODO: Test this code
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const dispatch = useDispatch<AppDispatch>()
+      dispatch(userActions.logout())
+      alert('Token has been expired')
+    }
+  }
+)
 
 /*
  * Type definitions
@@ -12,9 +25,9 @@ import { UserType } from '../user/user'
 
 export interface LendType {
   id: number
-  book: BookType['id']
+  book: BookType['id'] // TODO: remove ['id']
   book_info: Omit<BookType, 'id'>
-  owner: UserType
+  owner: UserType['id']
   questions: string[]
   cost: number
   additional: string
@@ -33,8 +46,8 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
-  async (data: { title?: string, tag?: string[], author?: string }) => {
-    const response = await axios.get<LendType[]>('/api/lend/', { params: data })
+  async (params: { title?: string, tag?: string[], author?: string }) => {
+    const response = await axios.get<LendType[]>('/api/lend/', { params })
     return response.data
   }
 )
@@ -43,7 +56,6 @@ export const createLend = createAsyncThunk(
   'lend/createLend',
   async (data: Omit<LendType, 'id' | 'status'>, { dispatch }) => {
     const response = await axios.post('/api/lend/', data)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(lendActions.addLend(response.data))
     return response.data
   }
@@ -62,7 +74,6 @@ export const updateLend = createAsyncThunk(
   async (lend: Omit<LendType, 'status'>, { dispatch }) => {
     const { id, ...data } = lend
     const response = await axios.put(`/api/lend/${id}/`, data)
-    // TODO: modify here (in our backend, response.data cannot be null)
     dispatch(lendActions.updateLend(response.data))
     return response.data
   }

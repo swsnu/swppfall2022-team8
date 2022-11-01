@@ -1,17 +1,12 @@
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import NavBar from '../../components/NavBar/NavBar'
 import SearchBar from '../../components/SearchBar/SearchBar'
 
 const MainPage = () => {
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <br/>
+      <NavBar />
       <h1>MainPage</h1>
-      <br/>
+      <br />
 
       <SearchBar initContent="" />
 

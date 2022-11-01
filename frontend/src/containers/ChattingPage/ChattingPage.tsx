@@ -1,16 +1,11 @@
-import ChattingButton from '../../components/ChattingButton/ChattingButton'
-import LogoButton from '../../components/LogoButton/LogoButton'
-import RegisterButton from '../../components/RegisterButton/RegisterButton'
+import NavBar from '../../components/NavBar/NavBar'
 
 const ChattingPage = () => {
   return (
     <>
-      <LogoButton />
-      <RegisterButton />
-      <ChattingButton />
-      <br/>
+      <NavBar />
       <h1>ChattingPage</h1>
-      <br/>
+      <br />
     </>
   )
 }
