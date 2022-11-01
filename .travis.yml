@@ -14,6 +14,7 @@ jobs:
       install:
         - cd backend
         - pip install -r requirements.txt
+        - cd bookVillage
       script:
         - black --check ./
         - coverage run --source='.' manage.py test
