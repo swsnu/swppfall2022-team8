@@ -13,7 +13,7 @@ jobs:
           token:
             secure: "rKBANiluev3Fkd6MTrEOnZxoTOaPpv4/qDHL6WCoaenZKnAoZlGyeOMuSG1SpKPWRgU9gXv+3hWxS/yPBLtfZjrI48yHNcR8mxEx9KNKmYdn3MxSItQlY0KzanH8Nh0WyJ4crOAtLNeqVOH5nxNKJjkc3pTwq0x4eqtfT5nctdFlHo2HZXgw2PNLuluyuECsoc8HNY8CrmAUTtyL3Yy32vMWrwywag3wvPbYwccAjn9E+KFIy6Eo+mvtkbuSUmlZ+xqoOuiFtg/WvGlCyIoG9vrsK/5mhYI/zJejBXDa/dN85nQj59AVf3uCvvNvnIy2kZHpGSvvGt/7moIgoBlUJoiyZY3zpkYzK6b204YQSn2WBhh04mOc6sN/BecMP87EmKTVFYeBQkGikcKjuABq49boi0p8YLD6uW4vTPKNH8Qh5S8yswI52CRtRboSw6SuWCyb1DIE/Zae9zIreTGXduJL+jbNmEgFRQajnNpCo0s3rK9638kiGxV+eaV/P6u5mRnuxf6c4o7BhxMPDTNeiykH5fwieD2WQqHGei0U8CyCGa/h4uHIwCwg0immn1NVNB0NZO8ksNelbk3O3Q4qhwFQ6g5IfQ++OFaivNtfxOBq2/xkleBX4uWtqW5xAog0DG0Ol1Hu2wkYuzrU70emRYOiX4JwOGAwqewa4vLcdeM=" # encrypted value of your token
       install:
-        - source ~/virtualenv/python3.9/bin/activate
+        - source ~/virtualenv/python3.9.6/bin/activate
         - pip install -r backend/requirements.txt
         - pip install coveralls
         - yarn global add coveralls
