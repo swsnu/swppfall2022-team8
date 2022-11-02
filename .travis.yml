@@ -29,6 +29,7 @@ jobs:
         - coveralls-lcov -v -n coverage/lcov.info > coverage.json
         - cd ../backend
         - black --check ./
+        - cd bookVillage
         - coverage run --source='.' manage.py test
         - coverage xml
         - sonar-scanner
