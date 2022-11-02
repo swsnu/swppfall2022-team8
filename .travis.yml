@@ -33,5 +33,5 @@ jobs:
         - cd bookVillage
         - coverage run --source='.' manage.py test
         - coverage xml
-        - sonar-scanner
-        - coveralls --merge=../../frontend/coverage.json
+        - cd ../.. && sonar-scanner
+        - coveralls --merge=./frontend/coverage.json
