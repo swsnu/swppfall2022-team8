@@ -17,7 +17,7 @@ const UserStatusButton = () => {
       ><h5><FontAwesomeIcon
           icon={faUser}
           id='user-icon'
-        /></h5>
+        /> User</h5>
       </Button>
     </div>
   )

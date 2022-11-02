@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Bangers|Cinzel:400,700,900|Lato:100,300,400,700,900|Lobster|Lora:400,700|Mansalva|Muli:200,300,400,600,700,800,900|Open+Sans:300,400,600,700,800|Oswald:200,300,400,500,600,700|Roboto:100,300,400,500,700,900&display=swap');
+
+.book-register {
+    border: 3px solid black;
+    display: inline-block;
+    text-align: left;
+    width: 1000px
+}
+
+.mb-3 h4 {
+    text-align: left;
+    display: block;
+    margin: 0 auto;
+}
+
+.book-register h1 {
+    text-align: center;
+}
+
+#title-input {
+    width: 100%;
+    border-radius: 0;
+}

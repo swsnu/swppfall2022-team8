@@ -17,7 +17,7 @@ const RegisterButton = () => {
       ><h5><FontAwesomeIcon
           id='register-icon'
           icon={faPenToSquare}
-        /></h5>
+        /> Register</h5>
       </Button>
     </div>
   )

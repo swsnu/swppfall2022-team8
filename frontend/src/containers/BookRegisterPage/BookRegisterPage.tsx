@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 
@@ -6,6 +7,7 @@ import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
+import './BookRegisterPage.css'
 
 const BookRegisterPage = () => {
   const [title, setTitle] = useState('')
@@ -95,16 +97,28 @@ const BookRegisterPage = () => {
     return <Navigate to={`/book${(lendState.selectedLend != null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
-      <>
+    <>
+      <div className='nav-bar'>
         <NavBar />
+      </div>
+      <div className='book-register'>
+
         <h1>BookRegisterPage</h1>
         <br />
 
         {/* TODO: add image upload field */}
 
         <label>
-          title
-          <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label><h4>title</h4></Form.Label>
+              <Form.Control
+                id='title-input'
+                size='lg' type="text" placeholder="title"
+                value={title} onChange={event => setTitle(event.target.value)}
+              />
+            </Form.Group>
+          </Form>
         </label>
         <br />
         <label>
@@ -171,7 +185,8 @@ const BookRegisterPage = () => {
         <br />
 
         <button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</button>
-      </>
+      </div>
+    </>
     )
   }
 }

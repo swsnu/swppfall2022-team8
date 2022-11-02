@@ -23,7 +23,7 @@ const LogoutButton = () => {
       ><h5><FontAwesomeIcon
           icon={faRightFromBracket}
           id='logout-icon'
-        /></h5>
+        /> Logout</h5>
       </Button>
     </div>
   )

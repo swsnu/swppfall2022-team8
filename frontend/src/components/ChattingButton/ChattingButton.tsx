@@ -17,7 +17,7 @@ const ChattingButton = () => {
       ><h5><FontAwesomeIcon
           id='chat-icon'
           icon={faComments}
-        /></h5>
+        /> Chat</h5>
       </Button>
     </div>
   )
