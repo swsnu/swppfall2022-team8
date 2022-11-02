@@ -1,0 +1,16 @@
+.chat h5{
+    display: inline;
+    color: rgb(119, 170, 235);
+    font-family: 'Muli', sans-serif;
+}
+
+#chat-button {
+    border: 2px solid rgb(119, 170, 235);
+    width: 65px;
+    height: 50px;
+}
+
+#chat-icon {
+    display: inline-block;
+    color:#34495e;
+}
