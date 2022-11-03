@@ -17,7 +17,7 @@ const UserStatusPage = () => {
   const borrowState = useSelector(selectBorrow)
 
   const [tag, setTag] = useState('')
-  const [tags, setTags] = useState<string[]>([])//TODO : Should use User's tags as initial state
+  const [tags, setTags] = useState<string[]>([]) // TODO : Should use User's tags as initial state
 
   useEffect(() => {
     if (!userState.currentUser) {
@@ -25,20 +25,20 @@ const UserStatusPage = () => {
     } else {
       dispatch(fetchUserLends())
       dispatch(fetchUserBorrows())
-      //dispatch(fetchUserTags()) //TODO : Should fetch user tags
+      // dispatch(fetchUserTags()) // TODO : Should fetch user tags
     }
   }, [navigate, dispatch])
 
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    //dispatch(postUserTag({name: tag})) //TODO
+    // dispatch(postUserTag({name: tag})) // TODO
     setTag('')
   }
 
   const clickDeleteTagHandler = (index: number) => {
     const newTags = tags.filter((tag, idx) => idx !== index)
-    //dispatch(deleteUserTag({name: tags[index]})) //TODO
+    // dispatch(deleteUserTag({name: tags[index]})) // TODO
     setTags(newTags)
   }
 
