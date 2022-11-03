@@ -104,14 +104,14 @@ const BookRegisterPage = () => {
       <div className='book-register'>
 
         <h1>BookRegisterPage</h1>
-        <br />
-
+        <br/>
+        <br/>
         {/* TODO: add image upload field */}
 
           <Form>
             <Form.Group as={Row} className="input-class" controlId="title-input-form">
               <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
-              <Col sm={9}>
+              <Col>
                 <Form.Control
                   id='title-input'
                   type="text" placeholder="title"
@@ -119,15 +119,23 @@ const BookRegisterPage = () => {
                 />
               </Col>
             </Form.Group>
-            <Form.Group as={Row} classname="input-class" controlId="title-input-form">
-              <Form.Label coulmn sm={1} id="author-text"><h5>Author</h5></Form.Label>
-              <Col sm={9}>
+            <Form.Group as={Row} classname='input-class-2' controlId="author-input-form">
+              <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
+              <Col>
                 <Form.Control
                   id='author-input'
                   type="text" placeholder='author'
                   value={author} onChange={event => setAuthor(event.target.value)}
                 />
               </Col>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' controlId='brief-summary-input-form'>
+              <Form.Label id='brief-summary-text'><h5>Breif Summary</h5></Form.Label>
+                <Form.Control
+                  id='breif-summary-input'
+                  type='text' value={brief}
+                  onChange={event => setBrief(event.target.value)}
+                />
             </Form.Group>
           </Form>
         <br />

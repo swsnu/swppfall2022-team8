@@ -9,6 +9,7 @@
 
 .book-register h1 {
     text-align: center;
+    padding-top: 40px;
 }
 
 #title-input {
@@ -21,4 +22,20 @@
     display: inline;
     text-align: center;
     font-weight: bold;
+}
+
+.input-class {
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 2px solid black;
+}
+
+.input-class-2{
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-bottom: 2px solid black;
 }
