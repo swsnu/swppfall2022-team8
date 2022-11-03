@@ -16,7 +16,7 @@
     text-align: center;
     float: left;
     background-color: white;
-    width: 500px !important;
+    width: auto;
     border: 4px solid rgb(119, 170, 235);
     border-style: double;
 }

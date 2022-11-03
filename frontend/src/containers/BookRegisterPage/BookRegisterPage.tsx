@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 
@@ -6,6 +7,7 @@ import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
+import './BookRegisterPage.css'
 
 const BookRegisterPage = () => {
   const [title, setTitle] = useState('')
@@ -95,22 +97,39 @@ const BookRegisterPage = () => {
     return <Navigate to={`/book${(lendState.selectedLend != null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
-      <>
+    <>
+      <div className='nav-bar'>
         <NavBar />
+      </div>
+      <div className='book-register'>
+
         <h1>BookRegisterPage</h1>
         <br />
 
         {/* TODO: add image upload field */}
 
-        <label>
-          title
-          <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
-        </label>
-        <br />
-        <label>
-          author
-          <input type="text" value={author} onChange={event => setAuthor(event.target.value)} />
-        </label>
+          <Form>
+            <Form.Group as={Row} className="input-class" controlId="title-input-form">
+              <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  id='title-input'
+                  type="text" placeholder="title"
+                  value={title} onChange={event => setTitle(event.target.value)}
+                />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} classname="input-class" controlId="title-input-form">
+              <Form.Label coulmn sm={1} id="author-text"><h5>Author</h5></Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  id='author-input'
+                  type="text" placeholder='author'
+                  value={author} onChange={event => setAuthor(event.target.value)}
+                />
+              </Col>
+            </Form.Group>
+          </Form>
         <br />
         <label>
           Brief summary
@@ -170,8 +189,9 @@ const BookRegisterPage = () => {
         ))}
         <br />
 
-        <button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</button>
-      </>
+        <Button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</Button>
+      </div>
+    </>
     )
   }
 }
