@@ -40,7 +40,7 @@ export interface BookState {
 
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
-  async (params: { title?: string, tag?: string[], author?: string }) => {
+  async (params: { title?: string, author?: string, tag?: string[] }) => {
     const response = await axios.get<BookType[]>('/api/book/', { params })
     return response.data
   }

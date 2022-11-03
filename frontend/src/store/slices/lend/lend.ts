@@ -46,7 +46,7 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
-  async (params: { title?: string, tag?: string[], author?: string }) => {
+  async (params: { title?: string, author?: string, tag?: string[] }) => {
     const response = await axios.get<LendType[]>('/api/lend/', { params })
     return response.data
   }

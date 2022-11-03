@@ -23,7 +23,7 @@ const App = () => {
           <Route path="/signup" element={<AuthElement auth={false} element={<SignupPage />} />} />
           <Route path="/main" element={<AuthElement auth={true} element={<MainPage />} />} />
           <Route path="/status" element={<AuthElement auth={true} element={<UserStatusPage />} />} />
-          <Route path="/search/:key" element={<AuthElement auth={true} element={<BookListPage />} />} />
+          <Route path="/search" element={<AuthElement auth={true} element={<BookListPage />} />} />
           <Route path="/book/register" element={<AuthElement auth={true} element={<BookRegisterPage />} />} />
           <Route path="/book/:id" element={<AuthElement auth={true} element={<BookDetailPage />} />} />
           <Route path="/book/:id/edit" element={<AuthElement auth={true} element={<BookEditPage />} />} />
