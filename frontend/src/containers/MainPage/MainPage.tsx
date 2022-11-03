@@ -8,7 +8,7 @@ const MainPage = () => {
       <h1>MainPage</h1>
       <br />
 
-      <SearchBar initContent="" />
+      <SearchBar />
 
       {/* TODO: add ML recommendation feature */}
     </>

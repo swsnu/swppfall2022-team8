@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router'
+import { useLocation } from 'react-router'
+import QueryString from 'qs'
 
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
 import NavBar from '../../components/NavBar/NavBar'
@@ -9,13 +10,13 @@ import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
 
 const BookListPage = () => {
-  const { key } = useParams()
+  const { search } = useLocation()
   const dispatch = useDispatch<AppDispatch>()
   const lendState = useSelector(selectLend)
 
   useEffect(() => {
-    dispatch(fetchQueryLends({ title: key }))
-  }, [key, dispatch])
+    dispatch(fetchQueryLends(QueryString.parse(search, { ignoreQueryPrefix: true })))
+  }, [search, dispatch])
 
   return (
     <>
@@ -23,8 +24,9 @@ const BookListPage = () => {
       <h1>BookListPage</h1>
       <br />
 
-      <SearchBar initContent={key ?? ''} />
-      <p>Search Result about &quot;{key}&quot;</p>
+      <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
+      <br />
+      <p>Search Result:</p>
       {lendState.lends.map(lend => (
         <div key={`lendlist_${lend.id}`}>
           <BookListEntity
