@@ -10,6 +10,9 @@ class LendInfo(models.Model):
     questions = models.JSONField(blank=True, default=list)
     cost = models.PositiveIntegerField(blank=False, null=False)
     additional = models.CharField(max_length=600, blank=True, default="")
+    watchers = models.ManyToManyField(
+        User, through="user.WatchLend", related_name="watching_lends"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
