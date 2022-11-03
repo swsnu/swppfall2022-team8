@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 
@@ -119,7 +119,7 @@ const BookRegisterPage = () => {
                 />
               </Col>
             </Form.Group>
-            <Form.Group as={Row} classname='input-class-2' controlId="author-input-form">
+            <Form.Group as={Row} className='input-class' controlId="author-input-form">
               <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
               <Col>
                 <Form.Control
@@ -130,38 +130,48 @@ const BookRegisterPage = () => {
               </Col>
             </Form.Group>
             <Form.Group as={Row} className='input-class' controlId='brief-summary-input-form'>
-              <Form.Label id='brief-summary-text'><h5>Breif Summary</h5></Form.Label>
-                <Form.Control
-                  id='breif-summary-input'
-                  type='text' value={brief}
-                  onChange={event => setBrief(event.target.value)}
-                />
+              <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
+                <div>
+                  <Form.Control
+                    id='brief-summary-input'
+                    type='text' value={brief}
+                    onChange={event => setBrief(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
             </Form.Group>
+            <InputGroup as={Row} className='tag-input-class' controlId='tags-input-form'>
+              <Form.Label id='tags-text'><h5>tags</h5>
+                <div className='tags-input-button'>
+                  <Form.Control
+                    id='tags-input'
+                    type='text' value={tag}
+                    onChange={event => setTag(event.target.value)}
+                  />
+                  <Button
+                    variant="primary"
+                    id='tags-add-button'
+                    onClick={() => clickAddTagHandler()}
+                    disabled={!tag}
+                  >add</Button>
+                </div>
+              </Form.Label>
+              <div className='tags-display'>
+                {tags.map((tag, index) => (
+                  <div key={index} className='tags-display-tag'>
+                    <h5 id='tags-display-text'>{tag}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteTagHandler(index)}
+                      className='tag-delete-button'
+                    >x</Button>
+                  </div>
+                ))}
+              </div>
+            </InputGroup>
           </Form>
-        <br />
-        <label>
-          Brief summary
-          <input type="text" value={brief} onChange={event => setBrief(event.target.value)} />
-        </label>
-        <br />
 
-        <label>
-          tags
-          <input type="text" value={tag} onChange={event => setTag(event.target.value)} />
-          <button
-            type="button"
-            onClick={() => clickAddTagHandler()}
-            disabled={!tag}
-          >add</button>
-        </label>
-        {tags.map((tag, index) => (
-          <div key={index}>
-            {tag}
-            <button type="button" onClick={() => clickDeleteTagHandler(index)}>x</button>
-          </div>
-        ))}
-
-        <br />
         <br />
         <label>
           borrowing cost

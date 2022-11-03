@@ -29,13 +29,50 @@
     margin-right: 30px;
     padding-left: 30px;
     padding-right: 30px;
-    border-bottom: 2px solid black;
+    padding-bottom: 20px;
+    padding-top: 20px;
 }
 
-.input-class-2{
+.tag-input-class {
     margin-left: 30px;
     margin-right: 30px;
     padding-left: 30px;
     padding-right: 30px;
-    border-bottom: 2px solid black;
+    padding-bottom: 20px;
+    padding-top: 20px;
 }
+
+.tags-input-button {
+    margin: auto;
+    padding: auto;
+    width: auto;
+    border: 2px solid black
+}
+
+#tags-add-button {
+    display: inline;
+}
+
+#tags-input {
+    display: inline;
+    width: auto;
+}
+
+#tags-display {
+    display: inline;
+}
+
+.tags-display h5 {
+    display: inline;
+    font-weight: normal;
+}
+
+.tag-delete-button{
+    margin-left: 5px;
+    margin-right: 12px;
+}
+
+.tags-display-tag {
+    display: inline;
+}
+
