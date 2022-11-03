@@ -165,7 +165,7 @@ const BookRegisterPage = () => {
                       variant='outline-secondary'
                       onClick={() => clickDeleteTagHandler(index)}
                       className='tag-delete-button'
-                    >x</Button>
+                    >X</Button>
                   </div>
                 ))}
               </div>
