@@ -8,7 +8,7 @@ from book.models.lend_info import LendInfo
 class LendInfoSerializer(serializers.ModelSerializer):
     questions = serializers.JSONField(required=False, default=list)
     cost = serializers.IntegerField(required=True)
-    additional = serializers.CharField(required=False)
+    additional = serializers.CharField(required=False, allow_blank=True, default="")
     book_info = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
