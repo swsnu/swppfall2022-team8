@@ -5,6 +5,9 @@ import json
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
+    users_subscribed = models.ManyToManyField(
+        User, through="user.SubscribeTag", related_name="subscribed_tags"
+    )
 
 
 class Book(models.Model):
