@@ -97,16 +97,16 @@ class UserViewSet(viewsets.GenericViewSet):
         else:
             watch_lend.delete()
             return Response({"created": False}, status=status.HTTP_204_NO_CONTENT)
-        
+
     # GET /api/user/tag/
     @action(detail=False)
     def tag(self, request):
         data = []
-        for tag in request.user.subscribed_tags.all() :
+        for tag in request.user.subscribed_tags.all():
             data.append(tag.name)
-            
+
         return Response(data, status=status.HTTP_200_OK)
-    
+
     # PUT /api/user/tag/
     @tag.mapping.put
     def put_tag(self, request):
@@ -116,10 +116,8 @@ class UserViewSet(viewsets.GenericViewSet):
         tag_name = request.data.get("tag")
 
         if not tag_name:
-            return Response(
-                {"error": "give tag"}, status=status.HTTP_400_BAD_REQUEST
-            )
-            
+            return Response({"error": "give tag"}, status=status.HTTP_400_BAD_REQUEST)
+
         tag = get_object_or_404(Tag, name=tag_name)
         subscribe_tag, created = SubscribeTag.objects.get_or_create(
             user=request.user, tag=tag
