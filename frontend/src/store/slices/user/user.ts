@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 
 import { AppDispatch, RootState } from '../..'
+import { LendType } from '../lend/lend'
 
 // TODO: Test this code
 axios.interceptors.response.use(
@@ -27,6 +28,7 @@ export interface UserType {
 export interface UserState {
   currentUser: UserType | null
   subscribed_tags: string[]
+  watch_list: LendType[]
 }
 
 export interface UserSubmitType {
@@ -38,9 +40,14 @@ export interface TagType {
   tag: string
 }
 
-export interface ToggleResponseType {
+export interface ToggleTagResponseType {
   created: boolean
   tag: string
+}
+
+export interface ToggleWatchResponseType {
+  created: boolean
+  lend_info: LendType
 }
 
 /*
@@ -94,7 +101,7 @@ export const fetchTags = createAsyncThunk(
   'user/fetchTags',
   async () => {
     const response = await axios.get('/api/user/tag/')
-    return response.data
+    return response.data ?? null
   }
 )
 
@@ -107,13 +114,31 @@ export const updateTag = createAsyncThunk(
   }
 )
 
+export const fetchWatch = createAsyncThunk(
+  'user/fetchWatch',
+  async () => {
+    const response = await axios.get<LendType[]>('/api/user/watch/')
+    return response.data
+  }
+)
+
+export const toggleWatch = createAsyncThunk(
+  'user/toggleWatch',
+  async (data: { 'lend_id': number }, { dispatch }) => {
+    const response = await axios.put('/api/user/watch/', data)
+    dispatch(userActions.toggleWatch(response.data))
+    return response.data
+  }
+)
+
 /*
  * Lend reducer
  */
 
 const initialState: UserState = {
   currentUser: null,
-  subscribed_tags: []
+  subscribed_tags: [],
+  watch_list: []
 }
 
 export const userSlice = createSlice({
@@ -132,10 +157,11 @@ export const userSlice = createSlice({
     ) => {
       state.currentUser = null
       state.subscribed_tags = []
+      state.watch_list = []
     },
     updateTag: (
       state,
-      action: PayloadAction<ToggleResponseType>
+      action: PayloadAction<ToggleTagResponseType>
     ) => {
       if (action.payload.created) {
         state.subscribed_tags.push(action.payload.tag)
@@ -144,11 +170,26 @@ export const userSlice = createSlice({
           tag => tag !== action.payload.tag
         )
       }
+    },
+    toggleWatch: (
+      state,
+      action: PayloadAction<ToggleWatchResponseType>
+    ) => {
+      if (action.payload.created) {
+        state.watch_list.push(action.payload.lend_info)
+      } else {
+        state.watch_list = state.watch_list.filter(
+          watch => watch.book !== action.payload.lend_info.book
+        )
+      }
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.subscribed_tags = action.payload
+    })
+    builder.addCase(fetchWatch.fulfilled, (state, action) => {
+      state.watch_list = action.payload
     })
   }
 })

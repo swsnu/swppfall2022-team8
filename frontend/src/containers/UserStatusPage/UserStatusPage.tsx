@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
-import { fetchTags, selectUser, updateTag } from '../../store/slices/user/user'
+import { fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
@@ -20,13 +20,19 @@ const UserStatusPage = () => {
   const [tags, setTags] = useState<string[]>(userState.subscribed_tags)
 
   useEffect(() => {
-    if (!userState.currentUser) {
-      navigate('/login')
-    } else {
-      dispatch(fetchUserLends())
-      dispatch(fetchUserBorrows())
-      dispatch(fetchTags())
-    }
+    (async () => {
+      if (!userState.currentUser) {
+        navigate('/login')
+      } else {
+        await dispatch(fetchUserLends())
+        await dispatch(fetchUserBorrows())
+        const response = await dispatch(fetchTags())
+        if (response.type === `${fetchTags.typePrefix}/fulfilled`) {
+          setTags(response.payload)
+        }
+        await dispatch(fetchWatch())
+      }
+    })()
   }, [navigate, dispatch])
 
   const clickAddTagHandler = () => {
@@ -70,7 +76,14 @@ const UserStatusPage = () => {
       <br />
       <p>Watch List</p>
       {/* TODO: implement Watch List */}
-
+      {userState.watch_list.map((watch, idx) => (
+        <div key={`mywatch_${idx}`}>
+          <BookListEntity
+            id={watch.id}
+            title={watch.book_info.title}
+          />
+        </div>
+      ))}
       <br />
       <p>Preference Tag List</p>
       <label>
