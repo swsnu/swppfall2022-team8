@@ -124,7 +124,11 @@ class UserViewSet(viewsets.GenericViewSet):
         )
 
         if created:
-            return Response({"created": True}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"created": True, "tag": tag_name}, status=status.HTTP_201_CREATED
+            )
         else:
             subscribe_tag.delete()
-            return Response({"created": False}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"created": False, "tag": tag_name}, status=status.HTTP_204_NO_CONTENT
+            )

@@ -26,11 +26,21 @@ export interface UserType {
 
 export interface UserState {
   currentUser: UserType | null
+  subscribed_tags: string[]
 }
 
 export interface UserSubmitType {
   username: string
   password: string
+}
+
+export interface TagType {
+  tag: string
+}
+
+export interface ToggleResponseType {
+  created: boolean
+  tag: string
 }
 
 /*
@@ -66,6 +76,7 @@ export const requestLogin = createAsyncThunk(
         }
       )
       dispatch(userActions.login(userData))
+      dispatch(fetchTags())
     }
     return userData
   }
@@ -80,12 +91,30 @@ export const requestLogout = createAsyncThunk(
   }
 )
 
+export const fetchTags = createAsyncThunk(
+  'user/fetchTags',
+  async () => {
+    const response = await axios.get('/api/user/tag/')
+    return response.data
+  }
+)
+
+export const updateTag = createAsyncThunk(
+  'user/updateTag',
+  async (data: TagType, { dispatch }) => {
+    const response = await axios.put('/api/user/tag/', data)
+    dispatch(userActions.updateTag(response.data))
+    return response.data
+  }
+)
+
 /*
  * Lend reducer
  */
 
 const initialState: UserState = {
-  currentUser: null
+  currentUser: null,
+  subscribed_tags: []
 }
 
 export const userSlice = createSlice({
@@ -103,7 +132,25 @@ export const userSlice = createSlice({
       state
     ) => {
       state.currentUser = null
+      state.subscribed_tags = []
+    },
+    updateTag: (
+      state,
+      action: PayloadAction<ToggleResponseType>
+    ) => {
+      if (action.payload.created) {
+        state.subscribed_tags.push(action.payload.tag)
+      } else {
+        state.subscribed_tags = state.subscribed_tags.filter(
+          tag => tag !== action.payload.tag
+        )
+      }
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTags.fulfilled, (state, action) => {
+      state.subscribed_tags = action.payload
+    })
   }
 })
 
