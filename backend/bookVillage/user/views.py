@@ -1,5 +1,5 @@
 from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from rest_framework import viewsets, status
@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from user.models import WatchLend
 from user.serializers import UserSerializer
 
 
@@ -66,3 +67,33 @@ class UserViewSet(viewsets.GenericViewSet):
     def logout(self, request):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # GET /api/user/watch/
+    @action(detail=False)
+    def watch(self, request):
+        from book.serializers.lend_info_serializers import LendInfoSerializer
+
+        data = LendInfoSerializer(request.user.watching_lends, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+
+    # PUT /api/user/watch/
+    @watch.mapping.put
+    def put_watch(self, request):
+        from book.models.lend_info import LendInfo
+
+        lend_id = request.data.get("lend_id")
+        if not lend_id:
+            return Response(
+                {"error": "give lend_id"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        lend_info = get_object_or_404(LendInfo, id=lend_id)
+        watch_lend, created = WatchLend.objects.get_or_create(
+            watching_lend=lend_info, watcher=request.user
+        )
+
+        if created:
+            return Response({"created": True}, status=status.HTTP_201_CREATED)
+        else:
+            watch_lend.delete()
+            return Response({"created": False}, status=status.HTTP_204_NO_CONTENT)

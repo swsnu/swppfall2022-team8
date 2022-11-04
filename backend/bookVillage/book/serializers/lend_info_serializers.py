@@ -11,6 +11,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
     additional = serializers.CharField(required=False)
     book_info = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    owner_username = serializers.SerializerMethodField()
 
     class Meta:
         model = LendInfo
@@ -19,6 +20,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
             "book",
             "book_info",
             "owner",
+            "owner_username",
             "questions",
             "cost",
             "additional",
@@ -58,3 +60,6 @@ class LendInfoSerializer(serializers.ModelSerializer):
             return data
         else:
             return None
+
+    def get_owner_username(self, lend_info):
+        return lend_info.owner.username
