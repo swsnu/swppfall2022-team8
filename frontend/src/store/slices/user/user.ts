@@ -76,7 +76,6 @@ export const requestLogin = createAsyncThunk(
         }
       )
       dispatch(userActions.login(userData))
-      dispatch(fetchTags())
     }
     return userData
   }
