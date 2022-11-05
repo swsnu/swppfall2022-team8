@@ -109,7 +109,7 @@ const BookRegisterPage = () => {
         {/* TODO: add image upload field */}
 
         <Form>
-          <Form.Group as={Row} className="input-class" controlId="title-input-form">
+          <Form.Group as={Row} className="input-class" id="title-input-form">
             <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
             <Col sm={9}>
               <Form.Control
@@ -119,7 +119,7 @@ const BookRegisterPage = () => {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId="author-input-form">
+          <Form.Group as={Row} className='input-class' id="author-input-form">
             <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
             <Col>
               <Form.Control
@@ -129,7 +129,7 @@ const BookRegisterPage = () => {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='brief-summary-input-form'>
+          <Form.Group as={Row} className='input-class' id='brief-summary-input-form'>
             <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
               <br />
               <br />
@@ -142,7 +142,7 @@ const BookRegisterPage = () => {
               </div>
             </Form.Label>
           </Form.Group>
-          <InputGroup as={Row} className='input-class' controlId='tags-input-form'>
+          <InputGroup as={Row} className='input-class' id='tags-input-form'>
             <Form.Label id='tags-text'>
               <h5>tags</h5>
               <br />
@@ -192,7 +192,7 @@ const BookRegisterPage = () => {
               </div>
             </Form.Label>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='additional-info-input-form'>
+          <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
             <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
               <br />
               <br />
@@ -206,7 +206,7 @@ const BookRegisterPage = () => {
               </div>
             </Form.Label>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='questions-input-form'>
+          <Form.Group as={Row} className='input-class' id='questions-input-form'>
             <Form.Label id='questions-text'>
               <h5>Questions</h5>
               <div className='questions-input-button'>
