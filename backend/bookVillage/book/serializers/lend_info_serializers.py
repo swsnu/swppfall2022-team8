@@ -60,6 +60,3 @@ class LendInfoSerializer(serializers.ModelSerializer):
             return data
         else:
             return None
-
-    def get_owner_username(self, lend_info):
-        return lend_info.owner.username
