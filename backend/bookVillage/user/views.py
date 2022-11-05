@@ -80,6 +80,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @watch.mapping.put
     def put_watch(self, request):
         from book.models.lend_info import LendInfo
+        from book.serializers.lend_info_serializers import LendInfoSerializer
 
         lend_id = request.data.get("lend_id")
         if not lend_id:
@@ -92,11 +93,19 @@ class UserViewSet(viewsets.GenericViewSet):
             watching_lend=lend_info, watcher=request.user
         )
 
+        lend_data = LendInfoSerializer(lend_info).data
+
         if created:
-            return Response({"created": True}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"created": True, "lend_info": lend_data},
+                status=status.HTTP_201_CREATED,
+            )
         else:
             watch_lend.delete()
-            return Response({"created": False}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"created": False, "lend_info": lend_data},
+                status=status.HTTP_204_NO_CONTENT,
+            )
 
     # GET /api/user/tag/
     @action(detail=False)
@@ -124,7 +133,11 @@ class UserViewSet(viewsets.GenericViewSet):
         )
 
         if created:
-            return Response({"created": True}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"created": True, "tag": tag_name}, status=status.HTTP_201_CREATED
+            )
         else:
             subscribe_tag.delete()
-            return Response({"created": False}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"created": False, "tag": tag_name}, status=status.HTTP_204_NO_CONTENT
+            )
