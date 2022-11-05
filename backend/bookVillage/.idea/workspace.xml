@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1b254686-49cb-468a-9a81-efc7295a17ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/serializers/borrrow_info_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/serializers/borrrow_info_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/serializers/lend_info_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/serializers/lend_info_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/book/models/lend_info.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/models/lend_info.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +65,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667663596161</updated>
-      <workItem from="1667663597225" duration="5825000" />
+      <workItem from="1667663597225" duration="6182000" />
+      <workItem from="1667671001429" duration="21000" />
     </task>
     <servers />
   </component>

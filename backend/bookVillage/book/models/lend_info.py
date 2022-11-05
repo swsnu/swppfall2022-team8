@@ -19,8 +19,7 @@ class LendInfo(models.Model):
     @property
     def current_borrow(self):
         history = self.history.all()
-        active = None
         for borrow_info in history:
             if borrow_info.active:
                 return borrow_info
-        return active
+        return None
