@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
-import { selectUser } from '../../store/slices/user/user'
+import { fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
@@ -17,28 +17,34 @@ const UserStatusPage = () => {
   const borrowState = useSelector(selectBorrow)
 
   const [tag, setTag] = useState('')
-  const [tags, setTags] = useState<string[]>([]) // TODO : Should use User's tags as initial state
+  const [tags, setTags] = useState<string[]>(userState.subscribed_tags)
 
   useEffect(() => {
-    if (!userState.currentUser) {
-      navigate('/login')
-    } else {
-      dispatch(fetchUserLends())
-      dispatch(fetchUserBorrows())
-      // dispatch(fetchUserTags()) // TODO : Should fetch user tags
-    }
+    (async () => {
+      if (!userState.currentUser) {
+        navigate('/login')
+      } else {
+        await dispatch(fetchUserLends())
+        await dispatch(fetchUserBorrows())
+        const response = await dispatch(fetchTags())
+        if (response.type === `${fetchTags.typePrefix}/fulfilled`) {
+          setTags(response.payload)
+        }
+        await dispatch(fetchWatch())
+      }
+    })()
   }, [navigate, dispatch])
 
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    // dispatch(postUserTag({name: tag})) // TODO
+    dispatch(updateTag({ tag: tag }))
     setTag('')
   }
 
   const clickDeleteTagHandler = (index: number) => {
     const newTags = tags.filter((tag, idx) => idx !== index)
-    // dispatch(deleteUserTag({name: tags[index]})) // TODO
+    dispatch(updateTag({ tag: tags[index] }))
     setTags(newTags)
   }
 
@@ -70,7 +76,14 @@ const UserStatusPage = () => {
       <br />
       <p>Watch List</p>
       {/* TODO: implement Watch List */}
-
+      {userState.watch_list.map((watch, idx) => (
+        <div key={`mywatch_${idx}`}>
+          <BookListEntity
+            id={watch.id}
+            title={watch.book_info.title}
+          />
+        </div>
+      ))}
       <br />
       <p>Preference Tag List</p>
       <label>

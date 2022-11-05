@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
 import Button from 'react-bootstrap/Button'
-import { selectUser } from '../../store/slices/user/user'
+import { selectUser, toggleWatch } from '../../store/slices/user/user'
 import './BookDetailPage.css'
 import NavBar from '../../components/NavBar/NavBar'
 
@@ -25,6 +25,19 @@ const BookDetailPage = () => {
   const clickDeleteHandler = async () => {
     await dispatch(deleteLend(Number(id)))
     navigate('/main')
+  }
+
+  const clickWatchHandler = async () => {
+    const response = await dispatch(toggleWatch({ lend_id: Number(id) }))
+
+    // TODO : Something's wrong... Can alert Success, but can't alert Canceled. Check console
+    if (response.payload.created) {
+      console.log('success')
+      alert('Watch Success!')
+    } else {
+      console.log('canceled')
+      alert('Watch Canceled!')
+    }
   }
 
   return (
@@ -82,7 +95,7 @@ const BookDetailPage = () => {
               <Button variant="outline-primary"
                 type="button"
                 id="detail-watch-button"
-                onClick={() => alert('TODO: implement user feature')}
+                onClick={() => clickWatchHandler()}
               >Watch</Button>
             </>
           )
