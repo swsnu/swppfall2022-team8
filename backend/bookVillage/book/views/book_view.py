@@ -6,7 +6,7 @@ from book.serializers.book_serializers import BookSerializer
 
 
 class BookViewSet(viewsets.GenericViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().prefetch_related('tags')
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
 
@@ -28,8 +28,9 @@ class BookViewSet(viewsets.GenericViewSet):
         )
         if tags:
             books = books.filter(tags__name__in=tags).distinct()
+        books = books[:100]
         data = self.get_serializer(books, many=True).data
-        return Response(data[:1000], status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
 
     # POST /api/book/
     def create(self, request):

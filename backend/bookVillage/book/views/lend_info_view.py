@@ -7,12 +7,17 @@ from rest_framework.decorators import action
 
 
 class LendInfoViewSet(viewsets.GenericViewSet):
-    queryset = LendInfo.objects.all()
     serializer_class = LendInfoSerializer
     permission_classes = (IsAuthenticated(),)
 
     def get_permissions(self):
         return self.permission_classes
+
+    def get_queryset(self):
+        qs = LendInfo.objects.all().prefetch_related('history')
+        if self.action == "list" or self.action == "user":
+            return qs.prefetch_related('book', 'book__tags', 'owner')
+        return qs
 
     # GET /api/lend/
     def list(self, request):
@@ -29,6 +34,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         )
         if tags:
             lend_infos = lend_infos.filter(book__tags__name__in=tags)
+        lend_infos = lend_infos[:100]
         datas = self.get_serializer(lend_infos, many=True).data
         for data in datas:
             data["status"] = "borrowed" if data["status"] else None
