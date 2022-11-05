@@ -19,8 +19,6 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
     # POST /api/borrow/
     def create(self, request):
         data = request.data.copy()
-        user = request.user
-        data["borrower"] = user.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         lend_info = LendInfo.objects.get(id=data["lend_id"])
@@ -29,10 +27,15 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
                 {"error": "Book is already borrowed"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if lend_info.owner == request.user:
+        if lend_info.owner == data["borrower"]:
             return Response(
                 {"error": "You can't borrow your book"},
                 status=status.HTTP_400_BAD_REQUEST,
+            )
+        if request.user != lend_info.owner:
+            return Response(
+                {"error": "You can't lend someone else's book"},
+                status=status.HTTP_403_FORBIDDEN,
             )
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

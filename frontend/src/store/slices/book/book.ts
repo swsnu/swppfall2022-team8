@@ -1,21 +1,7 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { AppDispatch, RootState } from '../..'
-import { useDispatch } from 'react-redux'
-import { userActions } from '../user/user'
-
-// TODO: Test this code
-axios.interceptors.response.use(
-  response => response,
-  async (error) => {
-    if (error.response.status === 401) {
-      const dispatch = useDispatch<AppDispatch>()
-      dispatch(userActions.logout())
-      alert('Token has been expired')
-    }
-  }
-)
+import { RootState } from '../..'
 
 /*
  * Type definitions

@@ -19,8 +19,8 @@ class RoomViewSet(viewsets.GenericViewSet):
         room_lend = self.get_queryset().filter(lender=request.user)
         room_borrow = self.get_queryset().filter(borrower=request.user)
         data = {
-            "room_lend": self.get_serializer(room_lend, many=True).data,
-            "room_borrow": self.get_serializer(room_borrow, many=True).data,
+            "rooms_lend": self.get_serializer(room_lend, many=True).data,
+            "rooms_borrow": self.get_serializer(room_borrow, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -32,7 +32,7 @@ class RoomViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         existing_room = self.get_queryset().filter(
-            Q(borrower=request.user) | Q(lend_id=data["lend_id"])
+            Q(borrower=request.user) & Q(lend_id=data["lend_id"])
         )
         if existing_room:
             return Response(

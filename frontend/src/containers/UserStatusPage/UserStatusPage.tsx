@@ -38,7 +38,7 @@ const UserStatusPage = () => {
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    dispatch(updateTag({ tag: tag }))
+    dispatch(updateTag({ tag }))
     setTag('')
   }
 
