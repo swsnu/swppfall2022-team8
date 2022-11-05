@@ -20,5 +20,3 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
             "lend_end_time",
         )
 
-    def get_borrower_username(self, borrow_info):
-        return borrow_info.borrower.username
