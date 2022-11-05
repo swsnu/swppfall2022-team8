@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b254686-49cb-468a-9a81-efc7295a17ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/bookVillage.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bookVillage.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/models/lend_info.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/models/lend_info.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/serializers/borrrow_info_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/serializers/borrrow_info_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/serializers/lend_info_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/serializers/lend_info_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/views/book_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/views/book_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/views/lend_info_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/views/lend_info_view.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bookVillage/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookVillage/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookVillage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookVillage/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +65,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667663596161</updated>
-      <workItem from="1667663597225" duration="5136000" />
+      <workItem from="1667663597225" duration="5338000" />
     </task>
     <servers />
   </component>
