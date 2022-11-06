@@ -35,10 +35,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     #
     async def list_messages(self, data):
         room_id = self.room_id
-        data = await database_sync_to_async(ChatConsumer.get_list_data)(room_id=room_id)
+        list_data = await database_sync_to_async(ChatConsumer.get_list_data)(
+            room_id=room_id
+        )
         content = {
             "command": "list",
-            "messages": data,
+            "messages": list_data,
         }
         await self.send_message_to_client(content)
 
@@ -50,12 +52,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def create_message(self, data):
         user_id = data["user_id"]
         room_id = self.room_id
-        data = await database_sync_to_async(ChatConsumer.get_create_data)(
+        create_data = await database_sync_to_async(ChatConsumer.get_create_data)(
             room_id=room_id, user_id=user_id, content=data["message"]
         )
         content = {
             "command": "create",
-            "message": data,
+            "message": create_data,
         }
         await self.channel_layer.group_send(
             self.room_group_name,
