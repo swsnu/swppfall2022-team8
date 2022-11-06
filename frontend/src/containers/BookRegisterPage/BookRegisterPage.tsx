@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router'
 
@@ -112,13 +112,13 @@ const BookRegisterPage = () => {
         </div>
         <div className='book-register'>
 
-          <h1>BookRegisterPage</h1>
+          <h1>Register Your Book!</h1>
           <br />
 
           {/* TODO: add image upload field */}
 
           <Form>
-            <Form.Group as={Row} className="input-class" controlId="title-input-form">
+            <Form.Group as={Row} className="input-class" id="title-input-form">
               <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
               <Col sm={9}>
                 <Form.Control
@@ -128,9 +128,9 @@ const BookRegisterPage = () => {
                 />
               </Col>
             </Form.Group>
-            <Form.Group as={Row} classname="input-class" controlId="title-input-form">
-              <Form.Label coulmn sm={1} id="author-text"><h5>Author</h5></Form.Label>
-              <Col sm={9}>
+            <Form.Group as={Row} className='input-class' id="author-input-form">
+              <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
+              <Col>
                 <Form.Control
                   id='author-input'
                   type="text" placeholder='author'
@@ -138,67 +138,121 @@ const BookRegisterPage = () => {
                 />
               </Col>
             </Form.Group>
+            <Form.Group as={Row} className='input-class' id='brief-summary-input-form'>
+              <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
+                <br />
+                <br />
+                <div>
+                  <Form.Control
+                    id='brief-summary-input'
+                    type='text' value={brief}
+                    onChange={event => setBrief(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+            </Form.Group>
+            <InputGroup as={Row} className='input-class' id='tags-input-form'>
+              <Form.Label id='tags-text'>
+                <h5>tags</h5>
+                <br />
+                <br />
+                <div className='tags-input-button'>
+                  <Form.Control
+                    id='tags-input'
+                    type='text' value={tag}
+                    onChange={event => setTag(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+              <div className='tags-display'>
+                {tags.map((tag, index) => (
+                  <div key={index} className='display-tag'>
+                    <h5 id='tags-display-text'>{tag}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteTagHandler(index)}
+                      className='tag-delete-button'
+                    >X</Button>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddTagHandler()}
+                  disabled={!tag}
+                >add</Button>
+              </div>
+            </InputGroup>
+            <Form.Group as={Row} className='input-class'>
+              <Form.Label>
+                <h5>Borrowing Cost :</h5>
+                <h5 id='h5-cost'>{cost}</h5>
+                <br />
+                <br />
+                <div id='borrowing-cost-range'>
+                  <Form.Range
+                    min="0"
+                    max="5000"
+                    step="100"
+                    value={cost}
+                    onChange={event => setCost(Number(event.target.value))}
+                  />
+                </div>
+              </Form.Label>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
+              <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
+                <br />
+                <br />
+                <div>
+                  <Form.Control
+                    as='textarea'
+                    id='additional-info-input'
+                    type='text' value={info}
+                    onChange={event => setInfo(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id='questions-input-form'>
+              <Form.Label id='questions-text'>
+                <h5>Questions</h5>
+                <div className='questions-input-button'>
+                  <Form.Control
+                    id='questions-input'
+                    type='text' value={question}
+                    onChange={event => setQuestion(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+              <div className='questions-display'>
+                {questions.map((question, index) => (
+                  <div key={index} className='display-tag'>
+                    <h5 id='questions-display-text'>{question}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteQuestionHandler(index)}
+                      className='question-delete-button'
+                    >X</Button>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
+              </div>
+            </Form.Group>
           </Form>
-          <br />
-          <label>
-            Brief summary
-            <input type="text" value={brief} onChange={event => setBrief(event.target.value)} />
-          </label>
-          <br />
-
-          <label>
-            tags
-            <input type="text" value={tag} onChange={event => setTag(event.target.value)} />
-            <button
-              type="button"
-              onClick={() => clickAddTagHandler()}
-              disabled={!tag}
-            >add</button>
-          </label>
-          {tags.map((tag, index) => (
-            <div key={index}>
-              {tag}
-              <button type="button" onClick={() => clickDeleteTagHandler(index)}>x</button>
-            </div>
-          ))}
-
-          <br />
-          <br />
-          <label>
-            borrowing cost
-            <input
-              type="number"
-              min="0"
-              step="100"
-              value={cost}
-              onChange={event => setCost(Number(event.target.value))}
-            />
-          </label>
-          <br />
-          <label>
-            additional info (optional)
-            <input type="text" value={info} onChange={event => setInfo(event.target.value)} />
-          </label>
-          <br />
-
-          <label>
-            questions (optional)
-            <input type="text" value={question} onChange={event => setQuestion(event.target.value)} />
-            <button
-              type="button"
-              onClick={() => clickAddQuestionHandler()}
-              disabled={!question}
-            >add</button>
-          </label>
-          {questions.map((question, index) => (
-            <div key={index}>
-              {question}
-              <button type="button" onClick={() => clickDeleteQuestionHandler(index)}>x</button>
-            </div>
-          ))}
-          <br />
-
-          <Button type="button" onClick={() => clickConfirmRegisterHanler()}>Register</Button>
+          <Button
+            id='register-button'
+            type="button"
+            onClick={() => clickConfirmRegisterHanler()}>
+            Register
+          </Button>
         </div>
       </>
     )
