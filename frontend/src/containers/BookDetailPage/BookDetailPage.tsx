@@ -44,63 +44,67 @@ const BookDetailPage = () => {
     <>
       <NavBar />
       <br />
-      <h1>BookDetailPage</h1>
+      <h1>Book Detail Page</h1>
       <br />
+      <div className='book-detail-page'>
+        {/* TODO: add image field */}
+        <div className="image-test">
+          image
+        </div>
+        <div className='book-detail-info'>
+          <h1>{lendState.selectedLend?.book_info.title}</h1>
+          <h5>written by {lendState.selectedLend?.book_info.author}</h5>
+          <p>owned by {lendState.selectedLend?.owner}</p>
+          <hr/>
+          <h2>{lendState.selectedLend?.cost} &#x20a9;</h2>
+          <p>Brief Summary: {lendState.selectedLend?.book_info.brief}</p>
+          <p>Status: {lendState.selectedLend?.status ? 'Borrowed' : 'Available'}</p>
+          <p>tags: {lendState.selectedLend?.book_info.tags.join(', ')}</p>
+          <br />
+          <Button variant="outline-primary"
+            type="button"
+            onClick={() => setInfoVisible(!infoVisible)}
+          >Info</Button>
+          <br />
+          <div className="info-box" hidden={!infoVisible}>
+            {lendState.selectedLend?.additional}
+          </div>
 
-      {/* TODO: add image field */}
-      <div className="image-test"><p>image</p></div>
+          {/* TODO: implement borrow related feature in sprint3 */}
 
-      <p>Owner: {lendState.selectedLend?.owner}</p>
-      <p>Book title: {lendState.selectedLend?.book_info.title}</p>
-      <p>Author: {lendState.selectedLend?.book_info.author}</p>
-      <p>Brief Summary: {lendState.selectedLend?.book_info.brief}</p>
-
-      <p>Status: {lendState.selectedLend?.status ? 'Borrowed' : 'Available'}</p>
-      <p>Borrowing cost: {lendState.selectedLend?.cost}</p>
-      <p>tags: {lendState.selectedLend?.book_info.tags.join(', ')}</p>
-      <br />
-      <Button variant="outline-primary"
-        type="button"
-        onClick={() => setInfoVisible(!infoVisible)}
-      >Info</Button>
-      <br />
-      <div className="info-box" hidden={!infoVisible}>
-        {lendState.selectedLend?.additional}
+          {(() => {
+            if (userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner)) {
+              return (
+                <>
+                  <Button variant="outline-primary"
+                    type="button"
+                    id="detail-edit-button"
+                    onClick={() => navigate(`/book/${id}/edit`)}
+                  >Edit</Button>
+                  <Button variant="outline-primary"
+                    type="button"
+                    onClick={() => clickDeleteHandler()}
+                  >Delete</Button>
+                </>
+              )
+            } else {
+              return (
+                <>
+                  <Button variant="outline-primary"
+                    id="detail-request-button"
+                    onClick={() => navigate(`/book/${id}/request`)}
+                  >Request</Button>
+                  <Button variant="outline-primary"
+                    type="button"
+                    id="detail-watch-button"
+                    onClick={() => clickWatchHandler()}
+                  >Watch</Button>
+                </>
+              )
+            }
+          })()}
+        </div>
       </div>
-
-      {/* TODO: implement borrow related feature in sprint3 */}
-
-      {(() => {
-        if (userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner)) {
-          return (
-            <>
-              <Button variant="outline-primary"
-                type="button"
-                id="detail-edit-button"
-                onClick={() => navigate(`/book/${id}/edit`)}
-              >Edit</Button>
-              <Button variant="outline-primary"
-                type="button"
-                onClick={() => clickDeleteHandler()}
-              >Delete</Button>
-            </>
-          )
-        } else {
-          return (
-            <>
-              <Button variant="outline-primary"
-                id="detail-request-button"
-                onClick={() => navigate(`/book/${id}/request`)}
-              >Request</Button>
-              <Button variant="outline-primary"
-                type="button"
-                id="detail-watch-button"
-                onClick={() => clickWatchHandler()}
-              >Watch</Button>
-            </>
-          )
-        }
-      })()}
     </>
   )
 }

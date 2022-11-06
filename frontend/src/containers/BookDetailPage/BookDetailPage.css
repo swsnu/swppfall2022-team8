@@ -1,7 +1,13 @@
+.book-detail-page {
+  border: 2px solid black;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+
 .image-test {
   width: 200px;
-  height: 200px;
-  margin: 0px auto;
+  height: 300px;
+  margin: 30px auto;
   border: 1px solid black;
 }
 
@@ -16,4 +22,21 @@
   width: 500px;
   margin: 0 auto;
   padding: 3px;
+}
+
+.book-detail-info {
+  display: inline-block;
+  border: 2px solid black;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  text-align: left;
+}
+
+.book-detail-info h1 {
+  font-weight: bold;
+}
+
+.book-detail-info h2 {
+  font-weight: bold;
 }
