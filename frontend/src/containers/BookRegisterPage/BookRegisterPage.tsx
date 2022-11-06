@@ -163,7 +163,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteTagHandler(index)}
-                    className='tag-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}
@@ -225,7 +225,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteQuestionHandler(index)}
-                    className='question-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}

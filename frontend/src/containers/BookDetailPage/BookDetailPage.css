@@ -1,5 +1,5 @@
 .book-detail-page {
-  border: 2px solid black;
+  border: 2px solid rgb(119, 170, 235);
   display: grid;
   grid-template-columns: 300px 1fr;
 }
@@ -17,20 +17,28 @@
   background-color: skyblue;
 }
 
+.add-info {
+  display: inline;
+}
+
 .info-box {
-  border: 1px solid black;
-  width: 500px;
-  margin: 0 auto;
-  padding: 3px;
+  border: 2px solid rgb(119, 170, 235);
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 15px;
 }
 
 .book-detail-info {
   display: inline-block;
-  border: 2px solid black;
+  border-left: 2px solid black;
   padding-top: 30px;
   padding-left: 30px;
   padding-right: 30px;
+  padding-bottom: 20px;
   text-align: left;
+  word-break: break-all;
+  word-wrap: break-word;
 }
 
 .book-detail-info h1 {
@@ -39,4 +47,18 @@
 
 .book-detail-info h2 {
   font-weight: bold;
+}
+
+.light-text {
+  font-weight: 250;
+}
+
+.detail-page-bottom {
+  display: flex;
+  float: right;
+}
+
+.detail-page-buttons {
+  width: 120px;
+  margin: 20px;
 }
