@@ -101,9 +101,10 @@ const BookRegisterPage = () => {
       <div className='nav-bar'>
         <NavBar />
       </div>
+      <p/>
+      <h1>Register Your Book!</h1>
+      <p/>
       <div className='book-register'>
-
-        <h1>Register Your Book!</h1>
         <br />
 
         {/* TODO: add image upload field */}
@@ -163,7 +164,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteTagHandler(index)}
-                    className='tag-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}
@@ -225,7 +226,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteQuestionHandler(index)}
-                    className='question-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}
