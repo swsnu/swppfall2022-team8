@@ -7,7 +7,6 @@ import borrowReducer from './slices/borrow/borrow'
 import userReducer, { userActions } from './slices/user/user'
 import roomReducer from './slices/room/room'
 
-// TODO: Test this code
 axios.interceptors.response.use(
   response => response,
   async (error) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import NavBar from '../../components/NavBar/NavBar'
@@ -6,47 +6,123 @@ import { AppDispatch } from '../../store'
 import { BorrowType, createBorrow, toggleBorrowStatus } from '../../store/slices/borrow/borrow'
 import { fetchLend, LendType } from '../../store/slices/lend/lend'
 import { fetchUserRooms, selectRoom } from '../../store/slices/room/room'
+import { selectUser } from '../../store/slices/user/user'
+import './ChattingPage.css'
 
 type ChatGroup = '' | 'lend' | 'borrow'
 
+interface ChatType {
+  id: number
+  author: number
+  author_username: string
+  content: string
+  timestamp: string
+}
+
 const ChattingPage = () => {
   const [chatInput, setChatInput] = useState<string>('')
-  const [chatLog/*, setChatLog */] = useState<string[]>([])
   const [chatIdx, setChatIdx] = useState<number>(-1)
   const [group, setGroup] = useState<ChatGroup>('')
+  const [connectedRoom, setConnectedRoom] = useState<Number>(-1)
   const [borrowable, setBorrowable] = useState<boolean>(false)
   const [borrowed, setBorrowed] = useState<boolean>(false)
+  const [chatList, setChatList] = useState<ChatType[]>([])
+  const chatSocket = useRef<WebSocket | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
   const roomState = useSelector(selectRoom)
+  const userState = useSelector(selectUser)
 
   useEffect(() => {
     dispatch(fetchUserRooms())
+    return () => {
+      if (chatSocket.current) {
+        chatSocket.current.close(1000)
+      }
+    }
   }, [dispatch])
 
-  // TODO: get chat log by WebSocket
+  // this code makes chatting scroll down when new chatting is added
+  useEffect(() => {
+    const chatBox = document.querySelector('#chat-box')
+    if (chatBox) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
+  }, [chatList])
 
   const clickRoomHandler = async (idx: number, selectedGroup: 'lend' | 'borrow') => {
-    // TODO: enter chat room using WebSocket
     const rooms = selectedGroup === 'lend'
       ? roomState.rooms_lend
       : roomState.rooms_borrow
-    const response = await dispatch(fetchLend(rooms[idx].lend_id))
+    const room = rooms[idx]
+
+    if (room.id === connectedRoom) {
+      return
+    }
+
+    setChatList(_oldList => [])
+
+    const response = await dispatch(fetchLend(room.lend_id))
 
     if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
       const data = response.payload as LendType
       const borrowStatus = data.status as BorrowType | null
       setBorrowable(!borrowStatus)
-      setBorrowed(Boolean(borrowStatus && borrowStatus.borrower === rooms[idx].borrower))
+      setBorrowed(Boolean(borrowStatus && borrowStatus.borrower === room.borrower))
       setChatIdx(idx)
     } else {
       alert('Error on fetch lending information')
+      return
     }
+
+    if (chatSocket.current) {
+      chatSocket.current.close(1000)
+      chatSocket.current = null
+      setConnectedRoom(-1)
+    }
+
+    setConnectedRoom(room.id)
+
+    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room.id}/`)
+
+    chatSocket.current = newSocket
+
+    newSocket.addEventListener('open', function (_event) {
+      this.send(JSON.stringify({ command: 'list' }))
+    })
+
+    newSocket.addEventListener('message', function (event) {
+      const data = JSON.parse(event.data)
+      if (data.command === 'list') {
+        const messages = data.messages as ChatType[]
+        setChatList(oldList => [...oldList, ...messages])
+      } else if (data.command === 'create') {
+        const message = data.message as ChatType
+        setChatList(oldList => [...oldList, message])
+      }
+    })
+
+    newSocket.addEventListener('close', function (event) {
+      if (event.code !== 1000) {
+        console.error('Chat socket closed unexpectedly')
+      }
+    })
   }
 
   const clickSendChatHandler = () => {
-    // TODO: send chatInput by WebSocket
-    setChatInput('')
+    if (!chatSocket.current) {
+      alert('connection is closed')
+      return
+    }
+
+    if (chatInput) {
+      chatSocket.current.send(JSON.stringify({
+        message: chatInput,
+        user_id: userState.currentUser?.id ?? NaN,
+        command: 'create'
+      }))
+      setChatInput('')
+    }
   }
 
   const clickConfirmLendingHandler = async () => {
@@ -116,12 +192,14 @@ const ChattingPage = () => {
         if (group === 'lend') {
           return (
             <>
+              <br />
+              <br />
               {roomState.rooms_lend.map((room, idx) => (
-                <div
-                  key={`room_lend_${idx}_to_${room.borrower}`}
-                  onClick={() => clickRoomHandler(idx, 'lend')}
-                >
-                  <p>chat with {room.borrower_username}</p>
+                <div key={`room_lend_${idx}_to_${room.borrower}`}>
+                  <button
+                    type="button"
+                    onClick={() => clickRoomHandler(idx, 'lend')}
+                  >chat with {room.borrower_username}</button>
                 </div>
               ))}
             </>
@@ -130,11 +208,11 @@ const ChattingPage = () => {
           return (
             <>
               {roomState.rooms_borrow.map((room, idx) => (
-                <div
-                  key={`room_borrow_${idx}_from_${room.lender}`}
-                  onClick={() => clickRoomHandler(idx, 'borrow')}
-                >
-                  <p>chat with {room.lender_username}</p>
+                <div key={`room_borrow_${idx}_from_${room.lender}`}>
+                  <button
+                    type="button"
+                    onClick={() => clickRoomHandler(idx, 'borrow')}
+                  >chat with {room.lender_username}</button>
                 </div>
               ))}
             </>
@@ -157,18 +235,28 @@ const ChattingPage = () => {
                 return <p>Chatting with {roomState.rooms_borrow[chatIdx].lender_username}</p>
               }
             })()}
-            <textarea
-              defaultValue={chatLog.join('\n')}
-            ></textarea>
+            <div id="chat-box">
+              {chatList.map(chat => (
+                <div
+                  key={`room_${connectedRoom.toString()}_chat_${chat.id}`}
+                  className={`chat-message-${chat.author === userState.currentUser?.id ? 'me' : 'other'}`}
+                >
+                  <p>{chat.content}</p>
+                </div>
+              ))}
+            </div>
             <br />
-            <label htmlFor="chat-input">chat&gt;</label>
             <input
               id="chat-input"
               type="text"
               value={chatInput}
               onChange={event => setChatInput(event.target.value)}
+              onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
             />
-            <button type="button" onClick={() => clickSendChatHandler()}>Send chat</button>
+            <button
+              type="button"
+              onClick={() => clickSendChatHandler()}
+            >Send chat</button>
             <br />
             <hr />
             {(() => {

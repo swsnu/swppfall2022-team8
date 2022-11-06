@@ -68,8 +68,6 @@ const BookDetailPage = () => {
         {lendState.selectedLend?.additional}
       </div>
 
-      {/* TODO: implement borrow related feature in sprint3 */}
-
       {(() => {
         if (userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner)) {
           return (

@@ -15,6 +15,7 @@ class RoomViewSet(viewsets.GenericViewSet):
     serializer_class = RoomSerializer
     permission_classes = (permissions.IsAuthenticated, IsInRoom)
 
+    # GET /api/room/
     def list(self, request):
         room_lend = self.get_queryset().filter(lender=request.user)
         room_borrow = self.get_queryset().filter(borrower=request.user)
@@ -24,6 +25,7 @@ class RoomViewSet(viewsets.GenericViewSet):
         }
         return Response(data, status=status.HTTP_200_OK)
 
+    # POST /api/room/
     def create(self, request):
         data = request.data.copy()
         data["borrower"] = request.user.id

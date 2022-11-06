@@ -120,6 +120,8 @@ const initialState: UserState = {
   watch_list: []
 }
 
+const errorPrefix = (code: number) => `Request failed with status code ${code}`
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -164,6 +166,22 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder.addCase(requestSignup.rejected, (_state, action) => {
+      if (action.error.message === errorPrefix(409)) {
+        alert('Username is duplicated')
+      } else {
+        alert('Error on signup')
+      }
+      console.error(action.error)
+    })
+    builder.addCase(requestLogin.rejected, (_state, action) => {
+      if (action.error.message?.startsWith(errorPrefix(4))) {
+        alert('Username or Password is wrong')
+      } else {
+        alert('Error on login')
+      }
+      console.error(action.error)
+    })
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.subscribed_tags = action.payload
     })

@@ -27,5 +27,6 @@ class Message(models.Model):
     def __str__(self):
         return self.author.username
 
-    def last_10_messages(self, room_id):
-        return Message.objects.filter(room_id=room_id).order_by("-created_at")[:10]
+    @staticmethod
+    def last_10_messages(room_id):
+        return Message.objects.filter(room_id=room_id).order_by("-created_at")[:10:-1]
