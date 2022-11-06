@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ChattingRightMenu from '../../components/ChattingRigntMenu/ChattingRightMenu'
+import ChattingRoom from '../../components/ChattingRoom/ChattingRoom'
+import ChattingRoomList from '../../components/ChattingRoomList/ChattingRoomList'
 
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
@@ -9,9 +12,10 @@ import { fetchUserRooms, selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 import './ChattingPage.css'
 
-type ChatGroup = '' | 'lend' | 'borrow'
+export type SelectedChatGroup = 'lend' | 'borrow'
+export type ChatGroup = '' | 'lend' | 'borrow'
 
-interface ChatType {
+export interface ChatType {
   id: number
   author: number
   author_username: string
@@ -23,7 +27,7 @@ const ChattingPage = () => {
   const [chatInput, setChatInput] = useState<string>('')
   const [chatIdx, setChatIdx] = useState<number>(-1)
   const [group, setGroup] = useState<ChatGroup>('')
-  const [connectedRoom, setConnectedRoom] = useState<Number>(-1)
+  const [connectedRoom, setConnectedRoom] = useState<number>(-1)
   const [borrowable, setBorrowable] = useState<boolean>(false)
   const [borrowed, setBorrowed] = useState<boolean>(false)
   const [chatList, setChatList] = useState<ChatType[]>([])
@@ -49,6 +53,33 @@ const ChattingPage = () => {
       chatBox.scrollTop = chatBox.scrollHeight
     }
   }, [chatList])
+
+  const createAndSetupSocket = (roomID: number) => {
+    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${roomID}/`)
+
+    chatSocket.current = newSocket
+
+    newSocket.addEventListener('open', function (_event) {
+      this.send(JSON.stringify({ command: 'list' }))
+    })
+
+    newSocket.addEventListener('message', function (event) {
+      const data = JSON.parse(event.data)
+      if (data.command === 'list') {
+        const messages = data.messages as ChatType[]
+        setChatList(oldList => [...oldList, ...messages])
+      } else if (data.command === 'create') {
+        const message = data.message as ChatType
+        setChatList(oldList => [...oldList, message])
+      }
+    })
+
+    newSocket.addEventListener('close', function (event) {
+      if (event.code !== 1000) {
+        console.error('Chat socket closed unexpectedly')
+      }
+    })
+  }
 
   const clickRoomHandler = async (idx: number, selectedGroup: 'lend' | 'borrow') => {
     const rooms = selectedGroup === 'lend'
@@ -83,30 +114,7 @@ const ChattingPage = () => {
 
     setConnectedRoom(room.id)
 
-    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room.id}/`)
-
-    chatSocket.current = newSocket
-
-    newSocket.addEventListener('open', function (_event) {
-      this.send(JSON.stringify({ command: 'list' }))
-    })
-
-    newSocket.addEventListener('message', function (event) {
-      const data = JSON.parse(event.data)
-      if (data.command === 'list') {
-        const messages = data.messages as ChatType[]
-        setChatList(oldList => [...oldList, ...messages])
-      } else if (data.command === 'create') {
-        const message = data.message as ChatType
-        setChatList(oldList => [...oldList, message])
-      }
-    })
-
-    newSocket.addEventListener('close', function (event) {
-      if (event.code !== 1000) {
-        console.error('Chat socket closed unexpectedly')
-      }
-    })
+    createAndSetupSocket(room.id)
   }
 
   const clickSendChatHandler = () => {
@@ -174,6 +182,8 @@ const ChattingPage = () => {
       <h1>ChattingPage</h1>
       <br />
       <hr />
+
+      {/* Select buttons (lend group or borrow group) */}
       <button
         type="button"
         onClick={() => {
@@ -188,109 +198,44 @@ const ChattingPage = () => {
           setChatIdx(-1)
         }}
       >borrow rooms</button>
-      {(() => {
-        if (group === 'lend') {
-          return (
-            <>
-              <br />
-              <br />
-              {roomState.rooms_lend.map((room, idx) => (
-                <div key={`room_lend_${idx}_to_${room.borrower}`}>
-                  <button
-                    type="button"
-                    onClick={() => clickRoomHandler(idx, 'lend')}
-                  >chat with {room.borrower_username}</button>
-                </div>
-              ))}
-            </>
-          )
-        } else if (group === 'borrow') {
-          return (
-            <>
-              {roomState.rooms_borrow.map((room, idx) => (
-                <div key={`room_borrow_${idx}_from_${room.lender}`}>
-                  <button
-                    type="button"
-                    onClick={() => clickRoomHandler(idx, 'borrow')}
-                  >chat with {room.lender_username}</button>
-                </div>
-              ))}
-            </>
-          )
-        }
-        return null // group === ''
-      })()}
       <br />
       <hr />
-      {(() => {
-        if (!group || chatIdx < 0) {
-          return <p>Select any chatroom and enjoy chatting!</p>
-        }
-        return (
-          <>
-            {(() => {
-              if (group === 'lend') {
-                return <p>Chatting with {roomState.rooms_lend[chatIdx].borrower_username}</p>
-              } else {
-                return <p>Chatting with {roomState.rooms_borrow[chatIdx].lender_username}</p>
-              }
-            })()}
-            <div id="chat-box">
-              {chatList.map(chat => (
-                <div
-                  key={`room_${connectedRoom.toString()}_chat_${chat.id}`}
-                  className={`chat-message-${chat.author === userState.currentUser?.id ? 'me' : 'other'}`}
-                >
-                  <p>{chat.content}</p>
-                </div>
-              ))}
-            </div>
-            <br />
-            <input
-              id="chat-input"
-              type="text"
-              value={chatInput}
-              onChange={event => setChatInput(event.target.value)}
-              onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
-            />
-            <button
-              type="button"
-              onClick={() => clickSendChatHandler()}
-            >Send chat</button>
-            <br />
-            <hr />
-            {(() => {
-              if (group === 'lend') {
-                if (borrowable) {
-                  return (
-                    <button
-                      type="button"
-                      onClick={() => clickConfirmLendingHandler()}
-                    >Confirm lending</button>
-                  )
-                } else if (borrowed) {
-                  return (
-                    <button
-                      type="button"
-                      onClick={() => clickConfirmReturnHandler()}
-                    >Confirm return</button>
-                  )
-                } else {
-                  return <p>You&apos;ve already lent your book to someone!</p>
-                }
-              } else {
-                if (borrowable) {
-                  return <p>You can borrow this book!</p>
-                } else if (borrowed) {
-                  return <p>You are borrowing this book now!</p>
-                } else {
-                  return <p>Someone has already borrowed this book...</p>
-                }
-              }
-            })()}
-          </>
-        )
-      })()}
+
+      {/* ChattingRoomList component */}
+      {(group)
+        ? <ChattingRoomList
+            group={group}
+            clickRoomHandler={clickRoomHandler}
+          />
+        : null}
+      <br />
+      <hr />
+
+      {/* ChattingRoom component */}
+      {(group && chatIdx >= 0)
+        ? <ChattingRoom
+            group={group}
+            chatIdx={chatIdx}
+            chatList={chatList}
+            chatInput={chatInput}
+            changeChatInput={setChatInput}
+            clickSendChatHandler={clickSendChatHandler}
+          />
+        : <p>Select any chatroom and enjoy chatting!</p>
+      }
+      <br />
+      <hr />
+
+      {/* ChattingRightMenu component */}
+      {(group && chatIdx >= 0)
+        ? <ChattingRightMenu
+            group={group}
+            borrowable={borrowable}
+            borrowed={borrowed}
+            clickConfirmLendingHandler={clickConfirmLendingHandler}
+            clickConfirmReturnHandler={clickConfirmReturnHandler}
+          />
+        : null }
       <br />
       <hr />
     </>
