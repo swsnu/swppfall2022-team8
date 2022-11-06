@@ -101,9 +101,10 @@ const BookRegisterPage = () => {
       <div className='nav-bar'>
         <NavBar />
       </div>
+      <p/>
+      <h1>Register Your Book!</h1>
+      <p/>
       <div className='book-register'>
-
-        <h1>Register Your Book!</h1>
         <br />
 
         {/* TODO: add image upload field */}
