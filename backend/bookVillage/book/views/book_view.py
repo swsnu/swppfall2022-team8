@@ -6,7 +6,7 @@ from book.serializers.book_serializers import BookSerializer
 
 
 class BookViewSet(viewsets.GenericViewSet):
-    queryset = Book.objects.all().prefetch_related('tags')
+    queryset = Book.objects.all().prefetch_related("tags")
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
 

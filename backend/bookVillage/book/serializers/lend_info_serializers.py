@@ -11,7 +11,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
     additional = serializers.CharField(required=False, allow_blank=True, default="")
     book_info = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    owner_username = serializers.ReadOnlyField(source='owner.username')
+    owner_username = serializers.ReadOnlyField(source="owner.username")
 
     class Meta:
         model = LendInfo
