@@ -8,11 +8,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from user.models import WatchLend
+from user.models import WatchLend, UserRecommend
 from user.serializers import UserSerializer
 
 
-# Create your views here.
+from user.tasks import recommend_with_tags
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -21,7 +21,7 @@ class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated(),)
 
     def get_permissions(self):
-        if self.action in ("create", "login"):
+        if self.action in ("create", "login", "post_recommend"):
             return (AllowAny(),)
         return self.permission_classes
 
@@ -42,6 +42,7 @@ class UserViewSet(viewsets.GenericViewSet):
             )
 
         login(request, user)
+        UserRecommend.objects.create(user=user)
         data = self.get_serializer(user).data
         Token.objects.create(user=user)
         data["token"] = user.auth_token.key
@@ -56,6 +57,8 @@ class UserViewSet(viewsets.GenericViewSet):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
+            if not hasattr(user, "recommend"):
+                UserRecommend.objects.create(user=user)
             data = self.get_serializer(user).data
             token, created = Token.objects.get_or_create(user=user)
             data["token"] = token.key
@@ -145,52 +148,40 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET /api/user/recommend/
     @action(detail=False)
     def recommend(self, request):
-        from book.models.book import Book
+        recommend_list = request.user.recommend.list
+        if not recommend_list:
+            self._recommend(request.user)
+            return Response({"requested": True}, status=status.HTTP_200_OK)
+        return Response(recommend_list, status=status.HTTP_200_OK)
+
+    # PUT /api/user/recommend/
+    @recommend.mapping.put
+    def put_recommend(self, request):
+        self._recommend(request.user)
+        return Response({"requested": True}, status=status.HTTP_200_OK)
+
+    # POST /api/user/recommend/
+    @recommend.mapping.post
+    def post_recommend(self, request):
+        book_ids = request.data.get("book_ids")
+        internal_password = request.data.get("internal_password")
+        user_id = request.data.get("user_id")
+        if internal_password != "41q2c8578":
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        user = User.objects.get(id=user_id)
+        if book_ids:
+            recommend = user.recommend
+            recommend.list = book_ids
+            recommend.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def _recommend(user):
 
         subscribed_tags = [
-            subscribed_tag.tag.name for subscribed_tag in request.user.usertag.all()
+            subscribed_tag.tag.name for subscribed_tag in user.usertag.all()
         ]
 
-        recommend_ids_list = recommend_with_tags(subscribed_tags)
-
-        books = Book.objects.filter(pk__in=recommend_ids_list)
-        data = [{"id": book.id, "title": book.title} for book in books]
-
-        return Response(data, status=status.HTTP_200_OK)
-
-
-def recommend_with_tags(subscribed_tags):
-    import pandas as pd
-    from book.models.book import Book, Tag, BookTag
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import linear_kernel
-
-    book_tags = pd.DataFrame(list(BookTag.objects.all().values()))
-    tags = pd.DataFrame(list(Tag.objects.all().values()))
-    books = pd.DataFrame(list(Book.objects.all().values()))
-
-    book_tags_df = pd.merge(
-        book_tags, tags, left_on="tag_id", right_on="id", how="inner"
-    )[["book_id", "name"]]
-    book_tags_df = book_tags_df.groupby("book_id")["name"].apply(" ".join).reset_index()
-    books = books.loc[:, books.columns != "brief"]
-    books = pd.merge(books, book_tags_df, left_on="id", right_on="book_id", how="inner")
-
-    books = books.append(
-        {"id": 0, "name": " ".join(subscribed_tags)}, ignore_index=True
-    )
-
-    tf = TfidfVectorizer(
-        analyzer="word", ngram_range=(1, 2), min_df=0, stop_words="english"
-    )
-    tfidf_matrix = tf.fit_transform(books["name"])
-    cosine_similarity = linear_kernel(tfidf_matrix, tfidf_matrix)
-
-    idx = len(books.index) - 1
-    scores = list(enumerate(cosine_similarity[idx]))
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)
-    scores = scores[1:11]  # return 10 books
-    indices = [i[0] for i in scores]
-    result = books.iloc[indices]["id"]
-
-    return result.values.tolist()
+        recommend_with_tags.delay(subscribed_tags, user.id)

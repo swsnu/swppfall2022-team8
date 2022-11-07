@@ -16,3 +16,10 @@ class WatchLend(models.Model):
 class SubscribeTag(models.Model):
     user = models.ForeignKey(User, related_name="usertag", on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, related_name="usertag", on_delete=models.CASCADE)
+
+
+class UserRecommend(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="recommend", primary_key=True
+    )
+    list = models.JSONField(default=list, blank=True)

@@ -1,5 +1,6 @@
 from rest_framework import status, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from book.models.book import Book, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
@@ -11,6 +12,8 @@ class BookViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated(),)
 
     def get_permissions(self):
+        if self.action in ("all"):
+            return (AllowAny(),)
         return self.permission_classes
 
     # GET /api/book/
@@ -70,3 +73,18 @@ class BookViewSet(viewsets.GenericViewSet):
         book = self.get_object()
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # PUT /api/book/all
+    @action(detail=False, methods=["PUT"])
+    def all(self, request):
+        internal_password = request.data.get("internal_password")
+
+        if internal_password != "41q2c8578":
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        data = {
+            "book_tags": list(BookTag.objects.all().values()),
+            "tags": list(Tag.objects.all().values("id", "name")),
+            "books": list(Book.objects.all().values("id")),
+        }
+        return Response(data, status=status.HTTP_200_OK)
