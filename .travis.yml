@@ -32,6 +32,5 @@ jobs:
         - black --check ./
         - coverage run --source='.' manage.py test
         - coverage xml
-        - cd ../..
-        - sonar-scanner
-        - coveralls --merge=./frontend/coverage.json
+        - cd ../.. && sonar-scanner
+        - cd backend && coveralls --merge=../frontend/coverage.json
