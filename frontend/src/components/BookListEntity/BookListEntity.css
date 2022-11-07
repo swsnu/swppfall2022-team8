@@ -1,8 +1,33 @@
 .book-list-entity {
-  height: 50px;
-  border: 1px solid black;
+  border: 5px solid rgb(119, 170, 235);
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: 300px;
+  margin: 10px;
+  word-break: break-all;
+  word-wrap: break-word;
 }
+
 .book-list-entity:hover {
-  background-color: skyblue;
+  background-color: rgb(119, 170, 235);
   cursor: pointer;
+}
+
+.image-grid {
+  margin: auto;
+}
+
+.image-small {
+  border: 2px solid black;
+  height: 240px;
+  width: 180px;
+}
+
+
+h2 {
+  border-left: 2px solid black;
+  padding-top: 20px;
+  padding-left: 20px;
+  text-align: left;
+  font-weight: bold;
 }

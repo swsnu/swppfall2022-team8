@@ -20,6 +20,7 @@ const LoginPage = () => {
   return (
     <>
       <h1>LoginPage</h1>
+      <br />
       <label htmlFor="login-username">Username</label>
       <input
         id="login-username"

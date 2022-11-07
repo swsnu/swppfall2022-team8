@@ -81,6 +81,7 @@ const UserStatusPage = () => {
           <BookListEntity
             id={watch.id}
             title={watch.book_info.title}
+            available={watch.status === null}
           />
         </div>
       ))}
