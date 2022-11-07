@@ -17,7 +17,7 @@ const BookListEntity = (props: IProps) => {
     >
       <p>
         {props.title}
-        {props.available ? "  Available!" : null}
+        {props.available ? '  Available!' : null}
       </p>
     </div>
   )
