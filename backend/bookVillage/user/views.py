@@ -122,28 +122,32 @@ class UserViewSet(viewsets.GenericViewSet):
     # PUT /api/user/tag/
     @tag.mapping.put
     def put_tag(self, request):
+        tag_names = request.data.get("tags")
+
+        if not tag_names or not isinstance(tag_names, list):
+            return Response(
+                {"error": "give tags as list"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        data = []
+        for tag_name in tag_names:
+            data.append(self._tag_atomic(tag_name, request.user))
+
+        return Response(data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def _tag_atomic(tag_name, user):
         from book.models.book import Tag
         from user.models import SubscribeTag
 
-        tag_name = request.data.get("tag")
-
-        if not tag_name:
-            return Response({"error": "give tag"}, status=status.HTTP_400_BAD_REQUEST)
-
         tag = get_object_or_404(Tag, name=tag_name)
-        subscribe_tag, created = SubscribeTag.objects.get_or_create(
-            user=request.user, tag=tag
-        )
+        subscribe_tag, created = SubscribeTag.objects.get_or_create(user=user, tag=tag)
 
         if created:
-            return Response(
-                {"created": True, "tag": tag_name}, status=status.HTTP_201_CREATED
-            )
+            return {"created": True, "tag": tag_name}
         else:
             subscribe_tag.delete()
-            return Response(
-                {"created": False, "tag": tag_name}, status=status.HTTP_204_NO_CONTENT
-            )
+            return {"created": False, "tag": tag_name}
 
     # GET /api/user/recommend/
     @action(detail=False)
