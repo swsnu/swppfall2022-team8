@@ -32,7 +32,8 @@ export const rootInitialState: RootState = {
   user: {
     currentUser: null,
     subscribed_tags: [],
-    watch_list: []
+    watch_list: [],
+    recommend_list: []
   },
   room: {
     rooms_lend: [],

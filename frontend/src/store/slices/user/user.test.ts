@@ -16,7 +16,8 @@ describe('user reducer', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
       currentUser: null,
       subscribed_tags: [],
-      watch_list: []
+      watch_list: [],
+      recommend_list: []
     })
   })
   it('should handle fetchQueryUsers', async () => {
