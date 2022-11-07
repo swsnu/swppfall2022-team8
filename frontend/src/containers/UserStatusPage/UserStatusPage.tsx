@@ -38,7 +38,7 @@ const UserStatusPage = () => {
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    dispatch(updateTag({ tag: tag }))
+    dispatch(updateTag({ tag }))
     setTag('')
   }
 
@@ -81,6 +81,7 @@ const UserStatusPage = () => {
           <BookListEntity
             id={watch.id}
             title={watch.book_info.title}
+            available={watch.status === null}
           />
         </div>
       ))}
