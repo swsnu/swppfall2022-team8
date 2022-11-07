@@ -133,6 +133,7 @@ class UserViewSet(viewsets.GenericViewSet):
         for tag_name in tag_names:
             data.append(self._tag_atomic(tag_name, request.user))
 
+        self._recommend(request.user)
         return Response(data, status=status.HTTP_200_OK)
 
     @staticmethod
