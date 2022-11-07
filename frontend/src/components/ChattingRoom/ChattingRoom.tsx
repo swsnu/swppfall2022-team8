@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 import { ChatType, SelectedChatGroup } from '../../containers/ChattingPage/ChattingPage'
 import { selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
+import './ChattingRoom.css'
 
 interface IProps {
   group: SelectedChatGroup

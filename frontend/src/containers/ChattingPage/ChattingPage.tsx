@@ -10,7 +10,6 @@ import { BorrowType, createBorrow, toggleBorrowStatus } from '../../store/slices
 import { fetchLend, LendType } from '../../store/slices/lend/lend'
 import { fetchUserRooms, selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
-import './ChattingPage.css'
 
 export type SelectedChatGroup = 'lend' | 'borrow'
 export type ChatGroup = '' | 'lend' | 'borrow'
