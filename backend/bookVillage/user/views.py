@@ -141,3 +141,56 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(
                 {"created": False, "tag": tag_name}, status=status.HTTP_204_NO_CONTENT
             )
+
+    # GET /api/user/recommend/
+    @action(detail=False)
+    def recommend(self, request):
+        from book.models.book import Book
+
+        subscribed_tags = [
+            subscribed_tag.tag.name for subscribed_tag in request.user.usertag.all()
+        ]
+
+        recommend_ids_list = recommend_with_tags(subscribed_tags)
+
+        books = Book.objects.filter(pk__in=recommend_ids_list)
+        data = [{"id": book.id, "title": book.title} for book in books]
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+def recommend_with_tags(subscribed_tags):
+    import pandas as pd
+    from book.models.book import Book, Tag, BookTag
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import linear_kernel
+
+    book_tags = pd.DataFrame(list(BookTag.objects.all().values()))
+    tags = pd.DataFrame(list(Tag.objects.all().values()))
+    books = pd.DataFrame(list(Book.objects.all().values()))
+
+    book_tags_df = pd.merge(
+        book_tags, tags, left_on="tag_id", right_on="id", how="inner"
+    )[["book_id", "name"]]
+    book_tags_df = book_tags_df.groupby("book_id")["name"].apply(" ".join).reset_index()
+    books = books.loc[:, books.columns != "brief"]
+    books = pd.merge(books, book_tags_df, left_on="id", right_on="book_id", how="inner")
+
+    books = books.append(
+        {"id": 0, "name": " ".join(subscribed_tags)}, ignore_index=True
+    )
+
+    tf = TfidfVectorizer(
+        analyzer="word", ngram_range=(1, 2), min_df=0, stop_words="english"
+    )
+    tfidf_matrix = tf.fit_transform(books["name"])
+    cosine_similarity = linear_kernel(tfidf_matrix, tfidf_matrix)
+
+    idx = len(books.index) - 1
+    scores = list(enumerate(cosine_similarity[idx]))
+    scores = sorted(scores, key=lambda x: x[1], reverse=True)
+    scores = scores[1:11]  # return 10 books
+    indices = [i[0] for i in scores]
+    result = books.iloc[indices]["id"]
+
+    return result.values.tolist()
