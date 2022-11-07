@@ -1,21 +1,8 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { useDispatch } from 'react-redux'
 
-import { AppDispatch, RootState } from '../..'
+import { RootState } from '../..'
 import { LendType } from '../lend/lend'
-
-// TODO: Test this code
-axios.interceptors.response.use(
-  response => response,
-  async (error) => {
-    if (error.response.status === 401) {
-      const dispatch = useDispatch<AppDispatch>()
-      dispatch(userActions.logout())
-      alert('Token has been expired')
-    }
-  }
-)
 
 /*
  * Type definitions
@@ -80,14 +67,6 @@ export const requestLogin = createAsyncThunk(
     const { token, ...userData } = response.data
     if (token) {
       axios.defaults.headers.common.Authorization = `Token ${String(token)}`
-      axios.interceptors.response.use(
-        response => response,
-        async (error) => {
-          if (error.response.status === 401) {
-            dispatch(userActions.logout())
-          }
-        }
-      )
       dispatch(userActions.login(userData))
     }
     return userData
@@ -99,7 +78,7 @@ export const requestLogout = createAsyncThunk(
   async (data: never, { dispatch }) => {
     const response = await axios.put('/api/user/logout/')
     dispatch(userActions.logout())
-    return response
+    return response.data
   }
 )
 
@@ -146,7 +125,7 @@ export const fetchRecommend = createAsyncThunk(
 )
 
 /*
- * Lend reducer
+ * User reducer
  */
 
 const initialState: UserState = {
@@ -155,6 +134,8 @@ const initialState: UserState = {
   watch_list: [],
   recommend_list: []
 }
+
+const errorPrefix = (code: number) => `Request failed with status code ${code}`
 
 export const userSlice = createSlice({
   name: 'user',
@@ -201,6 +182,22 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder.addCase(requestSignup.rejected, (_state, action) => {
+      if (action.error.message === errorPrefix(409)) {
+        alert('Username is duplicated')
+      } else {
+        alert('Error on signup')
+      }
+      console.error(action.error)
+    })
+    builder.addCase(requestLogin.rejected, (_state, action) => {
+      if (action.error.message?.startsWith(errorPrefix(4))) {
+        alert('Username or Password is wrong')
+      } else {
+        alert('Error on login')
+      }
+      console.error(action.error)
+    })
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.subscribed_tags = action.payload
     })

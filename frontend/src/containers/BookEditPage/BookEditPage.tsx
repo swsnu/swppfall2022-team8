@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
+import { Button, Form, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
-
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
+
+import './BookEditPage.css'
 
 const BookEditPage = () => {
   const id = useParams().id as string
@@ -57,6 +59,7 @@ const BookEditPage = () => {
         book: lendState.selectedLend.book,
         book_info: lendState.selectedLend.book_info,
         owner: lendState.selectedLend.owner,
+        owner_username: lendState.selectedLend.owner_username,
         questions,
         cost,
         additional: info
@@ -69,51 +72,98 @@ const BookEditPage = () => {
   return (
     <>
       <NavBar />
-      <h1>BookEditPage</h1>
+      <h1>Book Edit Page</h1>
       <br />
-
-      <p>Can only edit lend info.</p>
-
-      <div>title : {lendState.selectedLend?.book_info.title}</div>
-      <div>author : {lendState.selectedLend?.book_info.author}</div>
-      <div>brief summary : {lendState.selectedLend?.book_info.brief}</div>
-      <div>tags : {lendState.selectedLend?.book_info.tags}</div>
-
-      <label>
-        borrowing cost
-        <input
-          type="number"
-          min="0"
-          step="100"
-          value={cost}
-          onChange={event => setCost(Number(event.target.value))}
-        />
-      </label>
-      <br />
-      <label>
-        additional info (optional)
-        <input type="text" value={info} onChange={event => setInfo(event.target.value)} />
-      </label>
-      <br />
-
-      <label>
-        questions
-        <input type="text" value={question} onChange={event => setQuestion(event.target.value)} />
-        <button
-          type="button"
-          onClick={() => clickAddQuestionHandler()}
-          disabled={!question}
-        >add</button>
-      </label>
-      {questions.map((question, index) => (
-        <div key={index}>
-          {question}
-          <button type="button" onClick={() => clickDeleteQuestionHandler(index)}>x</button>
+      <p>You can only edit lend info.</p>
+      <div className='book-edit'>
+        <div className='book-main-info'>
+          <div className="image-test">
+            image
+          </div>
+          <div className='input-class'>
+            <div className='book-detail-info'>
+              <h1>{lendState.selectedLend?.book_info.title}</h1>
+              <br/>
+              <h5 id='edit-author'>written by {lendState.selectedLend?.book_info.author}</h5>
+              <br/>
+              <p/>
+              {lendState.selectedLend?.book_info.brief}
+              <br/>
+              <p/>
+              {lendState.selectedLend?.book_info.tags.map((t) => ('#' + t + ' '))}
+            </div>
+          </div>
         </div>
-      ))}
-      <br />
-
-      <button type="button" onClick={() => clickConfirmEditHanler()}>Edit</button>
+        <hr id='hr-line' />
+        <Form>
+          <Form.Group as={Row} className='input-class'>
+              <Form.Label>
+                <h5>Borrowing Cost :</h5>
+                <h5 id='h5-cost'>{cost}</h5>
+                <br />
+                <br />
+                <div id='borrowing-cost-range'>
+                  <Form.Range
+                    min="0"
+                    max="5000"
+                    step="100"
+                    value={cost}
+                    onChange={event => setCost(Number(event.target.value))}
+                  />
+                </div>
+              </Form.Label>
+          </Form.Group>
+          <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
+            <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
+              <br />
+              <br />
+              <div>
+                <Form.Control
+                  as='textarea'
+                  id='additional-info-input'
+                  type='text' value={info}
+                  onChange={event => setInfo(event.target.value)}
+                />
+              </div>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group as={Row} className='input-class' id='questions-input-form'>
+              <Form.Label id='questions-text'>
+                <h5>Questions</h5>
+                <div className='questions-input-button'>
+                  <Form.Control
+                    id='questions-input'
+                    type='text' value={question}
+                    onChange={event => setQuestion(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+                <div className='questions-display'>
+                {questions.map((question, index) => (
+                  <div key={index} className='display-tag'>
+                    <h5 id='questions-display-text'>{question}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteQuestionHandler(index)}
+                      className='delete-button'
+                    >X</Button>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
+              </div>
+            </Form.Group>
+        </Form>
+      </div>
+      <Button
+        id='edit-button'
+        type="button" onClick={() => clickConfirmEditHanler()}
+      >Edit</Button>
     </>
   )
 }

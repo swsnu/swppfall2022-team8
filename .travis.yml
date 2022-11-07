@@ -28,10 +28,9 @@ jobs:
         - ./node_modules/.bin/eslint src
         - yarn test --coverage --watchAll=false
         - coveralls-lcov -v -n coverage/lcov.info > coverage.json
-        - cd ../backend
+        - cd ../backend/bookVillage
         - black --check ./
-        - cd bookVillage
         - coverage run --source='.' manage.py test
         - coverage xml
         - cd ../.. && sonar-scanner
-        - coveralls --merge=./frontend/coverage.json
+        - cd backend/bookVillage && coveralls --merge=../../frontend/coverage.json

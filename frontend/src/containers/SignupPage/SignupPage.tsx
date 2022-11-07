@@ -11,24 +11,19 @@ const SignupPage = () => {
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const clickSubmitHandler = async () => {
+  const clickSubmitHandler = () => {
     if (password !== confirmPassword) {
       alert('Please check your password.')
       return
     }
 
-    const data = { username, password }
-
-    const response = await dispatch(requestSignup(data))
-
-    if (response.type === `${requestSignup.typePrefix}/rejected`) {
-      alert('Error on signup')
-    }
+    dispatch(requestSignup({ username, password }))
   }
 
   return (
     <>
       <h1>SignupPage</h1>
+      <br />
       <label htmlFor="login-username">Username</label>
       <input
         id="login-username"
@@ -40,7 +35,7 @@ const SignupPage = () => {
       <label htmlFor="login-password">Password</label>
       <input
         id="login-password"
-        // type="password" // TODO: add this property
+        type="password"
         value={password}
         onChange={event => setPassword(event.target.value)}
       />
@@ -48,7 +43,7 @@ const SignupPage = () => {
       <label htmlFor="login-confirm-password">Confirm Password</label>
       <input
         id="login-confirm-password"
-        // type="password" // TODO: add this property
+        type="password"
         value={confirmPassword}
         onChange={event => setConfirmPassword(event.target.value)}
       />

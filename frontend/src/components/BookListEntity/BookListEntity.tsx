@@ -14,11 +14,12 @@ const BookListEntity = (props: IProps) => {
     <div
       className="book-list-entity"
       onClick={() => navigate(`/book/${props.id}`)}
-    >
-      <p>
-        {props.title}
-        {props.available ? '  Available!' : null}
-      </p>
+    > <div className='image-grid'>
+        <div className='image-small'>
+          image
+        </div>
+      </div>
+      <h2>{props.title}<br /><br />{props.available ? '  Available!' : null}</h2>
     </div>
   )
 }
