@@ -152,7 +152,10 @@ class UserViewSet(viewsets.GenericViewSet):
         if not recommend_list:
             self._recommend(request.user)
             return Response({"requested": True}, status=status.HTTP_200_OK)
-        return Response(recommend_list, status=status.HTTP_200_OK)
+        return Response(
+            {"requested": False, "recommend_list": recommend_list},
+            status=status.HTTP_200_OK,
+        )
 
     # PUT /api/user/recommend/
     @recommend.mapping.put

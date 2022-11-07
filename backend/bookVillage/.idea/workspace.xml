@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b254686-49cb-468a-9a81-efc7295a17ed" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bookVillage/celery.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user/tasks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/bookVillage.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bookVillage.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/views/book_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/views/book_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookVillage/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookVillage/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/user/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
