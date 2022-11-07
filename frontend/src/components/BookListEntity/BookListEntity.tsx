@@ -4,6 +4,7 @@ import './BookListEntity.css'
 interface IProps {
   id: number
   title: string
+  available?: boolean
 };
 
 const BookListEntity = (props: IProps) => {
@@ -14,7 +15,10 @@ const BookListEntity = (props: IProps) => {
       className="book-list-entity"
       onClick={() => navigate(`/book/${props.id}`)}
     >
-      <p>{props.title}</p>
+      <p>
+        {props.title}
+        {props.available ? '  Available!' : null}
+      </p>
     </div>
   )
 }
