@@ -29,6 +29,7 @@ export interface UserState {
   currentUser: UserType | null
   subscribed_tags: string[]
   watch_list: LendType[]
+  recommend_list: RecommendType[]
 }
 
 export interface UserSubmitType {
@@ -48,6 +49,11 @@ export interface ToggleTagResponseType {
 export interface ToggleWatchResponseType {
   created: boolean
   lend_info: LendType
+}
+
+export interface RecommendType {
+  id: number
+  title: string
 }
 
 /*
@@ -131,6 +137,14 @@ export const toggleWatch = createAsyncThunk(
   }
 )
 
+export const fetchRecommend = createAsyncThunk(
+  'user/fetchRecommend',
+  async () => {
+    const response = await axios.get<RecommendType[]>('/api/user/recommend/')
+    return response.data
+  }
+)
+
 /*
  * Lend reducer
  */
@@ -138,7 +152,8 @@ export const toggleWatch = createAsyncThunk(
 const initialState: UserState = {
   currentUser: null,
   subscribed_tags: [],
-  watch_list: []
+  watch_list: [],
+  recommend_list: []
 }
 
 export const userSlice = createSlice({
@@ -158,6 +173,7 @@ export const userSlice = createSlice({
       state.currentUser = null
       state.subscribed_tags = []
       state.watch_list = []
+      state.recommend_list = []
     },
     updateTag: (
       state,
@@ -190,6 +206,9 @@ export const userSlice = createSlice({
     })
     builder.addCase(fetchWatch.fulfilled, (state, action) => {
       state.watch_list = action.payload
+    })
+    builder.addCase(fetchRecommend.fulfilled, (state, action) => {
+      state.recommend_list = action.payload
     })
   }
 })

@@ -1,4 +1,5 @@
 import NavBar from '../../components/NavBar/NavBar'
+import Recommend from '../../components/Recommend/Recommend'
 import SearchBar from '../../components/SearchBar/SearchBar'
 
 const MainPage = () => {
@@ -11,6 +12,7 @@ const MainPage = () => {
       <SearchBar />
 
       {/* TODO: add ML recommendation feature */}
+      <Recommend />
     </>
   )
 }
