@@ -12,14 +12,9 @@ const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
-  const clickLoginHandler = async () => {
+  const clickLoginHandler = () => {
     const data = { username, password }
-
-    const response = await dispatch(requestLogin(data))
-
-    if (response.type === `${requestLogin.typePrefix}/rejected`) {
-      alert('Username or Password is wrong')
-    }
+    dispatch(requestLogin(data))
   }
 
   return (
@@ -37,7 +32,7 @@ const LoginPage = () => {
       <label htmlFor="login-password">Password</label>
       <input
         id="login-password"
-        // type="password" // TODO: add this property
+        type="password"
         value={password}
         onChange={event => setPassword(event.target.value)}
       />

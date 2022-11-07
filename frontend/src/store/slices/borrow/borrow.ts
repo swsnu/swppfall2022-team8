@@ -1,21 +1,8 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { AppDispatch, RootState } from '../..'
-import { userActions, UserType } from '../user/user'
-import { useDispatch } from 'react-redux'
-
-// TODO: Test this code
-axios.interceptors.response.use(
-  response => response,
-  async (error) => {
-    if (error.response.status === 401) {
-      const dispatch = useDispatch<AppDispatch>()
-      dispatch(userActions.logout())
-      alert('Token has been expired')
-    }
-  }
-)
+import { RootState } from '../..'
+import { UserType } from '../user/user'
 
 /*
  * Type definitions
@@ -23,7 +10,8 @@ axios.interceptors.response.use(
 
 export interface BorrowType {
   id: number
-  borrower: UserType['id'] // TODO: remove ['id']
+  borrower: UserType['id']
+  borrower_username: UserType['username']
   lend_id: number
   active: boolean
   lend_start_time: string // serialized Date object

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router'
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend } from '../../store/slices/lend/lend'
+import { createRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 
 const BookRequestPage = () => {
@@ -37,7 +38,7 @@ const BookRequestPage = () => {
     })()
   }, [id, dispatch])
 
-  const clickSendButtonHandler = () => {
+  const clickSendButtonHandler = async () => {
     if (lendState.selectedLend == null) {
       return
     }
@@ -48,9 +49,14 @@ const BookRequestPage = () => {
       return
     }
 
-    // TODO: send answers to chatting room
+    const response = await dispatch(createRoom({ lend_id: Number(id) }))
 
-    navigate('/chat')
+    if (response.type === `${createRoom.typePrefix}/fulfilled`) {
+      // TODO: send a message contains questions and corresponding answer
+      navigate('/chat')
+    } else {
+      alert('You cannot request same book twice.')
+    }
   }
 
   const changeAnswerHandler = (idx: number, value: string) => {

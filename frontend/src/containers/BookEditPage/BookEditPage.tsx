@@ -59,6 +59,7 @@ const BookEditPage = () => {
         book: lendState.selectedLend.book,
         book_info: lendState.selectedLend.book_info,
         owner: lendState.selectedLend.owner,
+        owner_username: lendState.selectedLend.owner_username,
         questions,
         cost,
         additional: info

@@ -93,7 +93,6 @@ const SearchBar = (props: IProps) => {
           id="search-bar"
           value={content}
           onChange={event => setContent(event.target.value)}
-          onKeyDown={event => { if (event.key === 'Enter') navigate(`/search/${content}`) }}
         />
         <Button variant="outline-primary" id="search-button"
           onClick={() => clickSearchHandler()}
