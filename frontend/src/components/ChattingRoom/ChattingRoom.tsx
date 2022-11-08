@@ -4,7 +4,7 @@ import { selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 import './ChattingRoom.css'
 
-interface IProps {
+export interface IProps {
   group: SelectedChatGroup
   chatIdx: number
   chatList: ChatType[]
@@ -21,13 +21,12 @@ const ChattingRoom = (props: IProps) => {
 
   return (
     <>
-      {(() => {
-        if (props.group === 'lend') {
-          return <p>Chatting with {roomState.rooms_lend[props.chatIdx].borrower_username}</p>
-        } else {
-          return <p>Chatting with {roomState.rooms_borrow[props.chatIdx].lender_username}</p>
+      <p>Chatting with&nbsp;
+        {props.group === 'lend'
+          ? roomState.rooms_lend[props.chatIdx].borrower_username
+          : roomState.rooms_borrow[props.chatIdx].lender_username
         }
-      })()}
+      </p>
       <div id="chat-box">
         {props.chatList.map(chat => (
           <div

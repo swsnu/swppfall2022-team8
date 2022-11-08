@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { SelectedChatGroup } from '../../containers/ChattingPage/ChattingPage'
 import { selectRoom } from '../../store/slices/room/room'
 
-interface IProps {
+export interface IProps {
   group: SelectedChatGroup
   clickRoomHandler: (idx: number, group: SelectedChatGroup) => Promise<void>
 }

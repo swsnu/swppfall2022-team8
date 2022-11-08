@@ -1,6 +1,6 @@
 import { SelectedChatGroup } from '../../containers/ChattingPage/ChattingPage'
 
-interface IProps {
+export interface IProps {
   group: SelectedChatGroup
   borrowable: boolean
   borrowed: boolean
