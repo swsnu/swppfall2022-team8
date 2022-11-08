@@ -31,9 +31,10 @@ const LoginPage = () => {
           <InputGroup as={Row} className='signin'>
             <Form.Label>
               Username
+              <p/>
               <Form.Control
                 id="login-username"
-                type="text"
+                type='text'
                 placeholder='username'
                 value={username}
                 onChange={event => setUsername(event.target.value)}
@@ -43,6 +44,7 @@ const LoginPage = () => {
           <InputGroup as={Row} className='signin'>
             <Form.Label>
               Password
+              <p/>
               <Form.Control
                 id="login-password"
                 type="password"
