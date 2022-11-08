@@ -103,7 +103,7 @@ const BookRegisterPage = () => {
   }
 
   if (submitted) {
-    return <Navigate to={`/book${(lendState.selectedLend != null) ? `/${lendState.selectedLend.id}` : ''}`} />
+    return <Navigate to={`/book${(lendState.selectedLend !== null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
     <>

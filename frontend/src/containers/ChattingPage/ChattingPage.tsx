@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ChattingRightMenu from '../../components/ChattingRigntMenu/ChattingRightMenu'
+
+import ChattingRightMenu from '../../components/ChattingRightMenu/ChattingRightMenu'
 import ChattingRoom from '../../components/ChattingRoom/ChattingRoom'
 import ChattingRoomList from '../../components/ChattingRoomList/ChattingRoomList'
-
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BorrowType, createBorrow, toggleBorrowStatus } from '../../store/slices/borrow/borrow'
@@ -108,7 +108,6 @@ const ChattingPage = () => {
     if (chatSocket.current) {
       chatSocket.current.close(1000)
       chatSocket.current = null
-      setConnectedRoom(-1)
     }
 
     setConnectedRoom(room.id)
