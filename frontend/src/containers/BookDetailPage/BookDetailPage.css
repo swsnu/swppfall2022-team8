@@ -47,6 +47,9 @@
 
 .book-detail-info h2 {
   font-weight: bold;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
 }
 
 .light-text {

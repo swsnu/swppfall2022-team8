@@ -19,7 +19,9 @@ const BookListEntity = (props: IProps) => {
           image
         </div>
       </div>
-      <h2>{props.title}<br /><br />{props.available ? '  Available!' : null}</h2>
+      <h2>{props.title}</h2>
+      <br />
+      <h2>{props.available ? '  Available!' : null}</h2>
     </div>
   )
 }
