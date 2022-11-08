@@ -1,0 +1,32 @@
+
+.tag-input-class {
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.add-button {
+    display: inline;
+}
+
+.tags-display {
+    display: inline;
+}
+
+.tags-display h5 {
+    display: inline;
+    font-weight: normal;
+}
+
+.delete-button{
+    margin-left: 5px;
+    margin-right: 12px;
+}
+
+.display-tag {
+    display: inline;
+    font-weight: normal;
+}
