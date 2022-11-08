@@ -53,7 +53,7 @@ const UserStatusPage = () => {
   return (
     <>
       <NavBar />
-      <h1>UserStatusPage</h1>
+      <h1>User Info</h1>
       <br />
       <p>Lend List</p>
       {lendState.userLends.map((lend, idx) => (

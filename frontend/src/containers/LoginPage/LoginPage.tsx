@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { Button, Form, InputGroup, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
 import { requestLogin } from '../../store/slices/user/user'
+
+import './LoginPage.css'
 
 const LoginPage = () => {
   const [username, setUsername] = useState<string>('')
@@ -18,28 +21,53 @@ const LoginPage = () => {
   }
 
   return (
-    <>
-      <h1>LoginPage</h1>
+    <div className='login-page'>
+      <p/>
+      <h1>Sign in to BookVillage!</h1>
       <br />
-      <label htmlFor="login-username">Username</label>
-      <input
-        id="login-username"
-        type="text"
-        value={username}
-        onChange={event => setUsername(event.target.value)}
-      />
       <br />
-      <label htmlFor="login-password">Password</label>
-      <input
-        id="login-password"
-        type="password"
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
+      <div>
+        <Form className='signin-input-class'>
+          <InputGroup as={Row} className='signin'>
+            <Form.Label>
+              Username
+              <Form.Control
+                id="login-username"
+                type="text"
+                placeholder='username'
+                value={username}
+                onChange={event => setUsername(event.target.value)}
+              />
+            </Form.Label>
+          </InputGroup>
+          <InputGroup as={Row} className='signin'>
+            <Form.Label>
+              Password
+              <Form.Control
+                id="login-password"
+                type="password"
+                value={password}
+                placeholder='password'
+                onChange={event => setPassword(event.target.value)}
+              />
+            </Form.Label>
+          </InputGroup>
+        </Form>
+      </div>
       <br />
-      <button onClick={() => clickLoginHandler()}>Login</button>
-      <button onClick={() => navigate('/signup')}>Sign up</button>
-    </>
+      <div className='signin-buttons'>
+        <Button
+          onClick={() => clickLoginHandler()}
+          id='login-button'
+          variant='outline-primary'
+        >Login</Button>
+        <Button
+          onClick={() => navigate('/signup')}
+          id='signup-button'
+          variant='outline-success'
+        >Sign up</Button>
+      </div>
+    </div>
   )
 }
 
