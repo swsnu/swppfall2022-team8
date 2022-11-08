@@ -21,7 +21,7 @@ const ChattingRoom = (props: IProps) => {
 
   return (
     <>
-      <p>Chatting with&npsp;
+      <p>Chatting with&nbsp;
         {props.group === 'lend'
           ? roomState.rooms_lend[props.chatIdx].borrower_username
           : roomState.rooms_borrow[props.chatIdx].lender_username
