@@ -169,4 +169,4 @@ migrations/*
 
 ###  backend end  ###
 
-./backend/bookVillage/.idea/
+backend/bookVillage/.idea/
