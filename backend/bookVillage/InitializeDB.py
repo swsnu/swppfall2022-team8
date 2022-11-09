@@ -33,7 +33,7 @@ for i in range(len(tags)):
 user = User.objects.create_user(username="MockUser", password="password")
 user.save()
 
-for i in range(len(books)):
+for i in range(len(books)):     # pragma: no cover
     book = Book(
         id=books["book_id"][i],
         title=books["title"][i],
