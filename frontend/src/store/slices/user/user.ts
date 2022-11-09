@@ -201,6 +201,13 @@ export const userSlice = createSlice({
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.subscribed_tags = action.payload
     })
+    builder.addCase(updateTag.rejected, (_state, action) => {
+      if (action.error.message === errorPrefix(404)) {
+        alert('The tag does not exist in DB.')
+      } else {
+        alert('Error on update tags')
+      }
+    })
     builder.addCase(fetchWatch.fulfilled, (state, action) => {
       state.watch_list = action.payload
     })
