@@ -1,23 +1,10 @@
 import axios from 'axios'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { AppDispatch, RootState } from '../..'
+import { RootState } from '../..'
 import { BookType } from '../book/book'
 import { BorrowType } from '../borrow/borrow'
-import { userActions, UserType } from '../user/user'
-import { useDispatch } from 'react-redux'
-
-// TODO: Test this code
-axios.interceptors.response.use(
-  response => response,
-  async (error) => {
-    if (error.response.status === 401) {
-      const dispatch = useDispatch<AppDispatch>()
-      dispatch(userActions.logout())
-      alert('Token has been expired')
-    }
-  }
-)
+import { UserType } from '../user/user'
 
 /*
  * Type definitions
@@ -25,9 +12,10 @@ axios.interceptors.response.use(
 
 export interface LendType {
   id: number
-  book: BookType['id'] // TODO: remove ['id']
+  book: BookType['id']
   book_info: Omit<BookType, 'id'>
   owner: UserType['id']
+  owner_username: UserType['username']
   questions: string[]
   cost: number
   additional: string
@@ -65,7 +53,7 @@ export const fetchLend = createAsyncThunk(
   'lend/fetchLend',
   async (id: LendType['id']) => {
     const response = await axios.get(`/api/lend/${id}/`)
-    return response.data ?? null
+    return response.data
   }
 )
 

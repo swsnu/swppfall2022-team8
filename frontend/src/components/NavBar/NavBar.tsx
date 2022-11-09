@@ -9,15 +9,17 @@ import './NavBar.css'
 const NavBar = () => {
   return (
     <>
-      <Navbar bg='light' expand='lg'>
-        <div className='nav-logo'>
-          <LogoButton />
-        </div>
-        <div className='nav-else'>
-        <RegisterButton />
-        <ChattingButton />
-        <UserStatusButton />
-        <LogoutButton />
+      <Navbar id='nav-bar' expand='lg'>
+        <div className='nav-instances'>
+          <div className='nav-logo'>
+            <LogoButton />
+          </div>
+          <div className='nav-else'>
+          <RegisterButton />
+          <ChattingButton />
+          <UserStatusButton />
+          <LogoutButton />
+          </div>
         </div>
       </Navbar>
     </>

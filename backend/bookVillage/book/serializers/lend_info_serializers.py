@@ -11,7 +11,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
     additional = serializers.CharField(required=False, allow_blank=True, default="")
     book_info = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    owner_username = serializers.SerializerMethodField()
+    owner_username = serializers.ReadOnlyField(source="owner.username")
 
     class Meta:
         model = LendInfo
@@ -55,11 +55,8 @@ class LendInfoSerializer(serializers.ModelSerializer):
 
         borrow_info = lend_info.current_borrow
         if borrow_info:
-            serializer = BorrowInfoSerializer(borrow_info)
+            serializer = BorrowInfoSerializer(borrow_info, many=True)
             data = serializer.data.copy()
             return data
         else:
             return None
-
-    def get_owner_username(self, lend_info):
-        return lend_info.owner.username

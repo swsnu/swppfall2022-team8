@@ -1,0 +1,25 @@
+h1 {
+    font-weight: bold;
+}
+
+.signup-page {
+    border-radius: 5px;
+    border: 10px solid rgb(119, 170, 235);
+    width: 600px;
+    height: 450px;
+    margin: auto;
+    margin-top: 300px;
+}
+
+.signup-input-class {
+    margin: auto;
+    width: 300px;
+}
+
+.signup-buttons {
+    display: inline;
+}
+
+#signup-submit-button {
+    margin: auto;
+}

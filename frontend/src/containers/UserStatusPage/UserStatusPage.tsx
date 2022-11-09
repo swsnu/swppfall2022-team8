@@ -8,6 +8,8 @@ import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
 import NavBar from '../../components/NavBar/NavBar'
+import { Button, Form, InputGroup, Row } from 'react-bootstrap'
+import './UserStatusPage.css'
 
 const UserStatusPage = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -38,7 +40,7 @@ const UserStatusPage = () => {
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    dispatch(updateTag({ tag: tag }))
+    dispatch(updateTag({ tag }))
     setTag('')
   }
 
@@ -51,7 +53,7 @@ const UserStatusPage = () => {
   return (
     <>
       <NavBar />
-      <h1>UserStatusPage</h1>
+      <h1>User Info</h1>
       <br />
       <p>Lend List</p>
       {lendState.userLends.map((lend, idx) => (
@@ -81,26 +83,45 @@ const UserStatusPage = () => {
           <BookListEntity
             id={watch.id}
             title={watch.book_info.title}
+            available={watch.status === null}
           />
         </div>
       ))}
       <br />
-      <p>Preference Tag List</p>
-      <label>
-        tags
-        <input type="text" value={tag} onChange={event => setTag(event.target.value)} />
-        <button
-          type="button"
-          onClick={() => clickAddTagHandler()}
-          disabled={!tag}
-        >add</button>
-      </label>
-      {tags.map((tag, index) => (
-        <div key={index}>
-          {tag}
-          <button type="button" onClick={() => clickDeleteTagHandler(index)}>x</button>
-        </div>
-      ))}
+      <Form>
+        <InputGroup as={Row} className='input-class' id='tags-input-form'>
+          <Form.Label id='tags-text'>
+            <h5>Preference Tag List</h5>
+            <div className='tags-input-button'>
+              <Form.Control
+                id='tags-input'
+                type='text' value={tag}
+                onChange={event => setTag(event.target.value)}
+              />
+            </div>
+          </Form.Label>
+          <div className='tags-display'>
+            {tags.map((tag, index) => (
+              <div key={index} className='display-tag'>
+                <h5 id='tags-display-text'>{tag}</h5>
+                <Button
+                  type="button"
+                  variant='outline-secondary'
+                  onClick={() => clickDeleteTagHandler(index)}
+                  className='delete-button'
+                >X</Button>
+              </div>
+            ))}
+            <Button
+              variant="primary"
+              className='add-button'
+              onClick={() => clickAddTagHandler()}
+              disabled={!tag}
+            >add</Button>
+          </div>
+        </InputGroup>
+      </Form>
+
     </>
   )
 }

@@ -26,7 +26,7 @@ const BookListPage = () => {
 
       <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
       <br />
-      <p>Search Result:</p>
+      <h3>Result</h3>
       {lendState.lends.map(lend => (
         <div key={`lendlist_${lend.id}`}>
           <BookListEntity

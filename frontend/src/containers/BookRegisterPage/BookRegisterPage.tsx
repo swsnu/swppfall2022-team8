@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router'
+import { Navigate, useNavigate } from 'react-router'
 
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
+import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
 
 const BookRegisterPage = () => {
@@ -22,7 +23,9 @@ const BookRegisterPage = () => {
   const [submitted, setSubmitted] = useState<boolean>(false)
 
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
   const lendState = useSelector(selectLend)
+  const userState = useSelector(selectUser)
 
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
@@ -47,6 +50,11 @@ const BookRegisterPage = () => {
   }
 
   const clickConfirmRegisterHanler = async () => {
+    if (!userState.currentUser) {
+      navigate('/login')
+      return
+    }
+
     const validationCheckList = [title, author, brief, tags.length]
     const validationMessages = ['title', 'author', 'brief summary', 'at least one tag']
 
@@ -75,7 +83,8 @@ const BookRegisterPage = () => {
       const lendData = {
         book: id,
         book_info: bookData,
-        owner: 1, // TODO: implement User
+        owner: userState.currentUser.id,
+        owner_username: userState.currentUser.username,
         questions,
         cost,
         additional: info
@@ -94,67 +103,68 @@ const BookRegisterPage = () => {
   }
 
   if (submitted) {
-    return <Navigate to={`/book${(lendState.selectedLend != null) ? `/${lendState.selectedLend.id}` : ''}`} />
+    return <Navigate to={`/book${(lendState.selectedLend !== null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
     <>
       <div className='nav-bar'>
         <NavBar />
       </div>
+      <p/>
+      <h1>Register Your Book!</h1>
+      <p/>
       <div className='book-register'>
-
-        <h1>Register Your Book!</h1>
         <br />
 
-        {/* TODO: add image upload field */}
+          {/* TODO: add image upload field */}
 
-        <Form>
-          <Form.Group as={Row} className="input-class" controlId="title-input-form">
-            <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
-            <Col sm={9}>
-              <Form.Control
-                id='title-input'
-                type="text" placeholder="title"
-                value={title} onChange={event => setTitle(event.target.value)}
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId="author-input-form">
-            <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
-            <Col>
-              <Form.Control
-                id='author-input'
-                type="text" placeholder='author'
-                value={author} onChange={event => setAuthor(event.target.value)}
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='brief-summary-input-form'>
-            <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
-              <br />
-              <br />
-              <div>
+          <Form>
+            <Form.Group as={Row} className="input-class" id="title-input-form">
+              <Form.Label column sm={1} id="title-text"><h5>Title</h5></Form.Label>
+              <Col sm={9}>
                 <Form.Control
-                  id='brief-summary-input'
-                  type='text' value={brief}
-                  onChange={event => setBrief(event.target.value)}
+                  id='title-input'
+                  type="text" placeholder="title"
+                  value={title} onChange={event => setTitle(event.target.value)}
                 />
-              </div>
-            </Form.Label>
-          </Form.Group>
-          <InputGroup as={Row} className='input-class' controlId='tags-input-form'>
-            <Form.Label id='tags-text'>
-              <h5>tags</h5>
-              <br />
-              <br />
-              <div className='tags-input-button'>
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id="author-input-form">
+              <Form.Label column sm={1} id="author-text"><h5>Author</h5></Form.Label>
+              <Col>
                 <Form.Control
-                  id='tags-input'
-                  type='text' value={tag}
-                  onChange={event => setTag(event.target.value)}
+                  id='author-input'
+                  type="text" placeholder='author'
+                  value={author} onChange={event => setAuthor(event.target.value)}
                 />
-              </div>
-            </Form.Label>
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id='brief-summary-input-form'>
+              <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
+                <br />
+                <br />
+                <div>
+                  <Form.Control
+                    id='brief-summary-input'
+                    type='text' value={brief}
+                    onChange={event => setBrief(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+            </Form.Group>
+            <InputGroup as={Row} className='input-class' id='tags-input-form'>
+              <Form.Label id='tags-text'>
+                <h5>tags</h5>
+                <br />
+                <br />
+                <div className='tags-input-button'>
+                  <Form.Control
+                    id='tags-input'
+                    type='text' value={tag}
+                    onChange={event => setTag(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
               <div className='tags-display'>
               {tags.map((tag, index) => (
                 <div key={index} className='display-tag'>
@@ -163,7 +173,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteTagHandler(index)}
-                    className='tag-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}
@@ -192,7 +202,7 @@ const BookRegisterPage = () => {
               </div>
             </Form.Label>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='additional-info-input-form'>
+          <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
             <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
               <br />
               <br />
@@ -206,7 +216,7 @@ const BookRegisterPage = () => {
               </div>
             </Form.Label>
           </Form.Group>
-          <Form.Group as={Row} className='input-class' controlId='questions-input-form'>
+          <Form.Group as={Row} className='input-class' id='questions-input-form'>
             <Form.Label id='questions-text'>
               <h5>Questions</h5>
               <div className='questions-input-button'>
@@ -225,7 +235,7 @@ const BookRegisterPage = () => {
                     type="button"
                     variant='outline-secondary'
                     onClick={() => clickDeleteQuestionHandler(index)}
-                    className='question-delete-button'
+                    className='delete-button'
                   >X</Button>
                 </div>
               ))}

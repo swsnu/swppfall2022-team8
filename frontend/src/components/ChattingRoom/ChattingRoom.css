@@ -1,0 +1,19 @@
+#chat-box {
+  border: 1px solid black;
+  width: 500px;
+  height: 400px;
+  margin: 0 auto;
+  overflow-y: scroll
+}
+
+#chat-input {
+  width: 420px;
+}
+
+.chat-message-me {
+  text-align: right;
+}
+
+.chat-message-other {
+  text-align: left;
+}

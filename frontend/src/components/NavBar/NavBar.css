@@ -1,5 +1,22 @@
 .nav-else {
     display: flex;
-    margin: 0 0 0 auto;
+    padding-right: 0px;
+    padding-left: auto;
+    margin-right: 0px;
+    margin-top: auto;
+    margin-bottom: auto;
     white-space: nowrap;
+}
+
+#nav-bar {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background-color: rgb(111, 219, 255);
+}
+
+.nav-instances {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 1000px;
+    margin: auto;
 }

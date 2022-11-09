@@ -7,12 +7,17 @@ from rest_framework.decorators import action
 
 
 class LendInfoViewSet(viewsets.GenericViewSet):
-    queryset = LendInfo.objects.all()
     serializer_class = LendInfoSerializer
     permission_classes = (IsAuthenticated(),)
 
     def get_permissions(self):
         return self.permission_classes
+
+    def get_queryset(self):
+        qs = LendInfo.objects.all().prefetch_related("history")
+        if self.action == "list" or self.action == "user":
+            return qs.prefetch_related("book", "book__tags", "owner")
+        return qs
 
     # GET /api/lend/
     def list(self, request):
@@ -29,9 +34,14 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         )
         if tags:
             lend_infos = lend_infos.filter(book__tags__name__in=tags)
+        lend_infos = lend_infos[:100]
         datas = self.get_serializer(lend_infos, many=True).data
         for data in datas:
-            data["status"] = "borrowed" if data["status"] else None
+            if data["status"] and request.user.id not in (
+                data["owner"],
+                data["status"]["borrower"],
+            ):
+                data["status"] = "borrowed"
         return Response(datas, status=status.HTTP_200_OK)
 
     # POST /api/lend/
@@ -48,8 +58,11 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         lend_info = self.get_object()
         data = self.get_serializer(lend_info).data
-        if lend_info.owner != request.user:
-            data["status"] = "borrowed" if data["status"] else None
+        if data["status"] and request.user.id not in (
+            data["owner"],
+            data["status"]["borrower"],
+        ):
+            data["status"] = "borrowed"
         return Response(data, status=status.HTTP_200_OK)
 
     # PUT /api/lend/{lend_info_id}
