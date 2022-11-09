@@ -12,6 +12,7 @@ import { IProps as RightMenuProps } from '../../components/ChattingRightMenu/Cha
 
 interface MessageType {
   command: string
+  user_id: number
   messages?: ChatType[]
   message?: ChatType[]
 }
@@ -149,8 +150,8 @@ describe('<ChattingPage />', () => {
             command: 'create',
             message: {
               id: 1,
-              author: fakeLender.id,
-              author_username: fakeLender.username,
+              author: data.user_id,
+              author_username: 'test_username',
               content: data.message,
               timestamp: 'tmp'
             }
@@ -271,7 +272,7 @@ describe('<ChattingPage />', () => {
         lend_end_time: '1970-01-01T00:00:00.001Z'
       }
     }))
-    const { unmount } = renderWithProviders(<ChattingPage />, {
+    renderWithProviders(<ChattingPage />, {
       preloadedState: {
         ...preloadedState,
         user: {
@@ -297,6 +298,43 @@ describe('<ChattingPage />', () => {
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Successfully return'))
-    unmount()
+  })
+  it('should not do anything if user clicks room which is already selected', async () => {
+    // given
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const op = url.split('/')[2]
+      const data = (op === 'room')
+        ? { rooms_lend: [fakeRoom], rooms_borrow: [] }
+        : {
+            ...fakeLend,
+            status: fakeBorrow
+          }
+      return Promise.resolve({ data })
+    })
+    renderWithProviders(<ChattingPage />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          currentUser: fakeLender
+        }
+      }
+    })
+    const lendRoomsButton = await screen.findByText('lend rooms')
+    await act(() => {
+      fireEvent.click(lendRoomsButton)
+    })
+    const roomButton = await screen.findByTestId('spyRoomButton')
+    await act(() => {
+      fireEvent.click(roomButton)
+    })
+
+    // when
+    await act(() => {
+      fireEvent.click(roomButton)
+    })
+
+    // then
+    await waitFor(() => expect(axios.get).toBeCalledTimes(2))
   })
 })
