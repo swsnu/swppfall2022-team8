@@ -93,7 +93,7 @@ class UserViewSet(viewsets.GenericViewSet):
             watching_lend=lend_info, watcher=request.user
         )
 
-        lend_data = LendInfoSerializer(lend_info).data
+        lend_data = LendInfoSerializer(lend_info).data.copy()
 
         if created:
             return Response(
@@ -104,7 +104,7 @@ class UserViewSet(viewsets.GenericViewSet):
             watch_lend.delete()
             return Response(
                 {"created": False, "lend_info": lend_data},
-                status=status.HTTP_204_NO_CONTENT,
+                status=status.HTTP_200_OK,
             )
 
     # GET /api/user/tag/

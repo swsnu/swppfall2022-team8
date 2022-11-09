@@ -66,7 +66,7 @@ const UserStatusPage = () => {
       ))}
       <br />
       <p>Borrow List</p>
-      {borrowState.userBorrows.map((borrow, idx) => (
+      {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
         <div key={`myborrow_${idx}`}>
           <BookListEntity
             id={borrow.lend_id}
