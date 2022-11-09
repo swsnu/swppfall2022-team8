@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="347ca676-cade-4799-bacd-4a0673fb0388" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/book/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/book/tests/test_lend.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/InitializeDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/InitializeDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/test_book.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/views/book_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/views/book_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/book/test_book.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/book/test_book.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/tests/test_book.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/book/views/lend_info_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/book/views/lend_info_view.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,8 +51,13 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
   </component>
-  <component name="RunManager" selected="Django tests.Test: book.test_book.BookTest">
-    <configuration name="Test: book.test_book.BookTest" type="DjangoTestsConfigurationType" temporary="true">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/book/tests" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Django tests.Test: book.tests.test_lend.LendTest.test_destroy_주인_아님">
+    <configuration name="Test: book.tests.test_book.BookTest" type="DjangoTestsConfigurationType" temporary="true">
       <module name="bookVillage" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -66,14 +70,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="book.test_book.BookTest" />
+      <option name="TARGET" value="book.tests.test_book.BookTest" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: book.test_book.BookTest.test_put_태그_초기화" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: book.tests.test_lend.LendTest" type="DjangoTestsConfigurationType" temporary="true">
       <module name="bookVillage" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -86,14 +90,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="book.test_book.BookTest.test_put_태그_초기화" />
+      <option name="TARGET" value="book.tests.test_lend.LendTest" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: book.test_book.BookTest.test_retrieve_실패" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: book.tests.test_lend.LendTest.test_create_question_실패" type="DjangoTestsConfigurationType" temporary="true">
       <module name="bookVillage" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -106,14 +110,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="book.test_book.BookTest.test_retrieve_실패" />
+      <option name="TARGET" value="book.tests.test_lend.LendTest.test_create_question_실패" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: book.test_book.BookTest.test_retrieve_성공" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: book.tests.test_lend.LendTest.test_destroy_주인_아님" type="DjangoTestsConfigurationType" temporary="true">
       <module name="bookVillage" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -126,14 +130,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="book.test_book.BookTest.test_retrieve_성공" />
+      <option name="TARGET" value="book.tests.test_lend.LendTest.test_destroy_주인_아님" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: tests.book.test_book.BookTest" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: book.tests.test_lend.LendTest.test_update_주인_아님" type="DjangoTestsConfigurationType" temporary="true">
       <module name="bookVillage" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -146,7 +150,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="tests.book.test_book.BookTest" />
+      <option name="TARGET" value="book.tests.test_lend.LendTest.test_update_주인_아님" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
@@ -178,11 +182,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Django tests.Test: book.test_book.BookTest" />
-        <item itemvalue="Django tests.Test: book.test_book.BookTest.test_put_태그_초기화" />
-        <item itemvalue="Django tests.Test: book.test_book.BookTest.test_retrieve_실패" />
-        <item itemvalue="Django tests.Test: book.test_book.BookTest.test_retrieve_성공" />
-        <item itemvalue="Django tests.Test: tests.book.test_book.BookTest" />
+        <item itemvalue="Django tests.Test: book.tests.test_lend.LendTest.test_destroy_주인_아님" />
+        <item itemvalue="Django tests.Test: book.tests.test_lend.LendTest" />
+        <item itemvalue="Django tests.Test: book.tests.test_book.BookTest" />
+        <item itemvalue="Django tests.Test: book.tests.test_lend.LendTest.test_update_주인_아님" />
+        <item itemvalue="Django tests.Test: book.tests.test_lend.LendTest.test_create_question_실패" />
       </list>
     </recent_temporary>
   </component>
@@ -214,12 +218,24 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/bookVillage$Test__tests_book_test_book_BookTest.coverage" NAME="Test: tests.book.test_book.BookTest Coverage Results" MODIFIED="1667990988337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_retrieve_.coverage" NAME="Test: book.tests.test_lend.LendTest.test_retrieve_주인 Coverage Results" MODIFIED="1668000867050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/bookVillage$Test__tests_book_test_book_BookTest_test_list_query_title.coverage" NAME="Test: tests.book.test_book.BookTest.test_list_query_title Coverage Results" MODIFIED="1667778632160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_list___.coverage" NAME="Test: book.tests.test_lend.LendTest.test_list_제목_저자_쿼리 Coverage Results" MODIFIED="1667999928506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_create.coverage" NAME="Test: book.tests.test_lend.LendTest.test_create Coverage Results" MODIFIED="1668000699343" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_update_.coverage" NAME="Test: book.tests.test_lend.LendTest.test_update_주인 Coverage Results" MODIFIED="1668001134755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_destroy__.coverage" NAME="Test: book.tests.test_lend.LendTest.test_destroy_주인_아님 Coverage Results" MODIFIED="1668001468474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_book_BookTest.coverage" NAME="Test: book.tests.test_book.BookTest Coverage Results" MODIFIED="1668001305974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_test_book_BookTest.coverage" NAME="Test: book.test_book.BookTest Coverage Results" MODIFIED="1667994282826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__tests_book_test_book_BookTest.coverage" NAME="Test: tests.book.test_book.BookTest Coverage Results" MODIFIED="1667990988337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_list__.coverage" NAME="Test: book.tests.test_lend.LendTest.test_list_태그_쿼리 Coverage Results" MODIFIED="1668000061779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_list_borrowed_.coverage" NAME="Test: book.tests.test_lend.LendTest.test_list_borrowed_출력 Coverage Results" MODIFIED="1667999930792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest.coverage" NAME="Test: book.tests.test_lend.LendTest Coverage Results" MODIFIED="1668001437596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/bookVillage$Test__book_test_book_BookTest_test_put__.coverage" NAME="Test: book.test_book.BookTest.test_put_태그_초기화 Coverage Results" MODIFIED="1667993270177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_retrieve__.coverage" NAME="Test: book.tests.test_lend.LendTest.test_retrieve_주인_아님 Coverage Results" MODIFIED="1668000863857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/bookVillage$Test__tests_book_test_book_BookTest_test_list.coverage" NAME="Test: tests.book.test_book.BookTest.test_list Coverage Results" MODIFIED="1667778492920" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/bookVillage$Test__book_test_book_BookTest_test_retrieve_.coverage" NAME="Test: book.test_book.BookTest.test_retrieve_실패 Coverage Results" MODIFIED="1667992631511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_update__.coverage" NAME="Test: book.tests.test_lend.LendTest.test_update_주인_아님 Coverage Results" MODIFIED="1668001251714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/bookVillage$Test__book_tests_test_lend_LendTest_test_create_question_.coverage" NAME="Test: book.tests.test_lend.LendTest.test_create_question_실패 Coverage Results" MODIFIED="1668001199825" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/bookVillage$celery.coverage" NAME="celery Coverage Results" MODIFIED="1667836210268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/bookVillage" />
-    <SUITE FILE_PATH="coverage/bookVillage$Test__book_test_book_BookTest.coverage" NAME="Test: book.test_book.BookTest Coverage Results" MODIFIED="1667993647038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

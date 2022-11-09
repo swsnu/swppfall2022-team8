@@ -75,7 +75,7 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_201_CREATED
-        assert Book.objects.all().count() == 3
+        assert Book.objects.count() == 3
         assert Tag.objects.all().count() == 2
         assert res.data["tags"] == ["tag0"]
 
@@ -88,8 +88,8 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_201_CREATED
-        assert Book.objects.all().count() == 3
-        assert Tag.objects.all().count() == 3
+        assert Book.objects.count() == 3
+        assert Tag.objects.count() == 3
         assert res.data["tags"] == ["tag0", "tag2"]
 
     def test_tags_typo(self):
@@ -135,8 +135,8 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_200_OK
-        assert Book.objects.all().count() == 2
-        assert BookTag.objects.all().count() == 3
+        assert Book.objects.count() == 2
+        assert BookTag.objects.count() == 3
         assert Book.objects.get(id=self.book_0.id).title == "c"
 
     def test_put_성공_태그_없음(self):
@@ -148,7 +148,7 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_200_OK
-        assert Book.objects.all().count() == 2
+        assert Book.objects.count() == 2
         assert Book.objects.get(id=self.book_0.id).title == "c"
 
     def test_put_태그_초기화(self):
@@ -161,8 +161,8 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_200_OK
-        assert Book.objects.all().count() == 2
-        assert BookTag.objects.all().count() == 1
+        assert Book.objects.count() == 2
+        assert BookTag.objects.count() == 1
         assert book.title == "c"
         assert book.tags.count() == 0
 
@@ -172,9 +172,9 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_204_NO_CONTENT
-        assert Book.objects.all().count() == 1
-        assert BookTag.objects.all().count() == 1
-        assert Tag.objects.all().count() == 2
+        assert Book.objects.count() == 1
+        assert BookTag.objects.count() == 1
+        assert Tag.objects.count() == 2
 
     def test_delete_pk_이상(self):
         # when
@@ -182,4 +182,4 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_404_NOT_FOUND
-        assert Book.objects.all().count() == 2
+        assert Book.objects.count() == 2
