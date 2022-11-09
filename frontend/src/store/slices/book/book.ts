@@ -45,7 +45,7 @@ export const fetchBook = createAsyncThunk(
   'book/fetchBook',
   async (id: BookType['id']) => {
     const response = await axios.get(`/api/book/${id}/`)
-    return response.data ?? null
+    return response.data
   }
 )
 
