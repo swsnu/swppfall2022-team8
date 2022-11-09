@@ -139,7 +139,7 @@ class UserViewSet(viewsets.GenericViewSet):
         else:
             subscribe_tag.delete()
             return Response(
-                {"created": False, "tag": tag_name}, status=status.HTTP_204_NO_CONTENT
+                {"created": False, "tag": tag_name}, status=status.HTTP_200_OK
             )
 
     # GET /api/user/recommend/
