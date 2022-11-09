@@ -40,7 +40,7 @@ const UserStatusPage = () => {
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
     setTags(newTags)
-    dispatch(updateTag({ tag }))
+    dispatch(updateTag({ tag })) // Todo : add alert if 404 here
     setTag('')
   }
 

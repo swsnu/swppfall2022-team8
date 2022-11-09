@@ -93,7 +93,7 @@ export const fetchTags = createAsyncThunk(
 export const updateTag = createAsyncThunk(
   'user/updateTag',
   async (data: TagType, { dispatch }) => {
-    const response = await axios.put('/api/user/tag/', data)
+    const response = await axios.put('/api/user/tag/', data) // Todo : handle 404 here
     dispatch(userActions.updateTag(response.data))
     return response.data
   }
