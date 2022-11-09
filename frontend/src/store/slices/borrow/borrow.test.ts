@@ -4,11 +4,7 @@ import axios from 'axios'
 import reducer, { BorrowState, createBorrow, fetchUserBorrows, toggleBorrowStatus } from './borrow'
 
 describe('borrow reducer', () => {
-  let store: EnhancedStore<
-    { borrow: BorrowState },
-    AnyAction,
-    [ThunkMiddleware<{ borrow: BorrowState }, AnyAction, undefined>]
-  >
+  let store: EnhancedStore<{ borrow: BorrowState }, AnyAction, [ThunkMiddleware<{ borrow: BorrowState }, AnyAction, undefined>]>
   const fakeBorrow = {
     id: 1,
     borrower: 2,

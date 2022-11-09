@@ -4,11 +4,7 @@ import axios from 'axios'
 import reducer, { UserState, fetchTags, updateTag, fetchWatch, fetchRecommend, toggleWatch, requestSignup, requestLogout, requestLogin } from './user'
 
 describe('user reducer', () => {
-  let store: EnhancedStore<
-    { user: UserState },
-    AnyAction,
-    [ThunkMiddleware<{ user: UserState }, AnyAction, undefined>]
-  >
+  let store: EnhancedStore<{ user: UserState }, AnyAction, [ThunkMiddleware<{ user: UserState }, AnyAction, undefined>]>
   const fakeTag = 'USER_TEST_TAG'
   const fakeRecommend = {
     id: 1,

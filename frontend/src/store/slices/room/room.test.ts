@@ -3,11 +3,7 @@ import axios from 'axios'
 import reducer, { RoomState, fetchUserRooms, createRoom } from './room'
 
 describe('room reducer', () => {
-  let store: EnhancedStore<
-    { room: RoomState },
-    AnyAction,
-    [ThunkMiddleware<{ room: RoomState }, AnyAction, undefined>]
-  >
+  let store: EnhancedStore<{ room: RoomState }, AnyAction, [ThunkMiddleware<{ room: RoomState }, AnyAction, undefined>]>
   const fakeLendRoom = {
     id: 1,
     lend_id: 2,

@@ -4,11 +4,7 @@ import axios from 'axios'
 import reducer, { BookState, createBook, deleteBook, fetchBook, fetchQueryBooks, updateBook } from './book'
 
 describe('book reducer', () => {
-  let store: EnhancedStore<
-    { book: BookState },
-    AnyAction,
-    [ThunkMiddleware<{ book: BookState }, AnyAction, undefined>]
-  >
+  let store: EnhancedStore<{ book: BookState }, AnyAction, [ThunkMiddleware<{ book: BookState }, AnyAction, undefined>]>
   const fakeBook1 = {
     id: 1,
     title: 'test-title-1',

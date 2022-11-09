@@ -4,11 +4,7 @@ import axios from 'axios'
 import reducer, { LendState, fetchQueryLends, createLend, fetchLend, deleteLend, updateLend, fetchUserLends } from './lend'
 
 describe('lend reducer', () => {
-  let store: EnhancedStore<
-    { lend: LendState },
-    AnyAction,
-    [ThunkMiddleware<{ lend: LendState }, AnyAction, undefined>]
-  >
+  let store: EnhancedStore<{ lend: LendState }, AnyAction, [ThunkMiddleware<{ lend: LendState }, AnyAction, undefined>]>
   const fakeLend = {
     id: 2,
     book: 1,
