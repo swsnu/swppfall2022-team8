@@ -1,12 +1,12 @@
 import { AnyAction, configureStore, EnhancedStore, ThunkMiddleware } from '@reduxjs/toolkit'
 import axios from 'axios'
-import reducer, { RoomState, fetchUserRooms } from './room'
+import reducer, { RoomState, fetchUserRooms, createRoom } from './room'
 
 describe('room reducer', () => {
   let store: EnhancedStore<
-  { room: RoomState },
-  AnyAction,
-  [ThunkMiddleware<{ room: RoomState }, AnyAction, undefined>]
+    { room: RoomState },
+    AnyAction,
+    [ThunkMiddleware<{ room: RoomState }, AnyAction, undefined>]
   >
   const fakeLendRoom = {
     id: 1,
@@ -43,5 +43,22 @@ describe('room reducer', () => {
     await store.dispatch(fetchUserRooms())
     expect(store.getState().room.rooms_lend).toEqual([fakeLendRoom])
     expect(store.getState().room.rooms_borrow).toEqual([fakeBorrowRoom])
+  })
+  it('should handle createRoom', async () => {
+    jest.spyOn(axios, 'post').mockResolvedValue({ data: fakeBorrowRoom })
+    const result = await store.dispatch(
+      createRoom(fakeBorrowRoom)
+    )
+    expect(result.type).toBe(`${createRoom.typePrefix}/fulfilled`)
+    expect(store.getState().room.rooms_borrow.length).toEqual(2)
+  })
+  it('should handle createRoom error', async () => {
+    const mockConsole = jest.fn()
+    window.console.error = mockConsole
+    jest.spyOn(axios, 'post').mockRejectedValue({ data: null })
+    const result = await store.dispatch(
+      createRoom(fakeLendRoom)
+    )
+    expect(result.type).toBe(`${createRoom.typePrefix}/rejected`)
   })
 })

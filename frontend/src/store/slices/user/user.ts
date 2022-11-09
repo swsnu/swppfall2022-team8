@@ -86,7 +86,7 @@ export const fetchTags = createAsyncThunk(
   'user/fetchTags',
   async () => {
     const response = await axios.get('/api/user/tag/')
-    return response.data ?? null
+    return response.data
   }
 )
 
