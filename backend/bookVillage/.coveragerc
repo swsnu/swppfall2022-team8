@@ -4,3 +4,5 @@ omit =
     InitializeDB.py
     bookVillage/*
     **/migrations/*
+    **/tests.py
+    **/test_*.py
