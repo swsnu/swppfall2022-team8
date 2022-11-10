@@ -57,7 +57,7 @@ class LendTest(APITestCase):
         # then
         assert len(data) == 2
         assert res.status_code == status.HTTP_200_OK
-        assert data[0]["status"] == "borrowed"
+        assert data[0]["status"]
         assert data[1]["status"] is None
 
     def test_list_제목_저자_쿼리(self):
@@ -138,13 +138,16 @@ class LendTest(APITestCase):
         assert data["status"]
         assert data["status"] != "borrowed"
 
-    def test_retrieve_주인_아님(self):
+    def test_retrieve_주인_빌린_사람_아님(self):
         # given
+        user_2 = User.objects.create_user(username="c", password="c")
+        client_2 = APIClient()
+        client_2.force_authenticate(user=user_2)
         lend_0 = LendInfo.objects.create(owner=self.user_0, book=self.book_0, cost=100)
         borrow_0 = BorrowInfo.objects.create(borrower=self.user_1, lend_id=lend_0)
 
         # when
-        res = self.client_1.get(f"/api/lend/{lend_0.id}/")
+        res = client_2.get(f"/api/lend/{lend_0.id}/")
         data = res.data
 
         # then

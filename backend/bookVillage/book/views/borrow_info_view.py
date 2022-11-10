@@ -27,7 +27,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
                 {"error": "Book is already borrowed"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if lend_info.owner == data["borrower"]:
+        if lend_info.owner.id == data["borrower"]:
             return Response(
                 {"error": "You can't borrow your book"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -55,10 +55,10 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
                 {"error": "You can't toggle on borrow active status again"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if not borrow_info.is_accesible(request.user):
+        if request.user != borrow_info.owner:
             return Response(
                 {"error": "You can't update other's status"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         borrow_info.active = False

@@ -16,3 +16,7 @@ class BorrowInfo(models.Model):
 
     def is_accesible(self, user):
         return self.borrower == user or self.lend_id.owner == user
+
+    @property
+    def owner(self):
+        return self.lend_id.owner
