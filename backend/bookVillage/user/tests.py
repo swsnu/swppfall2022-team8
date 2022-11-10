@@ -16,7 +16,7 @@ class UserTest(APITestCase):
     def setUp(self) -> None:
         self.client = APIClient()
 
-    def test_signup_password_빼먹음(self):
+    def test_signup_password_없음(self):
         # when
         res = self.client.post("/api/user/", data={"username": "c"}, format="json")
 
@@ -224,12 +224,12 @@ class UserRelatedTest(APITestCase):
     def test_recommend(self):
         # given
         _ = self.client_0.put("/api/user/tag/", data={"tag": "tag0"}, format="json")
+        _ = self.client_0.put("/api/user/tag/", data={"tag": "tag1"}, format="json")
 
         # when
         res = self.client_0.get("/api/user/recommend/")
         data = res.data
 
         # then
-
         assert res.status_code == status.HTTP_200_OK
         assert len(data) == 2

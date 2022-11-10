@@ -189,8 +189,10 @@ def recommend_with_tags(subscribed_tags):
     idx = len(books.index) - 1
     scores = list(enumerate(cosine_similarity[idx]))
     scores = sorted(scores, key=lambda x: x[1], reverse=True)
-    scores = scores[0:10]  # return 10 books
-    indices = [i[0] for i in scores]
-    result = books.iloc[indices]["id"]
 
+    scores = scores[1:11]  # return 10 books
+
+    indices = [i[0] for i in scores]
+
+    result = books.iloc[indices]["id"]
     return result.values.tolist()
