@@ -31,6 +31,6 @@ jobs:
         - cd ../backend/bookVillage
         - black --check ./
         - coverage run --source='.' manage.py test
-        - coverage xml --omit=./InitializeDB
+        - coverage xml
         - cd ../.. && sonar-scanner
         - cd backend/bookVillage && coveralls --merge=../../frontend/coverage.json

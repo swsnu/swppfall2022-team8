@@ -1,0 +1,6 @@
+[run]
+omit =
+    manage.py
+    InitializeDB.py
+    bookVillage/*
+    **/migrations/*
