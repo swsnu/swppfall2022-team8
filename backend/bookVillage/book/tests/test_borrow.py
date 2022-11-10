@@ -112,6 +112,19 @@ class BorrowTest(APITestCase):
         assert BorrowInfo.objects.count() == 1
         assert BorrowInfo.objects.filter(active=True).count() == 0
 
+    def test_update_body_보냄(self):
+        # given
+        lend_0 = LendInfo.objects.create(book=self.book_0, owner=self.user_0, cost=400)
+        borrow_0 = BorrowInfo.objects.create(borrower=self.user_1, lend_id=lend_0)
+
+        # when
+        res = self.client_0.put(
+            f"/api/borrow/{borrow_0.id}/", data={"active": False}, format="json"
+        )
+
+        # then
+        assert res.status_code == status.HTTP_400_BAD_REQUEST
+
     def test_update_active_false_실패(self):
         # given
         lend_0 = LendInfo.objects.create(book=self.book_0, owner=self.user_0, cost=400)
