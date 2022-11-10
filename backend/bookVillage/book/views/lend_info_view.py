@@ -72,7 +72,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         if lend_info.owner != request.user:
             return Response(
                 {"error": "You can't update other's book"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_403_FORBIDDEN,
             )
         serializer = self.get_serializer(lend_info, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -85,7 +85,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         if lend_info.owner != request.user:
             return Response(
                 {"error": "You can't delete other's book"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_403_FORBIDDEN,
             )
         lend_info.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -37,17 +37,21 @@ const UserStatusPage = () => {
     })()
   }, [navigate, dispatch])
 
-  const clickAddTagHandler = () => {
+  const clickAddTagHandler = async () => {
     const newTags: string[] = [...tags, tag]
-    setTags(newTags)
-    dispatch(updateTag({ tag }))
-    setTag('')
+    const response = await dispatch(updateTag({ tag }))
+    if (response.type === `${updateTag.typePrefix}/fulfilled`) {
+      setTags(newTags)
+      setTag('')
+    }
   }
 
-  const clickDeleteTagHandler = (index: number) => {
-    const newTags = tags.filter((tag, idx) => idx !== index)
-    dispatch(updateTag({ tag: tags[index] }))
-    setTags(newTags)
+  const clickDeleteTagHandler = async (index: number) => {
+    const newTags = tags.filter((_tag, idx) => idx !== index)
+    const response = await dispatch(updateTag({ tag: tags[index] }))
+    if (response.type === `${updateTag.typePrefix}/fulfilled`) {
+      setTags(newTags)
+    }
   }
 
   return (
@@ -66,7 +70,7 @@ const UserStatusPage = () => {
       ))}
       <br />
       <p>Borrow List</p>
-      {borrowState.userBorrows.map((borrow, idx) => (
+      {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
         <div key={`myborrow_${idx}`}>
           <BookListEntity
             id={borrow.lend_id}

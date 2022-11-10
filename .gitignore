@@ -168,3 +168,5 @@ cython_debug/
 migrations/*
 
 ###  backend end  ###
+
+backend/bookVillage/.idea/

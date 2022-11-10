@@ -53,7 +53,7 @@ export const fetchLend = createAsyncThunk(
   'lend/fetchLend',
   async (id: LendType['id']) => {
     const response = await axios.get(`/api/lend/${id}/`)
-    return response.data ?? null
+    return response.data
   }
 )
 

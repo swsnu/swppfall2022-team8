@@ -36,6 +36,10 @@ class BookViewSet(viewsets.GenericViewSet):
     def create(self, request):
         data = request.data.copy()
         tag_data = data.pop("tags", [])
+        if not isinstance(tag_data, list):
+            return Response(
+                {"error": "'tags' should be list"}, status=status.HTTP_400_BAD_REQUEST
+            )
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         book = serializer.save()

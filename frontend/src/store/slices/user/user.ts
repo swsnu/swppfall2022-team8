@@ -86,14 +86,14 @@ export const fetchTags = createAsyncThunk(
   'user/fetchTags',
   async () => {
     const response = await axios.get('/api/user/tag/')
-    return response.data ?? null
+    return response.data
   }
 )
 
 export const updateTag = createAsyncThunk(
   'user/updateTag',
   async (data: TagType, { dispatch }) => {
-    const response = await axios.put('/api/user/tag/', data)
+    const response = await axios.put('/api/user/tag/', data) // Todo : handle 404 here
     dispatch(userActions.updateTag(response.data))
     return response.data
   }
@@ -200,6 +200,13 @@ export const userSlice = createSlice({
     })
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.subscribed_tags = action.payload
+    })
+    builder.addCase(updateTag.rejected, (_state, action) => {
+      if (action.error.message === errorPrefix(404)) {
+        alert('The tag does not exist in DB.')
+      } else {
+        alert('Error on update tags')
+      }
     })
     builder.addCase(fetchWatch.fulfilled, (state, action) => {
       state.watch_list = action.payload

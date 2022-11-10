@@ -30,7 +30,6 @@ const BookDetailPage = () => {
   const clickWatchHandler = async () => {
     const response = await dispatch(toggleWatch({ lend_id: Number(id) }))
 
-    // TODO : Something's wrong... Can alert Success, but can't alert Canceled. Check console
     if (response.payload.created) {
       console.log('success')
       alert('Watch Success!')
