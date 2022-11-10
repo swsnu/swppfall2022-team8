@@ -55,7 +55,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
 
         borrow_info = lend_info.current_borrow
         if borrow_info:
-            serializer = BorrowInfoSerializer(borrow_info, many=True)
+            serializer = BorrowInfoSerializer(borrow_info)
             data = serializer.data.copy()
             return data
         else:
