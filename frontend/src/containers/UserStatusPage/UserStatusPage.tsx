@@ -22,19 +22,21 @@ const UserStatusPage = () => {
   const [tags, setTags] = useState<string[]>(userState.subscribed_tags)
 
   useEffect(() => {
-    (async () => {
-      if (!userState.currentUser) {
-        navigate('/login')
-      } else {
-        await dispatch(fetchUserLends())
-        await dispatch(fetchUserBorrows())
+    if (!userState.currentUser) {
+      navigate('/login')
+    } else {
+      (async () => {
         const response = await dispatch(fetchTags())
         if (response.type === `${fetchTags.typePrefix}/fulfilled`) {
           setTags(response.payload)
+        } else {
+          alert('Error on fetch tags')
         }
-        await dispatch(fetchWatch())
-      }
-    })()
+      })()
+      dispatch(fetchUserLends())
+      dispatch(fetchUserBorrows())
+      dispatch(fetchWatch())
+    }
   }, [navigate, dispatch])
 
   const clickAddTagHandler = async () => {
@@ -43,6 +45,8 @@ const UserStatusPage = () => {
     if (response.type === `${updateTag.typePrefix}/fulfilled`) {
       setTags(newTags)
       setTag('')
+    } else {
+      alert('Error on add tag')
     }
   }
 
@@ -51,6 +55,8 @@ const UserStatusPage = () => {
     const response = await dispatch(updateTag({ tag: tags[index] }))
     if (response.type === `${updateTag.typePrefix}/fulfilled`) {
       setTags(newTags)
+    } else {
+      alert('Error on delete tag')
     }
   }
 

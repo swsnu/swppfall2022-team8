@@ -76,6 +76,7 @@ const ChattingPage = () => {
     newSocket.addEventListener('close', function (event) {
       if (event.code !== 1000) {
         console.error('Chat socket closed unexpectedly')
+        chatSocket.current = null
       }
     })
   }
@@ -85,12 +86,6 @@ const ChattingPage = () => {
       ? roomState.rooms_lend
       : roomState.rooms_borrow
     const room = rooms[idx]
-
-    if (room.id === connectedRoom) {
-      return
-    }
-
-    setChatList(_oldList => [])
 
     const response = await dispatch(fetchLend(room.lend_id))
 
@@ -105,12 +100,17 @@ const ChattingPage = () => {
       return
     }
 
-    if (chatSocket.current) {
-      chatSocket.current.close(1000)
-      chatSocket.current = null
+    if (room.id === connectedRoom) {
+      return
     }
 
+    setChatList(_oldList => [])
+
     setConnectedRoom(room.id)
+
+    if (chatSocket.current) {
+      chatSocket.current.close(1000)
+    }
 
     createAndSetupSocket(room.id)
   }
