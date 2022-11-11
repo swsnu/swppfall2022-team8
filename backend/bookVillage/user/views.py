@@ -59,7 +59,7 @@ class UserViewSet(viewsets.GenericViewSet):
             data = self.get_serializer(user).data
             token, created = Token.objects.get_or_create(user=user)
             data["token"] = token.key
-            return Response(data)
+            return Response(data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # PUT /api/user/logout/
@@ -189,8 +189,10 @@ def recommend_with_tags(subscribed_tags):
     idx = len(books.index) - 1
     scores = list(enumerate(cosine_similarity[idx]))
     scores = sorted(scores, key=lambda x: x[1], reverse=True)
-    scores = scores[1:11]  # return 10 books
-    indices = [i[0] for i in scores]
-    result = books.iloc[indices]["id"]
 
+    scores = scores[1:11]  # return 10 books
+
+    indices = [i[0] for i in scores]
+
+    result = books.iloc[indices]["id"]
     return result.values.tolist()
