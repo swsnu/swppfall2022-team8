@@ -32,6 +32,7 @@ const BookRequestPage = () => {
           navigate('/main')
         }
       } else {
+        alert('Error on fetch lend')
         const surfix = id ? `/${id}` : ''
         navigate(`/book${surfix}`)
       }
@@ -86,7 +87,7 @@ const BookRequestPage = () => {
         : null}
 
       <br />
-      <button onClick={() => clickSendButtonHandler()}>send to lender</button>
+      <button onClick={() => clickSendButtonHandler()}>Send to lender</button>
     </>
   )
 }

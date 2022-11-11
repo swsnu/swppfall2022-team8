@@ -31,10 +31,8 @@ const BookDetailPage = () => {
     const response = await dispatch(toggleWatch({ lend_id: Number(id) }))
 
     if (response.payload.created) {
-      console.log('success')
       alert('Watch Success!')
     } else {
-      console.log('canceled')
       alert('Watch Canceled!')
     }
   }
@@ -56,17 +54,10 @@ const BookDetailPage = () => {
           <h2>{lendState.selectedLend?.cost} &#x20a9;</h2>
           <br/>
           <p className='light-text'>{lendState.selectedLend?.book_info.brief}</p>
-          {(() => {
-            if (lendState.selectedLend?.status) {
-              return (
-                <Button active variant='warning'>Borrowed</Button>
-              )
-            } else {
-              return (
-                <Button active variant='success'>Available</ Button>
-              )
-            }
-          })()}
+          {lendState.selectedLend?.status
+            ? <Button active variant='warning'>Borrowed</Button>
+            : <Button active variant='success'>Available</ Button>
+          }
           <br />
           <br />
           <div>
@@ -83,14 +74,12 @@ const BookDetailPage = () => {
               {lendState.selectedLend?.additional}
             </div>
           </div>
-          {/* TODO: implement borrow related feature in sprint3 */}
         </div>
       </div>
 
-      {(() => {
-        if (userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner)) {
-          return (
-            <div className='detail-page-bottom'>
+      <div className='detail-page-bottom'>
+        {(userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner))
+          ? <>
               <Button variant="outline-primary"
                 type="button"
                 className='detail-page-buttons'
@@ -102,11 +91,8 @@ const BookDetailPage = () => {
                 className='detail-page-buttons'
                 onClick={() => clickDeleteHandler()}
               >Delete</Button>
-            </div>
-          )
-        } else {
-          return (
-            <div className='detail-page-bottom'>
+            </>
+          : <>
               <Button variant="outline-primary"
                 className='detail-page-buttons'
                 id="detail-request-button"
@@ -118,10 +104,9 @@ const BookDetailPage = () => {
                 id="detail-watch-button"
                 onClick={() => clickWatchHandler()}
               >Watch</Button>
-            </div>
-          )
+            </>
         }
-      })()}
+      </div>
     </>
   )
 }

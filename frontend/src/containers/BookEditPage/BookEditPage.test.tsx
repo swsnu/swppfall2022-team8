@@ -44,7 +44,7 @@ jest.mock('../../components/NavBar/NavBar', () => spyNavBar)
 const preloadedState: RootState = rootInitialState
 
 describe('<BookEditPage />', () => {
-  it('should handle one edit story', async () => {
+  it('should handle a edit story', async () => {
     // given
     const updatedLend = {
       ...fakeLend,
@@ -59,18 +59,20 @@ describe('<BookEditPage />', () => {
       data: updatedLend
     }))
 
-    renderWithProviders(<BookEditPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeUser
-        },
-        lend: {
-          ...preloadedState.lend,
-          selectedLend: fakeLend
+    await act(() => {
+      renderWithProviders(<BookEditPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          },
+          lend: {
+            ...preloadedState.lend,
+            selectedLend: fakeLend
+          }
         }
-      }
+      })
     })
 
     // when
@@ -83,24 +85,90 @@ describe('<BookEditPage />', () => {
 
     await act(() => {
       fireEvent.change(cost, { target: { value: updatedLend.cost } })
+    })
+    await act(() => {
       fireEvent.change(info, { target: { value: updatedLend.additional } })
     })
     const deleteButton = await screen.findByText('X')
     await act(() => {
       fireEvent.click(deleteButton)
+    })
+    await act(() => {
       fireEvent.change(question, { target: { value: updatedLend.questions[0] } })
     })
+
     const addButton = await screen.findByText('add')
     await act(() => {
       fireEvent.click(addButton)
     })
 
-    const editButton = await screen.findByText('Edit')
-    await act(() => {
+    await act(async () => {
+      const editButton = await screen.findByText('Edit')
       fireEvent.click(editButton)
     })
 
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/book/${updatedLend.id}`))
+  })
+  it('should handle impossible case (current user is null)', async () => {
+    // given
+    await act(() => {
+      renderWithProviders(<BookEditPage />, { preloadedState })
+    })
+
+    // then
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/login'))
+  })
+  it('should handle impossible case (edit someone else\'s book)', async () => {
+    // given
+    globalThis.alert = jest.fn()
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({
+      data: {
+        ...fakeLend,
+        owner: 987
+      }
+    }))
+    await act(() => {
+      renderWithProviders(<BookEditPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          },
+          lend: {
+            ...preloadedState.lend,
+            selectedLend: fakeLend
+          }
+        }
+      })
+    })
+
+    // then
+    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('You can\'t edit other\'s book!'))
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/main'))
+  })
+  it('should handle fetch lend error', async () => {
+    // given
+    console.error = jest.fn()
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.reject(new Error('mock')))
+    await act(() => {
+      renderWithProviders(<BookEditPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          },
+          lend: {
+            ...preloadedState.lend,
+            selectedLend: fakeLend
+          }
+        }
+      })
+    })
+
+    // then
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/book/4'))
   })
 })

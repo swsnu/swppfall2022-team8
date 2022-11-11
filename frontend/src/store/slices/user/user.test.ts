@@ -1,7 +1,7 @@
 import { AnyAction, configureStore, EnhancedStore, ThunkMiddleware } from '@reduxjs/toolkit'
 import { waitFor } from '@testing-library/react'
 import axios from 'axios'
-import reducer, { UserState, fetchTags, updateTag, fetchWatch, fetchRecommend, toggleWatch, requestSignup, requestLogout, requestLogin } from './user'
+import reducer, { UserState, fetchTags, updateTag, fetchWatch, fetchRecommend, toggleWatch, requestSignup, requestLogout, requestLogin, errorPrefix } from './user'
 
 describe('user reducer', () => {
   let store: EnhancedStore<{ user: UserState }, AnyAction, [ThunkMiddleware<{ user: UserState }, AnyAction, undefined>]>
@@ -134,7 +134,6 @@ describe('user reducer', () => {
     window.console.error = mockConsole
     const mockAlert = jest.fn()
     window.alert = mockAlert
-    const errorPrefix = (code: number) => `Request failed with status code ${code}`
     jest.spyOn(axios, 'post').mockRejectedValue(new Error(errorPrefix(409)))
     const result = await store.dispatch(requestSignup({
       username: 'USER_TEST_USERNAME',
@@ -171,7 +170,6 @@ describe('user reducer', () => {
     window.console.error = mockConsole
     const mockAlert = jest.fn()
     window.alert = mockAlert
-    const errorPrefix = (code: number) => `Request failed with status code ${code}`
     jest.spyOn(axios, 'post').mockRejectedValue(new Error(errorPrefix(4)))
     const result = await store.dispatch(requestLogin({
       username: 'USER_TEST_USERNAME',
@@ -202,5 +200,19 @@ describe('user reducer', () => {
     }))
     expect(mockAlert).toHaveBeenCalledTimes(2)
     expect(mockConsole).toHaveBeenCalledTimes(2)
+  })
+  it('should handle updateTag error (404)', async () => {
+    console.error = jest.fn()
+    globalThis.alert = jest.fn()
+    jest.spyOn(axios, 'put').mockRejectedValue(new Error(errorPrefix(404)))
+    await store.dispatch(updateTag({ tag: fakeTag }))
+    await waitFor(() => expect(globalThis.alert).toHaveBeenLastCalledWith('The tag does not exist in DB.'))
+  })
+  it('should handle updateTag error (not 404)', async () => {
+    console.error = jest.fn()
+    globalThis.alert = jest.fn()
+    jest.spyOn(axios, 'put').mockRejectedValue(new Error('mock'))
+    await store.dispatch(updateTag({ tag: fakeTag }))
+    await waitFor(() => expect(globalThis.alert).toHaveBeenLastCalledWith('Error on update tags'))
   })
 })

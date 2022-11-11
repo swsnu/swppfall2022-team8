@@ -93,7 +93,7 @@ export const fetchTags = createAsyncThunk(
 export const updateTag = createAsyncThunk(
   'user/updateTag',
   async (data: TagType, { dispatch }) => {
-    const response = await axios.put('/api/user/tag/', data) // Todo : handle 404 here
+    const response = await axios.put('/api/user/tag/', data)
     dispatch(userActions.updateTag(response.data))
     return response.data
   }
@@ -135,7 +135,7 @@ const initialState: UserState = {
   recommend_list: []
 }
 
-const errorPrefix = (code: number) => `Request failed with status code ${code}`
+export const errorPrefix = (code: number) => `Request failed with status code ${code}`
 
 export const userSlice = createSlice({
   name: 'user',
