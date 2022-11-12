@@ -74,9 +74,9 @@ const ChattingPage = () => {
     })
 
     newSocket.addEventListener('close', function (event) {
+      chatSocket.current = null
       if (event.code !== 1000) {
         console.error('Chat socket closed unexpectedly')
-        chatSocket.current = null
       }
     })
   }
