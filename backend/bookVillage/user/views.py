@@ -157,7 +157,7 @@ class UserViewSet(viewsets.GenericViewSet):
         data = [
             {
                 "id": book.id,
-                "image": book.bookimage.get(book=book).image.url,
+                "image": book.bookimage.image.url,
                 "title": book.title,
             }
             for book in books

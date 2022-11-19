@@ -29,7 +29,10 @@ class BookSerializer(serializers.ModelSerializer):
         )
 
     def get_image(self, book):
-        return book.bookimage.get(book=book).image.url
+        if hasattr(book, "bookimage"):
+            return book.bookimage.image.url
+        else:
+            return None
 
     def get_tags(self, book):
         tags = book.tags.all()

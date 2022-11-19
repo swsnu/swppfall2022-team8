@@ -27,5 +27,7 @@ def upload_to(instance, filename):
 
 
 class BookImage(models.Model):
-    book = models.ForeignKey(Book, related_name="bookimage", on_delete=models.CASCADE)
+    book = models.OneToOneField(
+        Book, related_name="bookimage", on_delete=models.CASCADE
+    )
     image = models.ImageField(upload_to=upload_to)
