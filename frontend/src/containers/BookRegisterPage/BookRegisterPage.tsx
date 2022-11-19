@@ -133,7 +133,6 @@ const BookRegisterPage = () => {
 
             <input
               type='file'
-              name="image_url"
               accept="image/jpeg,image/png,image/gif"
               onChange={(event) => {
                 if (event.target?.files) {
