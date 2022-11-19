@@ -8,11 +8,10 @@ import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BorrowType, createBorrow, toggleBorrowStatus } from '../../store/slices/borrow/borrow'
 import { fetchLend, LendType } from '../../store/slices/lend/lend'
-import { fetchUserRooms, selectRoom } from '../../store/slices/room/room'
+import { fetchUserRooms, RoomType, selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 
-export type SelectedChatGroup = 'lend' | 'borrow'
-export type ChatGroup = '' | 'lend' | 'borrow'
+export type ChatRank = 'chat' | 'info'
 
 export interface ChatType {
   id: number
@@ -20,16 +19,16 @@ export interface ChatType {
   author_username: string
   content: string
   timestamp: string
+  rank: ChatRank
 }
 
 const ChattingPage = () => {
-  const [chatInput, setChatInput] = useState<string>('')
-  const [chatIdx, setChatIdx] = useState<number>(-1)
-  const [group, setGroup] = useState<ChatGroup>('')
-  const [connectedRoom, setConnectedRoom] = useState<number>(-1)
+  const [currentRoom, setCurrentRoom] = useState<RoomType | null>(null)
+  const [oldChatList, setOldChatList] = useState<ChatType[]>([])
+  const [newChatList, setNewChatList] = useState<ChatType[]>([])
+  const [chatCursor, setChatCursor] = useState<string | null>(null)
   const [borrowable, setBorrowable] = useState<boolean>(false)
   const [borrowed, setBorrowed] = useState<boolean>(false)
-  const [chatList, setChatList] = useState<ChatType[]>([])
   const chatSocket = useRef<WebSocket | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
@@ -37,56 +36,100 @@ const ChattingPage = () => {
   const userState = useSelector(selectUser)
 
   useEffect(() => {
+    if (roomState.selectedRoom) {
+      enterRoom(roomState.selectedRoom)
+    }
     dispatch(fetchUserRooms())
     return () => {
-      if (chatSocket.current) {
+      if (chatSocket.current && chatSocket.current.readyState !== WebSocket.CLOSED) {
         chatSocket.current.close(1000)
+        chatSocket.current = null
       }
     }
   }, [dispatch])
 
-  // this code makes chatting scroll down when new chatting is added
-  useEffect(() => {
-    const chatBox = document.querySelector('#chat-box')
-    if (chatBox) {
-      chatBox.scrollTop = chatBox.scrollHeight
+  /*
+   * Functions handling WebSocket
+   */
+  const enterRoom = (room: RoomType) => {
+    if (room.id === currentRoom?.id) {
+      return
     }
-  }, [chatList])
 
-  const createAndSetupSocket = (roomID: number) => {
-    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${roomID}/`)
+    setOldChatList(_prev => [])
+    setNewChatList(_prev => [])
+
+    createRoomConnection(room)
+
+    setCurrentRoom(room)
+    refreshBorrowStatus(room)
+  }
+
+  const loadMessage = () => {
+    if (!chatSocket.current || chatSocket.current.readyState === WebSocket.CLOSED) {
+      alert('connection is closed')
+      return
+    }
+
+    chatSocket.current.send(JSON.stringify({ command: 'list', cursor: chatCursor }))
+  }
+
+  const sendMessage = (message: string, rank: ChatRank) => {
+    if (!chatSocket.current || chatSocket.current.readyState === WebSocket.CLOSED) {
+      alert('connection is closed')
+      return false
+    }
+
+    chatSocket.current.send(JSON.stringify({
+      message,
+      rank,
+      user_id: userState.currentUser?.id ?? null,
+      command: 'create'
+    }))
+
+    return true
+  }
+
+  /*
+   * Detailed specification about WebSocket Connection
+   */
+  const createRoomConnection = (room: RoomType) => {
+    if (chatSocket.current && chatSocket.current.readyState !== WebSocket.CLOSED) {
+      chatSocket.current.close(1000)
+      chatSocket.current = null
+    }
+
+    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room.id}/`)
 
     chatSocket.current = newSocket
 
     newSocket.addEventListener('open', function (_event) {
-      this.send(JSON.stringify({ command: 'list' }))
+      this.send(JSON.stringify({ command: 'list', cursor: null }))
     })
 
     newSocket.addEventListener('message', function (event) {
       const data = JSON.parse(event.data)
       if (data.command === 'list') {
         const messages = data.messages as ChatType[]
-        setChatList(oldList => [...oldList, ...messages])
+        setOldChatList(prev => [...messages, ...prev])
+        setChatCursor(data.next ?? null)
       } else if (data.command === 'create') {
         const message = data.message as ChatType
-        setChatList(oldList => [...oldList, message])
+        setNewChatList(prev => [...prev, message])
+        if (message.rank === 'info') {
+          refreshBorrowStatus(room)
+        }
       }
     })
 
     newSocket.addEventListener('close', function (event) {
-      chatSocket.current = null
       if (event.code !== 1000) {
         console.error('Chat socket closed unexpectedly')
       }
     })
   }
 
-  const clickRoomHandler = async (idx: number, selectedGroup: 'lend' | 'borrow') => {
-    const rooms = selectedGroup === 'lend'
-      ? roomState.rooms_lend
-      : roomState.rooms_borrow
-    const room = rooms[idx]
-
+  const refreshBorrowStatus = async (room: RoomType) => {
     const response = await dispatch(fetchLend(room.lend_id))
 
     if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
@@ -94,54 +137,34 @@ const ChattingPage = () => {
       const borrowStatus = data.status as BorrowType | null
       setBorrowable(!borrowStatus)
       setBorrowed(Boolean(borrowStatus && borrowStatus.borrower === room.borrower))
-      setChatIdx(idx)
     } else {
       alert('Error on fetch lending information')
-      return
-    }
-
-    if (room.id === connectedRoom) {
-      return
-    }
-
-    setChatList(_oldList => [])
-
-    setConnectedRoom(room.id)
-
-    if (chatSocket.current) {
-      chatSocket.current.close(1000)
-    }
-
-    createAndSetupSocket(room.id)
-  }
-
-  const clickSendChatHandler = () => {
-    if (!chatSocket.current) {
-      alert('connection is closed')
-      return
-    }
-
-    if (chatInput) {
-      chatSocket.current.send(JSON.stringify({
-        message: chatInput,
-        user_id: userState.currentUser?.id ?? NaN,
-        command: 'create'
-      }))
-      setChatInput('')
     }
   }
 
+  /*
+   * Click event handlers
+   */
   const clickConfirmLendingHandler = async () => {
+    const confirmLendingMessage = 'You have successfully borrowed this book!'
+
+    if (!currentRoom) {
+      return
+    }
+
+    if (!globalThis.confirm('Are you sure you want to confirm lending?')) {
+      return
+    }
+
     const data = {
-      borrower: roomState.rooms_lend[chatIdx].borrower,
-      lend_id: roomState.rooms_lend[chatIdx].lend_id
+      borrower: currentRoom.borrower,
+      lend_id: currentRoom.lend_id
     }
 
     const response = await dispatch(createBorrow(data))
 
     if (response.type === `${createBorrow.typePrefix}/fulfilled`) {
-      // TODO: send approval message to borrower
-      alert('Successfully lent')
+      sendMessage(confirmLendingMessage, 'info')
       setBorrowable(false)
       setBorrowed(true)
     } else {
@@ -150,7 +173,17 @@ const ChattingPage = () => {
   }
 
   const clickConfirmReturnHandler = async () => {
-    const response = await dispatch(fetchLend(roomState.rooms_lend[chatIdx].lend_id))
+    const confirmReturnMessage = 'You have successfully returned this book!'
+
+    if (!currentRoom) {
+      return
+    }
+
+    if (!globalThis.confirm('Are you sure you want to confirm return?')) {
+      return
+    }
+
+    const response = await dispatch(fetchLend(currentRoom.lend_id))
 
     if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
       const data = response.payload as LendType
@@ -162,8 +195,7 @@ const ChattingPage = () => {
       const toggleResponse = await dispatch(toggleBorrowStatus(borrowStatus.id))
 
       if (toggleResponse.type === `${toggleBorrowStatus.typePrefix}/fulfilled`) {
-        // TODO: send returning message to borrower
-        alert('Successfully return')
+        sendMessage(confirmReturnMessage, 'info')
         setBorrowable(true)
         setBorrowed(false)
       } else {
@@ -174,6 +206,9 @@ const ChattingPage = () => {
     }
   }
 
+  /*
+   * HTML structure
+   */
   return (
     <>
       <NavBar />
@@ -181,43 +216,22 @@ const ChattingPage = () => {
       <br />
       <hr />
 
-      {/* Select buttons (lend group or borrow group) */}
-      <button
-        type="button"
-        onClick={() => {
-          setGroup('lend')
-          setChatIdx(-1)
-        }}
-      >lend rooms</button>
-      <button
-        type="button"
-        onClick={() => {
-          setGroup('borrow')
-          setChatIdx(-1)
-        }}
-      >borrow rooms</button>
-      <br />
-      <hr />
-
       {/* ChattingRoomList component */}
-      {(group)
-        ? <ChattingRoomList
-            group={group}
-            clickRoomHandler={clickRoomHandler}
-          />
-        : null}
+      <ChattingRoomList
+        enterRoom={enterRoom}
+      />
       <br />
       <hr />
 
       {/* ChattingRoom component */}
-      {(group && chatIdx >= 0)
+      {(currentRoom)
         ? <ChattingRoom
-            group={group}
-            chatIdx={chatIdx}
-            chatList={chatList}
-            chatInput={chatInput}
-            changeChatInput={setChatInput}
-            clickSendChatHandler={clickSendChatHandler}
+            room={currentRoom}
+            chatCursor={chatCursor}
+            oldChatList={oldChatList}
+            newChatList={newChatList}
+            loadMessage={loadMessage}
+            sendMessage={sendMessage}
           />
         : <p>Select any chatroom and enjoy chatting!</p>
       }
@@ -225,15 +239,16 @@ const ChattingPage = () => {
       <hr />
 
       {/* ChattingRightMenu component */}
-      {(group && chatIdx >= 0)
+      {(currentRoom)
         ? <ChattingRightMenu
-            group={group}
+            room={currentRoom}
             borrowable={borrowable}
             borrowed={borrowed}
             clickConfirmLendingHandler={clickConfirmLendingHandler}
             clickConfirmReturnHandler={clickConfirmReturnHandler}
           />
-        : null }
+        : null
+      }
       <br />
       <hr />
     </>

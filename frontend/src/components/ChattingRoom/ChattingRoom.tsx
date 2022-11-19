@@ -1,37 +1,71 @@
+import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ChatType, SelectedChatGroup } from '../../containers/ChattingPage/ChattingPage'
-import { selectRoom } from '../../store/slices/room/room'
+import { ChatRank, ChatType } from '../../containers/ChattingPage/ChattingPage'
+import { RoomType } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 import './ChattingRoom.css'
 
 export interface IProps {
-  group: SelectedChatGroup
-  chatIdx: number
-  chatList: ChatType[]
-  chatInput: string
-  changeChatInput: (str: string) => void
-  clickSendChatHandler: () => void
+  room: RoomType
+  chatCursor: string | null
+  oldChatList: ChatType[]
+  newChatList: ChatType[]
+  loadMessage: () => void
+  sendMessage: (message: string, rank: ChatRank) => boolean
 }
 
 const ChattingRoom = (props: IProps) => {
+  const [chatInput, setChatInput] = useState<string>('')
+  const prevScrollHeight = useRef<number>(0)
   const userState = useSelector(selectUser)
-  const roomState = useSelector(selectRoom)
 
   const userID = userState.currentUser?.id
+  const othersUsername = userID === props.room.lender
+    ? props.room.borrower_username
+    : props.room.lender_username
+
+  const chatList = [...props.oldChatList, ...props.newChatList]
+
+  // this code scrolls down the chat room when a new chat is added
+  useEffect(() => {
+    const chatBox = document.querySelector('#chat-box') as Element
+    chatBox.scrollTop = chatBox.scrollHeight
+  }, [props.newChatList])
+
+  // this code maintains the scroll of the chat room when the previous chat was loaded
+  useEffect(() => {
+    const chatBox = document.querySelector('#chat-box') as Element
+    chatBox.scrollTop = chatBox.scrollHeight - prevScrollHeight.current
+  }, [props.oldChatList])
+
+  const clickLoadChatHandler = () => {
+    const chatBox = document.querySelector('#chat-box') as Element
+    prevScrollHeight.current = chatBox.scrollHeight
+    props.loadMessage()
+  }
+
+  const clickSendChatHandler = () => {
+    if (chatInput) {
+      const success = props.sendMessage(chatInput, 'chat')
+      if (success) {
+        setChatInput('')
+      }
+    }
+  }
 
   return (
     <>
-      <p>Chatting with&nbsp;
-        {props.group === 'lend'
-          ? roomState.rooms_lend[props.chatIdx].borrower_username
-          : roomState.rooms_borrow[props.chatIdx].lender_username
-        }
-      </p>
+      <p>Chatting with {othersUsername}</p>
       <div id="chat-box">
-        {props.chatList.map(chat => (
+        <button
+          type="button"
+          disabled={!props.chatCursor}
+          onClick={() => clickLoadChatHandler()}
+        >&uarr;</button>
+        {chatList.map(chat => (
           <div
             key={`chat_${chat.id}`}
-            className={`chat-message-${(chat.author === userID) ? 'me' : 'other'}`}
+            className={`chat-message-${(chat.author === userID) ? 'me' : 'other'} ${chat.rank}`}
           >
             <p>{chat.content}</p>
           </div>
@@ -41,13 +75,13 @@ const ChattingRoom = (props: IProps) => {
       <input
         id="chat-input"
         type="text"
-        value={props.chatInput}
-        onChange={event => props.changeChatInput(event.target.value)}
-        onKeyDown={event => { if (event.key === 'Enter') props.clickSendChatHandler() }}
+        value={chatInput}
+        onChange={event => setChatInput(event.target.value)}
+        onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
       />
       <button
         type="button"
-        onClick={() => props.clickSendChatHandler()}
+        onClick={() => clickSendChatHandler()}
       >Send chat</button>
     </>
   )

@@ -1,11 +1,13 @@
 import json
-
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from rest_framework.request import Request
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from .models import Room, Message
 from .serializers import MessageSerializer
+from .paginations import MessageSetPagination
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -34,26 +36,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Commands about Message
     #
     async def list_messages(self, data):
-        room_id = self.room_id
-        list_data = await database_sync_to_async(ChatConsumer.get_list_data)(
-            room_id=room_id
+        list_data, next = await database_sync_to_async(ChatConsumer.get_list_data)(
+            room_id=self.room_id,
+            cursor=data["cursor"],
         )
         content = {
             "command": "list",
             "messages": list_data,
+            "next": next,
         }
         await self.send_message_to_client(content)
 
     @staticmethod
-    def get_list_data(room_id):
-        messages = Message.last_10_messages(room_id=room_id)
-        return MessageSerializer(messages, many=True).data
+    def get_list_data(room_id, cursor):
+        request = HttpRequest()
+        request.method = "GET"
+        request.META["SERVER_NAME"] = "localhost"
+        request.META["SERVER_PORT"] = 8000
+        page_request = Request(request)
+        if cursor:
+            page_request.query_params["cursor"] = cursor
+
+        pagination = MessageSetPagination()
+        messages = Message.objects.filter(room_id=room_id)
+        paginated_messages = pagination.paginate_queryset(messages, page_request)[::-1]
+        return (
+            MessageSerializer(paginated_messages, many=True).data,
+            pagination.get_next_link(),
+        )
 
     async def create_message(self, data):
-        user_id = data["user_id"]
-        room_id = self.room_id
         create_data = await database_sync_to_async(ChatConsumer.get_create_data)(
-            room_id=room_id, user_id=user_id, content=data["message"]
+            room_id=self.room_id,
+            user_id=data["user_id"],
+            content=data["message"],
+            rank=data["rank"],
         )
         content = {
             "command": "create",
@@ -69,13 +86,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     @staticmethod
-    def get_create_data(room_id, user_id, content):
+    def get_create_data(room_id, user_id, content, rank):
         room_join = get_object_or_404(Room, id=room_id)
         user_join = get_object_or_404(User, id=user_id)
         message = Message.objects.create(
             room=room_join,
             author=user_join,
             content=content,
+            rank=rank,
         )
         return MessageSerializer(message).data
 
