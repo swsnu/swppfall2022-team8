@@ -12,6 +12,7 @@ export interface BorrowType {
   id: number
   borrower: UserType['id']
   borrower_username: UserType['username']
+  image: string
   lend_id: number
   active: boolean
   lend_start_time: string // serialized Date object

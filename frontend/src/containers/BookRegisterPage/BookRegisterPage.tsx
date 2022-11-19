@@ -11,6 +11,7 @@ import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
 
 const BookRegisterPage = () => {
+  const [image, setImage] = useState<File | null>(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [cost, setCost] = useState(0)
@@ -55,8 +56,8 @@ const BookRegisterPage = () => {
       return
     }
 
-    const validationCheckList = [title, author, brief, tags.length]
-    const validationMessages = ['title', 'author', 'brief summary', 'at least one tag']
+    const validationCheckList = [image, title, author, brief, tags.length]
+    const validationMessages = ['image', 'title', 'author', 'brief summary', 'at least one tag']
 
     if (validationCheckList.some(val => !val)) {
       const messageBuffer = ['Should fill in :']
@@ -69,17 +70,22 @@ const BookRegisterPage = () => {
       return
     }
 
-    const bookData = {
-      title,
-      author,
-      tags,
-      brief
+    const formData = new FormData()
+    if (image) {
+      formData.append('image', image)
     }
+    formData.append('title', title)
+    formData.append('author', author)
+    tags.map(
+      tag => formData.append('tags', tag)
+    )
+    formData.append('brief', brief)
 
-    const responseBook = await dispatch(createBook(bookData))
+    const responseBook = await dispatch(createBook(formData))
 
     if (responseBook.type === `${createBook.typePrefix}/fulfilled`) {
       const { id } = responseBook.payload as BookType
+      const bookData = responseBook.payload
       const lendData = {
         book: id,
         book_info: bookData,
@@ -106,17 +112,36 @@ const BookRegisterPage = () => {
     return <Navigate to={`/book${(lendState.selectedLend !== null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
-    <>
-      <div className='nav-bar'>
-        <NavBar />
-      </div>
-      <p/>
-      <h1>Register Your Book!</h1>
-      <p/>
-      <div className='book-register'>
-        <br />
+      <>
+        <div className='nav-bar'>
+          <NavBar />
+        </div>
+        <p />
+        <h1>Register Your Book!</h1>
+        <p />
+        <div className='book-register'>
+          <br />
 
           {/* TODO: add image upload field */}
+          <div>
+            {image && (
+              <div>
+                <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(image)} />
+              </div>
+            )}
+            <br />
+
+            <input
+              type='file'
+              name="image_url"
+              accept="image/jpeg,image/png,image/gif"
+              onChange={(event) => {
+                if (event.target?.files) {
+                  setImage(event.target?.files[0])
+                }
+              }}
+            />
+          </div>
 
           <Form>
             <Form.Group as={Row} className="input-class" id="title-input-form">
@@ -166,96 +191,96 @@ const BookRegisterPage = () => {
                 </div>
               </Form.Label>
               <div className='tags-display'>
-              {tags.map((tag, index) => (
-                <div key={index} className='display-tag'>
-                  <h5 id='tags-display-text'>{tag}</h5>
-                  <Button
-                    type="button"
-                    variant='outline-secondary'
-                    onClick={() => clickDeleteTagHandler(index)}
-                    className='delete-button'
-                  >X</Button>
+                {tags.map((tag, index) => (
+                  <div key={index} className='display-tag'>
+                    <h5 id='tags-display-text'>{tag}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteTagHandler(index)}
+                      className='delete-button'
+                    >X</Button>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddTagHandler()}
+                  disabled={!tag}
+                >add</Button>
+              </div>
+            </InputGroup>
+            <Form.Group as={Row} className='input-class'>
+              <Form.Label>
+                <h5>Borrowing Cost :</h5>
+                <h5 id='h5-cost'>{cost}</h5>
+                <br />
+                <br />
+                <div id='borrowing-cost-range'>
+                  <Form.Range
+                    min="0"
+                    max="5000"
+                    step="100"
+                    value={cost}
+                    onChange={event => setCost(Number(event.target.value))}
+                  />
                 </div>
-              ))}
-              <Button
-                variant="primary"
-                className='add-button'
-                onClick={() => clickAddTagHandler()}
-                disabled={!tag}
-              >add</Button>
-            </div>
-          </InputGroup>
-          <Form.Group as={Row} className='input-class'>
-            <Form.Label>
-              <h5>Borrowing Cost :</h5>
-              <h5 id='h5-cost'>{cost}</h5>
-              <br />
-              <br />
-              <div id='borrowing-cost-range'>
-                <Form.Range
-                  min="0"
-                  max="5000"
-                  step="100"
-                  value={cost}
-                  onChange={event => setCost(Number(event.target.value))}
-                />
-              </div>
-            </Form.Label>
-          </Form.Group>
-          <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
-            <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
-              <br />
-              <br />
-              <div>
-                <Form.Control
-                  as='textarea'
-                  id='additional-info-input'
-                  type='text' value={info}
-                  onChange={event => setInfo(event.target.value)}
-                />
-              </div>
-            </Form.Label>
-          </Form.Group>
-          <Form.Group as={Row} className='input-class' id='questions-input-form'>
-            <Form.Label id='questions-text'>
-              <h5>Questions</h5>
-              <div className='questions-input-button'>
-                <Form.Control
-                  id='questions-input'
-                  type='text' value={question}
-                  onChange={event => setQuestion(event.target.value)}
-                />
-              </div>
-            </Form.Label>
+              </Form.Label>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
+              <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
+                <br />
+                <br />
+                <div>
+                  <Form.Control
+                    as='textarea'
+                    id='additional-info-input'
+                    type='text' value={info}
+                    onChange={event => setInfo(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
+            </Form.Group>
+            <Form.Group as={Row} className='input-class' id='questions-input-form'>
+              <Form.Label id='questions-text'>
+                <h5>Questions</h5>
+                <div className='questions-input-button'>
+                  <Form.Control
+                    id='questions-input'
+                    type='text' value={question}
+                    onChange={event => setQuestion(event.target.value)}
+                  />
+                </div>
+              </Form.Label>
               <div className='questions-display'>
-              {questions.map((question, index) => (
-                <div key={index} className='display-tag'>
-                  <h5 id='questions-display-text'>{question}</h5>
-                  <Button
-                    type="button"
-                    variant='outline-secondary'
-                    onClick={() => clickDeleteQuestionHandler(index)}
-                    className='delete-button'
-                  >X</Button>
-                </div>
-              ))}
-              <Button
-                variant="primary"
-                className='add-button'
-                onClick={() => clickAddQuestionHandler()}
-                disabled={!question}
-              >add</Button>
-            </div>
-          </Form.Group>
-        </Form>
-        <Button
-          id='register-button'
-          type="button"
-          onClick={() => clickConfirmRegisterHanler()}>
-          Register
-        </Button>
-      </div>
-    </>
+                {questions.map((question, index) => (
+                  <div key={index} className='display-tag'>
+                    <h5 id='questions-display-text'>{question}</h5>
+                    <Button
+                      type="button"
+                      variant='outline-secondary'
+                      onClick={() => clickDeleteQuestionHandler(index)}
+                      className='delete-button'
+                    >X</Button>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
+              </div>
+            </Form.Group>
+          </Form>
+          <Button
+            id='register-button'
+            type="button"
+            onClick={() => clickConfirmRegisterHanler()}>
+            Register
+          </Button>
+        </div>
+      </>
     )
   }
 }

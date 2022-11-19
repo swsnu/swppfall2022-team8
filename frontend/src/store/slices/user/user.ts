@@ -40,6 +40,7 @@ export interface ToggleWatchResponseType {
 
 export interface RecommendType {
   id: number
+  image: string
   title: string
 }
 

@@ -9,6 +9,7 @@ import { RootState } from '../..'
 
 export interface BookType {
   id: number
+  image: string
   title: string
   author: string
   tags: string[]
@@ -34,7 +35,7 @@ export const fetchQueryBooks = createAsyncThunk(
 
 export const createBook = createAsyncThunk(
   'book/createBook',
-  async (data: Omit<BookType, 'id'>, { dispatch }) => {
+  async (data: FormData, { dispatch }) => {
     const response = await axios.post('/api/book/', data)
     dispatch(bookActions.addBook(response.data))
     return response.data

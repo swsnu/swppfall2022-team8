@@ -9,6 +9,7 @@ const preloadedState: RootState = {
     books: [
       {
         id: 1,
+        image: '',
         title: 'test-title',
         author: 'test-author',
         tags: ['test-string'],
@@ -23,6 +24,7 @@ const preloadedState: RootState = {
         id: 2,
         book: 1,
         book_info: {
+          image: '',
           title: 'test-title',
           author: 'test-author',
           tags: ['test-string'],
@@ -41,6 +43,7 @@ const preloadedState: RootState = {
         id: 1,
         book: 1,
         book_info: {
+          image: '',
           title: 'test-title',
           author: 'test-author',
           tags: ['test-string'],

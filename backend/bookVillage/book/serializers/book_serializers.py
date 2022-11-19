@@ -11,6 +11,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     title = serializers.CharField(required=True)
     author = serializers.CharField(required=True)
     tags = serializers.SerializerMethodField()
@@ -20,11 +21,15 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = (
             "id",
+            "image",
             "title",
             "author",
             "tags",
             "brief",
         )
+
+    def get_image(self, book):
+        return book.bookimage.get(book=book).image.url
 
     def get_tags(self, book):
         tags = book.tags.all()

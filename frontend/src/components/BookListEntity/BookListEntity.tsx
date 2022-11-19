@@ -3,6 +3,7 @@ import './BookListEntity.css'
 
 interface IProps {
   id: number
+  image: string
   title: string
   available?: boolean
 };
@@ -16,7 +17,7 @@ const BookListEntity = (props: IProps) => {
       onClick={() => navigate(`/book/${props.id}`)}
     > <div className='image-grid'>
         <div className='image-small'>
-          image
+          <img alt='Image Not Found' width={'100%'} src={props.image} />
         </div>
       </div>
       <h2>{props.title}</h2>

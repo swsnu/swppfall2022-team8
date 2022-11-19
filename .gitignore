@@ -170,3 +170,4 @@ migrations/*
 ###  backend end  ###
 
 backend/bookVillage/.idea/
+backend/mediafiles

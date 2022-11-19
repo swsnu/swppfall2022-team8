@@ -24,6 +24,7 @@ let preloadedState: RootState = {
     recommend_list: [
       {
         id: 1,
+        image: '',
         title: 'test-title'
       }
     ]

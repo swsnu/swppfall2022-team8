@@ -14,6 +14,7 @@ const fakeUser: UserType = {
 
 const fakeBook: BookType = {
   id: 2,
+  image: '',
   title: 'TEST_TITLE',
   author: 'TEST_AUTHOR',
   tags: ['TEST_TAG'],

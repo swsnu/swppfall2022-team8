@@ -70,6 +70,7 @@ const UserStatusPage = () => {
         <div key={`mylend_${idx}`}>
           <BookListEntity
             id={lend.id}
+            image={lend.book_info.image}
             title={lend.book_info.title}
           />
         </div>
@@ -80,6 +81,7 @@ const UserStatusPage = () => {
         <div key={`myborrow_${idx}`}>
           <BookListEntity
             id={borrow.lend_id}
+            image={borrow.image}
             title={`lend_id: ${borrow.lend_id}`}
           // TODO: add book info to borrow slice
           />
@@ -92,6 +94,7 @@ const UserStatusPage = () => {
         <div key={`mywatch_${idx}`}>
           <BookListEntity
             id={watch.id}
+            image={watch.book_info.image}
             title={watch.book_info.title}
             available={watch.status === null}
           />
