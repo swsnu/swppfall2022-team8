@@ -3,9 +3,6 @@ from celery import shared_task
 from bookVillage.celery import app
 from book.models.book import Book, BookTag, Tag
 from django.contrib.auth.models import User
-from rest_framework import status
-from rest_framework.response import Response
-import requests
 
 
 @app.task
@@ -19,15 +16,9 @@ def recommend_with_tags(subscribed_tags, user_id):
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import linear_kernel
 
-    data = {
-        "book_tags": list(BookTag.objects.all().values()),
-        "tags": list(Tag.objects.all().values("id", "name")),
-        "books": list(Book.objects.all().values("id")),
-    }
-
-    book_tags = pd.DataFrame(data.get("book_tags"))
-    tags = pd.DataFrame(data.get("tags"))
-    books = pd.DataFrame(data.get("books"))
+    book_tags = pd.DataFrame(list(BookTag.objects.all().values()))
+    tags = pd.DataFrame(list(Tag.objects.all().values("id", "name")))
+    books = pd.DataFrame(list(Book.objects.all().values("id")))
 
     book_tags_df = pd.merge(
         book_tags, tags, left_on="tag_id", right_on="id", how="inner"
