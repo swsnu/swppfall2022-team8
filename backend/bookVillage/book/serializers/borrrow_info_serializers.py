@@ -26,4 +26,7 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
 
     def get_image(self, borrowInfo):
         book = borrowInfo.lend_id.book
-        return book.bookimage.image.url
+        if hasattr(book, "bookimage"):
+            return book.bookimage.image.url
+        else:
+            return None

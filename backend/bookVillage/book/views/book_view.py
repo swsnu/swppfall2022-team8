@@ -35,7 +35,7 @@ class BookViewSet(viewsets.GenericViewSet):
     # POST /api/book/
     def create(self, request):
         data = request.data
-        image_data = data.pop("image")
+        image_data = data.pop("image", None)
         tag_data = data.pop("tags", [])
         if not isinstance(tag_data, list):
             return Response(
@@ -48,7 +48,8 @@ class BookViewSet(viewsets.GenericViewSet):
         for name in tag_data:
             tag, created = Tag.objects.get_or_create(name=name)
             BookTag.objects.create(book=book, tag=tag)
-        BookImage.objects.create(book=book, image=image_data[0])
+        if image_data:
+            BookImage.objects.create(book=book, image=image_data[0])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # GET /api/book/{book_id}

@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from book.models.book import Book, Tag, BookTag
 from django.contrib.auth.models import User
+import tempfile
 
 
 class BookTest(APITestCase):
@@ -70,6 +71,19 @@ class BookTest(APITestCase):
     def test_서버에_존재_하는_태그만_가진_책_생성(self):
         # given
         body = {"title": "c", "author": "c", "tags": ["tag0"], "brief": "c"}
+        # when
+        res = self.client.post("/api/book/", data=body, format="json")
+
+        # then
+        assert res.status_code == status.HTTP_201_CREATED
+        assert Book.objects.count() == 3
+        assert Tag.objects.all().count() == 2
+        assert res.data["tags"] == ["tag0"]
+
+    def test_이미지_테스트(self):
+        # given
+        image = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        body = {"title": "c", "author": "c", "tags": ["tag0"], "brief": "c", "image": image}
         # when
         res = self.client.post("/api/book/", data=body, format="json")
 
