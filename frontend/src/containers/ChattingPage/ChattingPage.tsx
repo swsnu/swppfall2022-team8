@@ -26,10 +26,10 @@ const ChattingPage = () => {
   const [currentRoom, setCurrentRoom] = useState<RoomType | null>(null)
   const [oldChatList, setOldChatList] = useState<ChatType[]>([])
   const [newChatList, setNewChatList] = useState<ChatType[]>([])
-  const [chatCursor, setChatCursor] = useState<string | null>(null)
   const [borrowable, setBorrowable] = useState<boolean>(false)
   const [borrowed, setBorrowed] = useState<boolean>(false)
   const chatSocket = useRef<WebSocket | null>(null)
+  const chatCursor = useRef<string | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
   const roomState = useSelector(selectRoom)
@@ -71,7 +71,7 @@ const ChattingPage = () => {
       return
     }
 
-    chatSocket.current.send(JSON.stringify({ command: 'list', cursor: chatCursor }))
+    chatSocket.current.send(JSON.stringify({ command: 'list', cursor: chatCursor.current }))
   }
 
   const sendMessage = (message: string, rank: ChatRank) => {
@@ -111,8 +111,8 @@ const ChattingPage = () => {
       const data = JSON.parse(event.data)
       if (data.command === 'list') {
         const messages = data.messages as ChatType[]
+        chatCursor.current = data.next ?? null
         setOldChatList(prev => [...messages, ...prev])
-        setChatCursor(data.next ?? null)
       } else if (data.command === 'create') {
         const message = data.message as ChatType
         setNewChatList(prev => [...prev, message])
@@ -148,11 +148,7 @@ const ChattingPage = () => {
   const clickConfirmLendingHandler = async () => {
     const confirmLendingMessage = 'You have successfully borrowed this book!'
 
-    if (!currentRoom) {
-      return
-    }
-
-    if (!globalThis.confirm('Are you sure you want to confirm lending?')) {
+    if (!currentRoom || !globalThis.confirm('Are you sure you want to confirm lending?')) {
       return
     }
 
@@ -175,11 +171,7 @@ const ChattingPage = () => {
   const clickConfirmReturnHandler = async () => {
     const confirmReturnMessage = 'You have successfully returned this book!'
 
-    if (!currentRoom) {
-      return
-    }
-
-    if (!globalThis.confirm('Are you sure you want to confirm return?')) {
+    if (!currentRoom || !globalThis.confirm('Are you sure you want to confirm return?')) {
       return
     }
 
@@ -227,7 +219,7 @@ const ChattingPage = () => {
       {(currentRoom)
         ? <ChattingRoom
             room={currentRoom}
-            chatCursor={chatCursor}
+            chatCursor={chatCursor.current}
             oldChatList={oldChatList}
             newChatList={newChatList}
             loadMessage={loadMessage}

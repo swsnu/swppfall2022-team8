@@ -115,12 +115,10 @@ const spyChattingRoom = (props: RoomProps) => (
   <div data-testid='spyRoom'>
     <button
       type="button"
-      data-testid='spyLoadButton'
-      disabled={!props.chatCursor}
       onClick={() => props.loadMessage()}
-    >&uarr;</button>
+    >loadMessage</button>
     <div data-testid="spyChatBox" id='chat-box'>
-      {props.newChatList[0]?.content}
+      {[...props.oldChatList, ...props.newChatList].map(chat => chat.content).join(',')}
     </div>
     <button
       type="button"
@@ -172,12 +170,14 @@ describe('<ChattingPage />', () => {
           return
         }
         const data: MessageType = JSON.parse(message)
+        let testId = 6
         if (data.command === 'list') {
           socket.send(JSON.stringify({
             command: 'list',
-            messages: [fakeChat],
+            messages: [{ ...fakeChat, id: testId }],
             next: fakeCursor
           }))
+          testId += 1
         } else if (data.command === 'create') {
           socket.send(JSON.stringify({
             command: 'create',
@@ -228,7 +228,7 @@ describe('<ChattingPage />', () => {
 
     // then
     const chatBox = await screen.findByTestId('spyChatBox')
-    await waitFor(() => expect(chatBox.innerHTML).toEqual('CHAT_TEST_INPUT'))
+    await waitFor(() => expect(chatBox.innerHTML).toEqual(fakeChat.content + ',' + fakeChatInput))
     unmount()
   })
   it('should handle lender use case (confirm lending)', async () => {
@@ -319,7 +319,7 @@ describe('<ChattingPage />', () => {
     // then
     await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm return?'))
   })
-  it('should refresh lending information if user clicks the selected room', async () => {
+  it('should do nothing if user clicks already selected room', async () => {
     // given
     jest.spyOn(axios, 'get').mockImplementation((url: string) => {
       const op = url.split('/')[2]
@@ -340,7 +340,7 @@ describe('<ChattingPage />', () => {
         }
       }
     })
-    const roomButton = await screen.findByTestId('spyRoomButton0')
+    const roomButton = await screen.findByText('chat0')
     await act(() => {
       fireEvent.click(roomButton)
     })
@@ -414,6 +414,10 @@ describe('<ChattingPage />', () => {
     const sendButton = await screen.findByText('Send chat')
     await act(async () => {
       fireEvent.click(sendButton)
+    })
+    await act(async () => {
+      const loadButton = await screen.findByText('loadMessage')
+      fireEvent.click(loadButton)
     })
 
     // then
@@ -625,39 +629,6 @@ describe('<ChattingPage />', () => {
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on fetch lending information'))
   })
-  it('should do nothing when chat input is empty and user clicks send button', async () => {
-    // given
-    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
-      const op = url.split('/')[2]
-      const data = (op === 'room')
-        ? { next: fakeCursor, previous: null, results: [fakeRoom] }
-        : fakeLend
-      return Promise.resolve({ data })
-    })
-    renderWithProviders(<ChattingPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeBorrower
-        }
-      }
-    })
-
-    // when
-    const roomButton = await screen.findByTestId('spyRoomButton0')
-    await act(() => {
-      fireEvent.click(roomButton)
-    })
-    const sendButton = await screen.findByText('Send chat')
-    await act(async () => {
-      fireEvent.click(sendButton)
-    })
-
-    // then
-    const chatBox = await screen.findByTestId('spyChatBox')
-    await waitFor(() => expect(chatBox.innerHTML).toEqual(''))
-  })
   it('should enter the room immediately if selectedRoom is not null', async () => {
     // given
     jest.spyOn(axios, 'get').mockImplementation((url: string) => Promise.resolve({
@@ -679,5 +650,102 @@ describe('<ChattingPage />', () => {
 
     // then
     await screen.findByTestId('spyRoom')
+  })
+  it('should handle loadMessage', async () => {
+    // given
+    globalThis.alert = jest.fn()
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => Promise.resolve({
+      data: { next: fakeCursor, previous: null, results: [fakeRoom] }
+    }))
+    renderWithProviders(<ChattingPage />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          currentUser: fakeLender
+        },
+        room: {
+          ...preloadedState.room,
+          selectedRoom: fakeRoom
+        }
+      }
+    })
+
+    await act(async () => {
+      const loadButton = await screen.findByText('loadMessage')
+      fireEvent.click(loadButton)
+    })
+
+    const chatBox = await screen.findByTestId('spyChatBox')
+    await waitFor(() => expect(chatBox.innerHTML).toEqual(fakeChat.content + ',' + fakeChat.content))
+  })
+  it('should do not lend if lender canceled the confirm', async () => {
+    // given
+    globalThis.confirm = jest.fn().mockReturnValue(false)
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const op = url.split('/')[2]
+      const data = (op === 'room')
+        ? { next: fakeCursor, previous: null, results: [fakeRoom] }
+        : fakeLend
+      return Promise.resolve({ data })
+    })
+    renderWithProviders(<ChattingPage />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          currentUser: fakeLender
+        }
+      }
+    })
+
+    // when
+    const roomButton = await screen.findByTestId('spyRoomButton0')
+    await act(() => {
+      fireEvent.click(roomButton)
+    })
+    const confirmLendingButton = await screen.findByText('Confirm lending')
+    await act(() => {
+      fireEvent.click(confirmLendingButton)
+    })
+
+    // then
+    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm lending?'))
+  })
+  it('should do not return if lender canceled the confirm', async () => {
+    // given
+    globalThis.confirm = jest.fn().mockReturnValue(false)
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const op = url.split('/')[2]
+      const data = (op === 'room')
+        ? { next: fakeCursor, previous: null, results: [fakeRoom] }
+        : {
+            ...fakeLend,
+            status: fakeBorrow
+          }
+      return Promise.resolve({ data })
+    })
+    renderWithProviders(<ChattingPage />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          currentUser: fakeLender
+        }
+      }
+    })
+
+    // when
+    const roomButton = await screen.findByTestId('spyRoomButton0')
+    await act(() => {
+      fireEvent.click(roomButton)
+    })
+    const confirmReturnButton = await screen.findByText('Confirm return')
+    await act(() => {
+      fireEvent.click(confirmReturnButton)
+    })
+
+    // then
+    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm return?'))
   })
 })
