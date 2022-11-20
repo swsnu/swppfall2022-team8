@@ -76,9 +76,9 @@ const BookRegisterPage = () => {
     }
     formData.append('title', title)
     formData.append('author', author)
-    tags.map(
-      tag => formData.append('tags', tag)
-    )
+    tags.forEach(tag => {
+      formData.append('tags', tag)
+    })
     formData.append('brief', brief)
 
     const responseBook = await dispatch(createBook(formData))
