@@ -1,9 +1,12 @@
 .book-list-entity {
   border: 5px solid rgb(119, 170, 235);
-  display: grid;
+  display: inline-block;
+  position: relative;
+  border-radius: 10px;
   grid-template-columns: 300px 1fr;
-  height: 300px;
-  margin: 10px;
+  height: 450px;
+  width: 375px;
+  margin: 20px;
   word-break: break-all;
   word-wrap: break-word;
 }
@@ -25,7 +28,6 @@
 
 
 h2 {
-  border-left: 2px solid black;
   padding-top: 20px;
   padding-left: 20px;
   text-align: left;

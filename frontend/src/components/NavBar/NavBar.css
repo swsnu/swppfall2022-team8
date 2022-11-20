@@ -17,6 +17,6 @@
 .nav-instances {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 1000px;
+    width: 1500px;
     margin: auto;
 }

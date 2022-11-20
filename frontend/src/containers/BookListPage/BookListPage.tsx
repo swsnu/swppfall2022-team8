@@ -9,6 +9,8 @@ import SearchBar from '../../components/SearchBar/SearchBar'
 import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
 
+import './BookListPage.css'
+
 const BookListPage = () => {
   const { search } = useLocation()
   const dispatch = useDispatch<AppDispatch>()
@@ -27,14 +29,18 @@ const BookListPage = () => {
       <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
       <br />
       <h3>Result</h3>
-      {lendState.lends.map(lend => (
-        <div key={`lendlist_${lend.id}`}>
-          <BookListEntity
-            id={lend.id}
-            title={lend.book_info.title}
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {lendState.lends.map(lend => (
+          <div
+            key={`lendlist_${lend.id}`}
+            className='booklist-item'
+          > <BookListEntity
+              id={lend.id}
+              title={lend.book_info.title}
+            />
+          </div>
+        ))}
+      </div>
     </>
   )
 }

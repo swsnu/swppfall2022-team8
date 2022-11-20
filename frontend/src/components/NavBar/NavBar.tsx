@@ -1,26 +1,15 @@
-import { Navbar } from 'react-bootstrap'
-import ChattingButton from '../ChattingButton/ChattingButton'
+import { Container, Navbar } from 'react-bootstrap'
 import LogoButton from '../LogoButton/LogoButton'
-import LogoutButton from '../LogoutButton/LogoutButton'
-import RegisterButton from '../RegisterButton/RegisterButton'
-import UserStatusButton from '../UserStatusButton/UserStatusButton'
 import './NavBar.css'
 
 const NavBar = () => {
   return (
     <>
-      <Navbar id='nav-bar' expand='lg'>
-        <div className='nav-instances'>
-          <div className='nav-logo'>
-            <LogoButton />
-          </div>
-          <div className='nav-else'>
-          <RegisterButton />
-          <ChattingButton />
-          <UserStatusButton />
-          <LogoutButton />
-          </div>
-        </div>
+      <Navbar bg='light' expand='lg' id='nav-bar'>
+        <Container fluid>
+          <Navbar.Brand><LogoButton /></Navbar.Brand>
+          <Navbar.Toggle aria-controls={'offcanvasNavbar-expand-lg'} />
+        </Container>
       </Navbar>
     </>
   )

@@ -61,42 +61,48 @@ const UserStatusPage = () => {
   }
 
   return (
-    <>
+    <div className='user-status-page'>
       <NavBar />
       <h1>User Info</h1>
       <br />
       <p>Lend List</p>
-      {lendState.userLends.map((lend, idx) => (
-        <div key={`mylend_${idx}`}>
-          <BookListEntity
-            id={lend.id}
-            title={lend.book_info.title}
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {lendState.userLends.map((lend, idx) => (
+          <div key={`mylend_${idx}`}>
+            <BookListEntity
+              id={lend.id}
+              title={lend.book_info.title}
+            />
+          </div>
+        ))}
+      </div>
       <br />
       <p>Borrow List</p>
-      {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
-        <div key={`myborrow_${idx}`}>
-          <BookListEntity
-            id={borrow.lend_id}
-            title={`lend_id: ${borrow.lend_id}`}
-          // TODO: add book info to borrow slice
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
+          <div key={`myborrow_${idx}`}>
+            <BookListEntity
+              id={borrow.lend_id}
+              title={`lend_id: ${borrow.lend_id}`}
+            // TODO: add book info to borrow slice
+            />
+          </div>
+        ))}
+      </div>
       <br />
       <p>Watch List</p>
       {/* TODO: implement Watch List */}
-      {userState.watch_list.map((watch, idx) => (
-        <div key={`mywatch_${idx}`}>
-          <BookListEntity
-            id={watch.id}
-            title={watch.book_info.title}
-            available={watch.status === null}
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {userState.watch_list.map((watch, idx) => (
+          <div key={`mywatch_${idx}`}>
+            <BookListEntity
+              id={watch.id}
+              title={watch.book_info.title}
+              available={watch.status === null}
+            />
+          </div>
+        ))}
+      </div>
       <br />
       <Form>
         <InputGroup as={Row} className='input-class' id='tags-input-form'>
@@ -132,7 +138,7 @@ const UserStatusPage = () => {
         </InputGroup>
       </Form>
 
-    </>
+    </div>
   )
 }
 

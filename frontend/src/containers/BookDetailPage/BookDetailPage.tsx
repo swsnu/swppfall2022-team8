@@ -86,19 +86,19 @@ const BookDetailPage = () => {
                 id="detail-edit-button"
                 onClick={() => navigate(`/book/${id}/edit`)}
               >Edit</Button>
-              <Button variant="outline-primary"
+              <Button variant="outline-danger"
                 type="button"
                 className='detail-page-buttons'
                 onClick={() => clickDeleteHandler()}
               >Delete</Button>
             </>
           : <>
-              <Button variant="outline-primary"
+              <Button variant="outline-success"
                 className='detail-page-buttons'
                 id="detail-request-button"
                 onClick={() => navigate(`/book/${id}/request`)}
               >Request</Button>
-              <Button variant="outline-primary"
+              <Button variant="outline-warning"
                 type="button"
                 className='detail-page-buttons'
                 id="detail-watch-button"
