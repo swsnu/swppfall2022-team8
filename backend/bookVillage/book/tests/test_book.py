@@ -83,7 +83,13 @@ class BookTest(APITestCase):
     def test_이미지_테스트(self):
         # given
         image = tempfile.NamedTemporaryFile(suffix=".jpg").name
-        body = {"title": "c", "author": "c", "tags": ["tag0"], "brief": "c", "image": image}
+        body = {
+            "title": "c",
+            "author": "c",
+            "tags": ["tag0"],
+            "brief": "c",
+            "image": image,
+        }
         # when
         res = self.client.post("/api/book/", data=body, format="json")
 

@@ -157,7 +157,9 @@ class UserViewSet(viewsets.GenericViewSet):
         data = [
             {
                 "id": book.id,
-                "image": book.bookimage.image.url if hasattr(book, "bookimage") else None,
+                "image": book.bookimage.image.url
+                if hasattr(book, "bookimage")
+                else None,
                 "title": book.title,
             }
             for book in books
