@@ -7,6 +7,7 @@ describe('book reducer', () => {
   let store: EnhancedStore<{ book: BookState }, AnyAction, [ThunkMiddleware<{ book: BookState }, AnyAction, undefined>]>
   const fakeBook1 = {
     id: 1,
+    image: '',
     title: 'test-title-1',
     author: 'test-author-1',
     tags: ['test-tag-1'],
@@ -14,11 +15,20 @@ describe('book reducer', () => {
   }
   const fakeBook2 = {
     id: 1,
+    image: '',
     title: 'test-title-changed',
     author: 'test-author-changed',
     tags: ['test-tag-changed'],
     brief: 'test-brief-changed'
   }
+  const formData = new FormData()
+  formData.append('image', fakeBook1.image)
+  formData.append('title', fakeBook1.title)
+  formData.append('author', fakeBook1.author)
+  fakeBook1.tags.map(
+    tag => formData.append('tags', tag)
+  )
+  formData.append('brief', fakeBook1.brief)
   beforeAll(() => {
     store = configureStore({ reducer: { book: reducer } })
   })
@@ -37,12 +47,7 @@ describe('book reducer', () => {
   it('should handle createBook', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: fakeBook1 })
     const result = await store.dispatch(
-      createBook({
-        title: 'test-title-1',
-        author: 'test-author-1',
-        tags: ['test-tag-1'],
-        brief: 'test-brief-1'
-      })
+      createBook(formData)
     )
     expect(result.type).toBe(`${createBook.typePrefix}/fulfilled`)
     expect(store.getState().book.books.length).toEqual(2)
@@ -60,21 +65,11 @@ describe('book reducer', () => {
   it('should handle updateBook', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: fakeBook1 })
     await store.dispatch(
-      createBook({
-        title: 'test-title-1',
-        author: 'test-author-1',
-        tags: ['test-tag-1'],
-        brief: 'test-brief-1'
-      })
+      createBook(formData)
     )
     jest.spyOn(axios, 'post').mockResolvedValue({ data: { ...fakeBook1, id: 2 } })
     await store.dispatch(
-      createBook({
-        title: 'test-title-1',
-        author: 'test-author-1',
-        tags: ['test-tag-1'],
-        brief: 'test-brief-1'
-      })
+      createBook(formData)
     )
     jest.spyOn(axios, 'put').mockResolvedValue({
       data: fakeBook2
@@ -87,12 +82,7 @@ describe('book reducer', () => {
     window.console.error = mockConsole
     jest.spyOn(axios, 'post').mockRejectedValue({ data: null })
     const result = await store.dispatch(
-      createBook({
-        title: 'test-title-1',
-        author: 'test-author-1',
-        tags: ['test-tag-1'],
-        brief: 'test-brief-1'
-      })
+      createBook(formData)
     )
     expect(result.type).toBe(`${createBook.typePrefix}/rejected`)
   })

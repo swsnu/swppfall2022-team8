@@ -44,15 +44,15 @@ const BookDetailPage = () => {
       <div className='book-detail-page'>
         {/* TODO: add image field */}
         <div className="image-test">
-          image
+          <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
         </div>
         <div className='book-detail-info'>
           <h1>{lendState.selectedLend?.book_info.title}</h1>
           <h5>written by {lendState.selectedLend?.book_info.author}</h5>
-          <p className='light-text'>owned by {lendState.selectedLend?.owner}</p>
-          <hr/>
+          <p className='light-text'>owned by {lendState.selectedLend?.owner_username}</p>
+          <hr />
           <h2>{lendState.selectedLend?.cost} &#x20a9;</h2>
-          <br/>
+          <br />
           <p className='light-text'>{lendState.selectedLend?.book_info.brief}</p>
           {lendState.selectedLend?.status
             ? <Button active variant='warning'>Borrowed</Button>
@@ -80,31 +80,31 @@ const BookDetailPage = () => {
       <div className='detail-page-bottom'>
         {(userState.currentUser && (userState.currentUser.id === lendState.selectedLend?.owner))
           ? <>
-              <Button variant="outline-primary"
-                type="button"
-                className='detail-page-buttons'
-                id="detail-edit-button"
-                onClick={() => navigate(`/book/${id}/edit`)}
-              >Edit</Button>
-              <Button variant="outline-primary"
-                type="button"
-                className='detail-page-buttons'
-                onClick={() => clickDeleteHandler()}
-              >Delete</Button>
-            </>
+            <Button variant="outline-primary"
+              type="button"
+              className='detail-page-buttons'
+              id="detail-edit-button"
+              onClick={() => navigate(`/book/${id}/edit`)}
+            >Edit</Button>
+            <Button variant="outline-primary"
+              type="button"
+              className='detail-page-buttons'
+              onClick={() => clickDeleteHandler()}
+            >Delete</Button>
+          </>
           : <>
-              <Button variant="outline-primary"
-                className='detail-page-buttons'
-                id="detail-request-button"
-                onClick={() => navigate(`/book/${id}/request`)}
-              >Request</Button>
-              <Button variant="outline-primary"
-                type="button"
-                className='detail-page-buttons'
-                id="detail-watch-button"
-                onClick={() => clickWatchHandler()}
-              >Watch</Button>
-            </>
+            <Button variant="outline-primary"
+              className='detail-page-buttons'
+              id="detail-request-button"
+              onClick={() => navigate(`/book/${id}/request`)}
+            >Request</Button>
+            <Button variant="outline-primary"
+              type="button"
+              className='detail-page-buttons'
+              id="detail-watch-button"
+              onClick={() => clickWatchHandler()}
+            >Watch</Button>
+          </>
         }
       </div>
     </>

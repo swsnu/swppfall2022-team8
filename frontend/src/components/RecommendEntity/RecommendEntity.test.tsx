@@ -14,7 +14,7 @@ jest.mock('react-router', () => ({
 describe('<RecommendEntity />', () => {
   it('should handle onClick', async () => {
     // given
-    const { container } = renderWithProviders(<RecommendEntity idx={1} title='test-title' />, { preloadedState })
+    const { container } = renderWithProviders(<RecommendEntity idx={1} image='' title='test-title' />, { preloadedState })
     const info = container.getElementsByTagName('p').item(0)
 
     // when

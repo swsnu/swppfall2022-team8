@@ -32,6 +32,7 @@ const BookListPage = () => {
           <BookListEntity
             id={lend.id}
             title={lend.book_info.title}
+            image={lend.book_info.image}
           />
         </div>
       ))}

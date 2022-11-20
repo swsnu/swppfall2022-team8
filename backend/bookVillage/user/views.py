@@ -154,7 +154,16 @@ class UserViewSet(viewsets.GenericViewSet):
         recommend_ids_list = recommend_with_tags(subscribed_tags)
 
         books = Book.objects.filter(pk__in=recommend_ids_list)
-        data = [{"id": book.id, "title": book.title} for book in books]
+        data = [
+            {
+                "id": book.id,
+                "image": book.bookimage.image.url
+                if hasattr(book, "bookimage")
+                else None,
+                "title": book.title,
+            }
+            for book in books
+        ]
 
         return Response(data, status=status.HTTP_200_OK)
 
