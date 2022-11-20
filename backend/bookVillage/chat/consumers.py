@@ -36,14 +36,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Commands about Message
     #
     async def list_messages(self, data):
-        list_data, next = await database_sync_to_async(ChatConsumer.get_list_data)(
+        list_data, next_link = await database_sync_to_async(ChatConsumer.get_list_data)(
             room_id=self.room_id,
             cursor=data["cursor"],
         )
         content = {
             "command": "list",
             "messages": list_data,
-            "next": next,
+            "next": next_link,
         }
         await self.send_message_to_client(content)
 
