@@ -49,7 +49,7 @@ const BookDetailPage = () => {
         <div className='book-detail-info'>
           <h1>{lendState.selectedLend?.book_info.title}</h1>
           <h5>written by {lendState.selectedLend?.book_info.author}</h5>
-          <p className='light-text'>owned by {lendState.selectedLend?.owner}</p>
+          <p className='light-text'>owned by {lendState.selectedLend?.owner_username}</p>
           <hr />
           <h2>{lendState.selectedLend?.cost} &#x20a9;</h2>
           <br />

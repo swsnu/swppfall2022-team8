@@ -14,6 +14,7 @@ export interface BorrowType {
   borrower_username: UserType['username']
   image: string
   lend_id: number
+  book_title: string
   active: boolean
   lend_start_time: string // serialized Date object
   lend_end_time: string | null // serialized Date object | null

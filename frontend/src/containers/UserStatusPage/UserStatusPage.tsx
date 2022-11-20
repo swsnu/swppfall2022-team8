@@ -82,7 +82,7 @@ const UserStatusPage = () => {
           <BookListEntity
             id={borrow.lend_id}
             image={borrow.image}
-            title={`lend_id: ${borrow.lend_id}`}
+            title={borrow.book_title}
           // TODO: add book info to borrow slice
           />
         </div>
