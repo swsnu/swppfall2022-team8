@@ -22,7 +22,7 @@ class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated(),)
 
     def get_permissions(self):
-        if self.action in ("create", "login", "post_recommend"):
+        if self.action in ("create", "login"):
             return (AllowAny(),)
         return self.permission_classes
 
