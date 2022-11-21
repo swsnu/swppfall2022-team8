@@ -1,9 +1,6 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { RootState } from '../../store'
-import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
+import { fireEvent, screen, waitFor, render } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import SearchBar from './SearchBar'
-
-const preloadedState: RootState = rootInitialState
 
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
@@ -14,88 +11,78 @@ const mockAlert = jest.fn()
 window.alert = mockAlert
 
 describe('<SearchBar />', () => {
-  it('should handle add Buttons', async () => {
+  it('should handle normal use case at MainPage', async () => {
     // given
-    renderWithProviders(<SearchBar />, { preloadedState })
-    const input = screen.getByPlaceholderText('search')
-    const title = screen.getByText('Add title')
-    const author = screen.getByText('Add author')
-    const tag = screen.getByText('Add tag')
-    const button = screen.getByText('Search')
+    await act(async () => {
+      render(<SearchBar />)
+    })
 
     // when
-    fireEvent.change(input, { target: { value: 'test-input' } })
-    fireEvent.click(title)
-    fireEvent.change(input, { target: { value: 'test-input' } })
-    fireEvent.click(author)
-    fireEvent.change(input, { target: { value: 'test-input' } })
-    fireEvent.click(tag)
-    fireEvent.click(button)
+    const authorButton = await screen.findByText('Author')
+    fireEvent.click(authorButton)
+    const authorInput = await screen.findByPlaceholderText('Author search')
+    fireEvent.change(authorInput, { target: { value: 'TEST_AUTHOR' } })
+    const searchButton = await screen.findByText('Search')
+    fireEvent.click(searchButton)
 
     // then
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalled())
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/search?author=TEST_AUTHOR'))
   })
-  it('should handle alert when no search query', async () => {
+  it('should reject search if tag name is invalid', async () => {
     // given
-    renderWithProviders(<SearchBar />, { preloadedState })
-    const button = screen.getByText('Search')
+    globalThis.alert = jest.fn()
+    await act(async () => {
+      render(<SearchBar />)
+    })
 
     // when
-    fireEvent.click(button)
+    const tagButton = await screen.findByText('Tag')
+    fireEvent.click(tagButton)
+    const tagInput = await screen.findByPlaceholderText('Tag search')
+    fireEvent.change(tagInput, { target: { value: 'fake_tag1 fake_tag2' } })
+    const searchButton = await screen.findByText('Search')
+    fireEvent.click(searchButton)
 
     // then
-    await waitFor(() => expect(mockAlert).toHaveBeenCalled())
+    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.'))
   })
-  it('should handle alert when try to add no content tag', async () => {
+  it('should handle use case at BookListPage (normal search)', async () => {
     // given
-    renderWithProviders(<SearchBar />, { preloadedState })
-    const input = screen.getByPlaceholderText('search')
-    const tag = screen.getByText('Add tag')
-
-    // when
-    fireEvent.change(input, { target: { value: 'test-!@#$' } })
-    fireEvent.click(tag)
+    await act(async () => {
+      render(<SearchBar author={'TEST_AUTHOR'}/>)
+    })
 
     // then
-    await waitFor(() => expect(mockAlert).toHaveBeenCalled())
+    await waitFor(() => expect(screen.getAllByText('Author').length).toEqual(2))
   })
-  it('should handle click Reset button', async () => {
+  it('should handle use case at BookListPage (advanced search)', async () => {
     // given
-    renderWithProviders(<SearchBar />, { preloadedState })
-    const reset = screen.getByText('Reset')
-
-    // when
-    fireEvent.click(reset)
+    await act(async () => {
+      render(<SearchBar title={'TEST_TITLE'} tag={['test-tag1', 'test-tag2']}/>)
+    })
 
     // then
+    await waitFor(() => expect(screen.getAllByText('Advanced').length).toEqual(2))
   })
-  it('should handle delete Buttons', async () => {
+  it('should show hints if mouse is on tag search bar / remove hints if mouse goes out from tag search bar', async () => {
     // given
-    renderWithProviders(<SearchBar title='test-title' author='test-author' tag={['test-tag']} />, { preloadedState })
-    const buttons = screen.getAllByText('x')
+    await act(async () => {
+      render(<SearchBar />)
+    })
+    const tagButton = await screen.findByText('Tag')
+    fireEvent.click(tagButton)
 
     // when
-    buttons.map(
-      button => fireEvent.click(button)
-    )
+    const tagInput = await screen.findByPlaceholderText('Tag search')
+    fireEvent.mouseOver(tagInput)
 
     // then
-  })
-  it('should handle minor branches', async () => {
-    // given
-    renderWithProviders(<SearchBar />, { preloadedState })
-    const input = screen.getByPlaceholderText('search')
-    const tag = screen.getByText('Add tag')
-    const button = screen.getByText('Search')
+    const hint = await screen.findByText('Tag Search Hint')
 
     // when
-    fireEvent.change(input, { target: { value: 'test-input' } })
-    fireEvent.click(tag)
-    fireEvent.change(input, { target: { value: 'test-input' } })
-    fireEvent.click(tag)
-    fireEvent.click(button)
+    fireEvent.mouseOut(tagInput)
 
     // then
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalled())
+    await waitFor(() => expect(hint).not.toBeInTheDocument())
   })
 })

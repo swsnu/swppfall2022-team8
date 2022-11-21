@@ -41,8 +41,10 @@ export const rootInitialState: RootState = {
     }
   },
   room: {
-    rooms_lend: [],
-    rooms_borrow: []
+    next: null,
+    prev: null,
+    rooms: [],
+    selectedRoom: null
   }
 }
 
