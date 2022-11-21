@@ -1,118 +1,119 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
+import axios from 'axios'
+import { act } from 'react-dom/test-utils'
 import { RootState } from '../../store'
-import { renderWithProviders } from '../../test-utils/mock'
+import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import ChattingRoomList from './ChattingRoomList'
 
-const preloadedState: RootState = {
-  book: {
-    books: [
-      {
-        id: 1,
-        image: '',
-        title: 'test-title',
-        author: 'test-author',
-        tags: ['test-string'],
-        brief: 'test-brief'
-      }
-    ],
-    selectedBook: null
-  },
-  lend: {
-    lends: [
-      {
-        id: 2,
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'test-title',
-          author: 'test-author',
-          tags: ['test-string'],
-          brief: 'test-brief'
-        },
-        owner: 3,
-        owner_username: 'test-lender',
-        questions: ['test-question'],
-        cost: 0,
-        additional: 'test-additional',
-        status: null
-      }
-    ],
-    userLends: [
-      {
-        id: 1,
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'test-title',
-          author: 'test-author',
-          tags: ['test-string'],
-          brief: 'test-brief'
-        },
-        owner: 1,
-        owner_username: 'test-user',
-        questions: ['test-question'],
-        cost: 0,
-        additional: 'test-additional',
-        status: null
-      }
-    ],
-    selectedLend: null
-  },
-  borrow: {
-    userBorrows: [],
-    selectedBorrow: null
-  },
-  user: {
-    currentUser: {
-      id: 1,
-      username: 'test-user'
-    },
-    subscribed_tags: [],
-    watch_list: [],
-    recommend_list: []
-  },
-  room: {
-    rooms_lend: [
-      {
-        id: 1,
-        lend_id: 1,
-        lender: 1,
-        lender_username: 'test-user',
-        borrower: 2,
-        borrower_username: 'test-borrower'
-      }
-    ],
-    rooms_borrow: [
-      {
-        id: 2,
-        lend_id: 2,
-        lender: 3,
-        lender_username: 'test-lender',
-        borrower: 1,
-        borrower_username: 'test-user'
-      }
-    ]
-  }
+const fakeLender = {
+  id: 1,
+  username: 'lender_test_username'
 }
 
-const mockClickRoomHandler = jest.fn()
+const fakeBorrower = {
+  id: 2,
+  username: 'borrower_test_username'
+}
+
+const fakeThirdParty = {
+  id: 7,
+  username: 'third_party_test_username'
+}
+
+const fakeRoom = {
+  id: 3,
+  lend_id: 4,
+  lender: fakeLender.id,
+  lender_username: fakeLender.username,
+  borrower: fakeBorrower.id,
+  borrower_username: fakeBorrower.username,
+  questions: ['ROOMLIST_TEST_QUESTION'],
+  answers: ['ROOMLIST_TEST_ANSWER']
+}
+
+const fakeRoomThirdParty = {
+  id: 8,
+  lend_id: 4,
+  lender: fakeLender.id,
+  lender_username: fakeLender.username,
+  borrower: fakeThirdParty.id,
+  borrower_username: fakeBorrower.username,
+  questions: ['ROOMLIST_TEST_THIRD_QUESTION'],
+  answers: ['ROOMLIST_TEST_THIRD_ANSWER']
+}
+
+const fakeCursor = 'fakeCursor'
+
+const preloadedState: RootState = rootInitialState
+
+const mockEnterRoom = jest.fn()
 
 describe('<ChattingRoomList />', () => {
-  it('should handle click Button', async () => {
+  it('should handle enterRoom', async () => {
     // given
     renderWithProviders(
       <ChattingRoomList
-        group='lend'
-        clickRoomHandler={mockClickRoomHandler}
+        enterRoom={mockEnterRoom}
       />,
-      { preloadedState }
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeBorrower
+          },
+          room: {
+            ...preloadedState.room,
+            rooms: [fakeRoom],
+            next: fakeCursor
+          }
+        }
+      }
     )
-    const button = screen.getByRole('button')
+    const button = screen.getAllByRole('button')[0]
 
     // when
     fireEvent.click(button)
 
     // then
-    await waitFor(() => expect(mockClickRoomHandler).toHaveBeenCalled())
+    await waitFor(() => expect(mockEnterRoom).toHaveBeenCalledWith(fakeRoom))
+  })
+  it('should handle loadRoom', async () => {
+    // given
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        next: null,
+        previous: 'fakeCursor',
+        results: [fakeRoomThirdParty]
+      }
+    })
+    const { store } = renderWithProviders(
+      <ChattingRoomList
+        enterRoom={mockEnterRoom}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          },
+          room: {
+            ...preloadedState.room,
+            rooms: [fakeRoom],
+            next: fakeCursor
+          }
+        }
+      }
+    )
+
+    // when
+    await act(() => {
+      const button = screen.getAllByRole('button')[1]
+      fireEvent.click(button)
+    })
+
+    // then
+    await waitFor(() => expect(store.getState().room.rooms.length).toEqual(2))
   })
 })

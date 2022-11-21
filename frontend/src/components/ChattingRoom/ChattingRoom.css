@@ -17,3 +17,11 @@
 .chat-message-other {
   text-align: left;
 }
+
+.chat {
+  font-weight: normal;
+}
+
+.info {
+  font-weight: bold;
+}
