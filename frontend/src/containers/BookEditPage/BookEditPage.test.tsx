@@ -14,6 +14,7 @@ const fakeLend = {
   id: 2,
   book: 3,
   book_info: {
+    image: '',
     title: 'EDIT_TEST_TITLE',
     author: 'EDIT_TEST_AUTHOR',
     tags: ['EDIT_TEST_TAG_1', 'EDIT_TEST_TAG_2'],

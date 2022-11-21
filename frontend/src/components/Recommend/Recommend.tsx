@@ -32,6 +32,7 @@ const Recommend = () => {
         <div key={`recommendlist_${idx}`}>
           <RecommendEntity
             idx={idx + 1}
+            image={recommend.image}
             title={recommend.title}
           />
         </div>

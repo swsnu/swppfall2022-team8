@@ -10,6 +10,7 @@ describe('borrow reducer', () => {
     borrower: 2,
     borrower_username: 'BORROW_TEST_USERNAME',
     lend_id: 3,
+    book_title: 'BORROW_TEST_BOOK_TITLE',
     active: true,
     lend_start_time: '1970-01-01T00:00:00.000Z', // serialized Date object
     lend_end_time: null

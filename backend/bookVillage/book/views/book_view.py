@@ -1,7 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from book.models.book import Book, Tag, BookTag
+from book.models.book import Book, BookImage, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
 
 
@@ -34,7 +34,8 @@ class BookViewSet(viewsets.GenericViewSet):
 
     # POST /api/book/
     def create(self, request):
-        data = request.data.copy()
+        data = request.data
+        image_data = data.pop("image", None)
         tag_data = data.pop("tags", [])
         if not isinstance(tag_data, list):
             return Response(
@@ -47,6 +48,8 @@ class BookViewSet(viewsets.GenericViewSet):
         for name in tag_data:
             tag, created = Tag.objects.get_or_create(name=name)
             BookTag.objects.create(book=book, tag=tag)
+        if image_data:
+            BookImage.objects.create(book=book, image=image_data[0])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # GET /api/book/{book_id}

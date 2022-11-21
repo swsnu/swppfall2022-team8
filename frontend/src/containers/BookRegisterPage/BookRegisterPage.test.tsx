@@ -14,6 +14,7 @@ const fakeUser: UserType = {
 
 const fakeBook: BookType = {
   id: 2,
+  image: '',
   title: 'TEST_TITLE',
   author: 'TEST_AUTHOR',
   tags: ['TEST_TAG'],
@@ -31,6 +32,9 @@ const fakeLend: LendType = {
   additional: 'TEST_ADDITIONAL',
   status: null
 }
+
+const fakeFile = new File(['test'], 'test_image.png', { type: 'image/png' })
+global.URL.createObjectURL = jest.fn()
 
 const spyNavBar = () => <p>NavBar</p>
 
@@ -73,23 +77,24 @@ describe('<BookRegisterPage />', () => {
     const registerButton = await screen.findByText('Register')
 
     // when
-    fireEvent.change(inputs[0], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[1], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
-    fireEvent.change(inputs[4], { target: { value: fakeLend.cost } })
+    fireEvent.change(inputs[5], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
-    fireEvent.change(inputs[5], { target: { value: fakeLend.questions[0] } })
+    fireEvent.change(inputs[6], { target: { value: fakeLend.questions[0] } })
     fireEvent.click(addButtons[1])
 
     const deleteButtons = await screen.findAllByText('X')
     fireEvent.click(deleteButtons[0])
     fireEvent.click(deleteButtons[1])
 
-    fireEvent.change(inputs[3], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
-    fireEvent.change(inputs[5], { target: { value: fakeLend.questions[0] } })
+    fireEvent.change(inputs[6], { target: { value: fakeLend.questions[0] } })
     fireEvent.click(addButtons[1])
     fireEvent.click(registerButton)
 
@@ -98,7 +103,7 @@ describe('<BookRegisterPage />', () => {
   })
   it('should fill in all the title, author, brief, and tag', async () => {
     // given
-    const alertMessage = ['Should fill in :', 'author', 'brief summary', 'at least one tag']
+    const alertMessage = ['Should fill in :', 'image', 'author', 'brief summary', 'at least one tag']
     globalThis.alert = jest.fn()
     const { container } = renderWithProviders(<BookRegisterPage />, {
       preloadedState: {
@@ -113,7 +118,7 @@ describe('<BookRegisterPage />', () => {
     const registerButton = await screen.findByText('Register')
 
     // when
-    fireEvent.change(inputs[0], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
     fireEvent.click(registerButton)
 
     // then
@@ -150,14 +155,15 @@ describe('<BookRegisterPage />', () => {
     const registerButton = await screen.findByText('Register')
 
     // when
-    fireEvent.change(inputs[0], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[1], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
-    fireEvent.change(inputs[4], { target: { value: fakeLend.cost } })
+    fireEvent.change(inputs[5], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
-    fireEvent.change(inputs[5], { target: { value: fakeLend.questions[0] } })
+    fireEvent.change(inputs[6], { target: { value: fakeLend.questions[0] } })
     fireEvent.click(addButtons[1])
     fireEvent.click(registerButton)
 
@@ -191,14 +197,15 @@ describe('<BookRegisterPage />', () => {
     const registerButton = await screen.findByText('Register')
 
     // when
-    fireEvent.change(inputs[0], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[1], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
-    fireEvent.change(inputs[4], { target: { value: fakeLend.cost } })
+    fireEvent.change(inputs[5], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
-    fireEvent.change(inputs[5], { target: { value: fakeLend.questions[0] } })
+    fireEvent.change(inputs[6], { target: { value: fakeLend.questions[0] } })
     fireEvent.click(addButtons[1])
     fireEvent.click(registerButton)
 
