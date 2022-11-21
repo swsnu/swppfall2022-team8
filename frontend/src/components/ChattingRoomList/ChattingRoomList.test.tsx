@@ -69,7 +69,12 @@ const preloadedState: RootState = {
     },
     subscribed_tags: [],
     watch_list: [],
-    recommend_list: []
+    recommend: {
+      is_queued: false,
+      is_outdated: false,
+      enqueued: false,
+      recommend_list: []
+    }
   },
   room: {
     rooms_lend: [

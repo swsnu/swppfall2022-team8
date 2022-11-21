@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { RootState } from '../..'
 import { LendType } from '../lend/lend'
+import { BookType } from '../book/book'
 
 /*
  * Type definitions
@@ -16,7 +17,7 @@ export interface UserState {
   currentUser: UserType | null
   subscribed_tags: string[]
   watch_list: LendType[]
-  recommend_list: RecommendType[]
+  recommend: RecommendType
 }
 
 export interface UserSubmitType {
@@ -39,9 +40,10 @@ export interface ToggleWatchResponseType {
 }
 
 export interface RecommendType {
-  id: number
-  image: string
-  title: string
+  is_queued: boolean
+  is_outdated: boolean
+  enqueued: boolean
+  recommend_list: BookType[]
 }
 
 /*
@@ -120,7 +122,7 @@ export const toggleWatch = createAsyncThunk(
 export const fetchRecommend = createAsyncThunk(
   'user/fetchRecommend',
   async () => {
-    const response = await axios.get<RecommendType[]>('/api/user/recommend/')
+    const response = await axios.get<RecommendType>('/api/user/recommend/')
     return response.data
   }
 )
@@ -133,7 +135,12 @@ const initialState: UserState = {
   currentUser: null,
   subscribed_tags: [],
   watch_list: [],
-  recommend_list: []
+  recommend: {
+    is_queued: false,
+    is_outdated: false,
+    enqueued: false,
+    recommend_list: []
+  }
 }
 
 export const errorPrefix = (code: number) => `Request failed with status code ${code}`
@@ -155,7 +162,12 @@ export const userSlice = createSlice({
       state.currentUser = null
       state.subscribed_tags = []
       state.watch_list = []
-      state.recommend_list = []
+      state.recommend = {
+        is_queued: false,
+        is_outdated: false,
+        enqueued: false,
+        recommend_list: []
+      }
     },
     updateTag: (
       state,
@@ -213,7 +225,7 @@ export const userSlice = createSlice({
       state.watch_list = action.payload
     })
     builder.addCase(fetchRecommend.fulfilled, (state, action) => {
-      state.recommend_list = action.payload
+      state.recommend = action.payload
     })
   }
 })

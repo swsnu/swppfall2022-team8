@@ -7,8 +7,10 @@ describe('user reducer', () => {
   let store: EnhancedStore<{ user: UserState }, AnyAction, [ThunkMiddleware<{ user: UserState }, AnyAction, undefined>]>
   const fakeTag = 'USER_TEST_TAG'
   const fakeRecommend = {
-    id: 1,
-    title: 'RECOOMEND_TEST_TITLE'
+    is_queued: false,
+    is_outdated: false,
+    enqueued: false,
+    recommend_list: []
   }
   const fakeLend = {
     id: 2,
@@ -41,7 +43,12 @@ describe('user reducer', () => {
       currentUser: null,
       subscribed_tags: [],
       watch_list: [],
-      recommend_list: []
+      recommend: {
+        is_queued: false,
+        is_outdated: false,
+        enqueued: false,
+        recommend_list: []
+      }
     })
   })
   it('should handle fetchTags', async () => {
@@ -95,9 +102,9 @@ describe('user reducer', () => {
     await waitFor(() => expect(store.getState().user.watch_list.length).toEqual(1))
   })
   it('should handle fetchRecommend', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeRecommend] })
+    axios.get = jest.fn().mockResolvedValue({ data: fakeRecommend })
     await store.dispatch(fetchRecommend())
-    expect(store.getState().user.recommend_list).toEqual([fakeRecommend])
+    expect(store.getState().user.recommend.recommend_list).toEqual([])
   })
   it('should handle requestSignup', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({

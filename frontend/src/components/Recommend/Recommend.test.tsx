@@ -21,13 +21,23 @@ let preloadedState: RootState = {
     currentUser: null,
     subscribed_tags: [],
     watch_list: [],
-    recommend_list: [
-      {
-        id: 1,
-        image: '',
-        title: 'test-title'
-      }
-    ]
+    recommend: {
+      is_queued: true,
+      is_outdated: true,
+      enqueued: true,
+      recommend_list: [
+        {
+          id: 291354,
+          image: '/media/291354/book_291354.jpg',
+          title: 'The Ruby Knight (The Elenium, #2)',
+          author: 'David Eddings',
+          tags: [
+            'fantasy'
+          ],
+          brief: 'The Ruby Knight'
+        }
+      ]
+    }
   },
   room: {
     rooms_lend: [],
@@ -64,12 +74,5 @@ describe('<Recommend />', () => {
     // given
     preloadedState = rootInitialState
     renderWithProviders(<Recommend />, { preloadedState })
-    const button = screen.getByRole('button')
-
-    // when
-    fireEvent.click(button)
-
-    // then
-    await waitFor(() => expect(mockDispatch).toHaveBeenCalled())
   })
 })
