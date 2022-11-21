@@ -2,6 +2,10 @@ h1 {
     font-weight: bold;
 }
 
+.page {
+    background-color: aliceblue;
+}
+
 .login-page {
     border-radius: 5px;
     border: 10px solid rgb(119, 170, 235);

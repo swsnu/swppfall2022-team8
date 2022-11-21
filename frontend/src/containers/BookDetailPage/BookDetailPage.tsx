@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button'
 import { selectUser, toggleWatch } from '../../store/slices/user/user'
 import './BookDetailPage.css'
 import NavBar from '../../components/NavBar/NavBar'
+import { Collapse } from 'react-bootstrap'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
@@ -68,11 +69,15 @@ const BookDetailPage = () => {
             <Button variant="outline-primary"
               type="button"
               onClick={() => setInfoVisible(!infoVisible)}
+              aria-controls='add-information'
+              aria-expanded={infoVisible}
             >Additional Info</Button>
             <br />
-            <div className="info-box" hidden={!infoVisible}>
-              {lendState.selectedLend?.additional}
-            </div>
+            <Collapse in={infoVisible}>
+              <div id='add-information' className="info-box" hidden={!infoVisible}>
+                {lendState.selectedLend?.additional}
+              </div>
+            </Collapse>
           </div>
         </div>
       </div>
@@ -86,7 +91,7 @@ const BookDetailPage = () => {
               id="detail-edit-button"
               onClick={() => navigate(`/book/${id}/edit`)}
             >Edit</Button>
-            <Button variant="outline-primary"
+            <Button variant="outline-danger"
               type="button"
               className='detail-page-buttons'
               onClick={() => clickDeleteHandler()}
@@ -98,7 +103,7 @@ const BookDetailPage = () => {
               id="detail-request-button"
               onClick={() => navigate(`/book/${id}/request`)}
             >Request</Button>
-            <Button variant="outline-primary"
+            <Button variant="outline-warning  "
               type="button"
               className='detail-page-buttons'
               id="detail-watch-button"

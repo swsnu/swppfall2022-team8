@@ -1,3 +1,4 @@
+import { Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import './BookListEntity.css'
 
@@ -12,18 +13,15 @@ const BookListEntity = (props: IProps) => {
   const navigate = useNavigate()
 
   return (
-    <div
-      className="book-list-entity"
-      onClick={() => navigate(`/book/${props.id}`)}
-    > <div className='image-grid'>
-        <div className='image-small'>
-          <img alt='Image Not Found' width={'100%'} src={props.image} />
-        </div>
-      </div>
-      <h2>{props.title}</h2>
-      <br />
-      <h2>{props.available ? '  Available!' : null}</h2>
-    </div>
+    <Card style={ { width: '18rem' } } onClick={() => navigate(`/book/${props.id}`)} className='book-list-entity' >
+      <Card.Img variant='top' src={props.image} className='book-entity-image'/>
+      <Card.Body>
+        <Card.Title>{props.title}</Card.Title>
+        <Card.Text>
+          {props.available}
+        </Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
 

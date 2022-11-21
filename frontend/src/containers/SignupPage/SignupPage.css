@@ -6,14 +6,13 @@ h1 {
     border-radius: 5px;
     border: 10px solid rgb(119, 170, 235);
     width: 600px;
-    height: 450px;
     margin: auto;
-    margin-top: 300px;
+    margin-top: 100px;
 }
 
 .signup-input-class {
     margin: auto;
-    width: 300px;
+    width: 350px;
 }
 
 .signup-buttons {
@@ -21,5 +20,26 @@ h1 {
 }
 
 #signup-submit-button {
-    margin: auto;
+    margin-bottom: 20px;
+}
+
+.signup-tags {
+    margin: 40px;
+    border: 2px solid rgb(122, 180, 255);
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+    
+.tag-example {
+    border-radius: 5px;
+    margin: 20px
+}
+
+#cannot-change {
+    padding-right: 0;
+    text-align: center;
+    white-space: nowrap;
+    font-size: small;
+    color: grey;
 }

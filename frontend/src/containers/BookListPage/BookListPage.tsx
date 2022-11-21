@@ -29,15 +29,17 @@ const BookListPage = () => {
       <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
       <br />
       <h3>Result</h3>
-      {lendState.lends.map(lend => (
-        <div key={`lendlist_${lend.id}`}>
-          <BookListEntity
-            id={lend.id}
-            title={lend.book_info.title}
-            image={lend.book_info.image}
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {lendState.lends.map(lend => (
+          <div key={`lendlist_${lend.id}`} className='booklist-item'>
+            <BookListEntity
+              id={lend.id}
+              title={lend.book_info.title}
+              image={lend.book_info.image}
+            />
+          </div>
+        ))}
+      </div>
     </>
   )
 }

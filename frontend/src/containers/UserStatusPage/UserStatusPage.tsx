@@ -21,6 +21,8 @@ const UserStatusPage = () => {
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>(userState.subscribed_tags)
 
+  const borrowList = borrowState.userBorrows.filter((borrow, idx) => borrow.active)
+
   useEffect(() => {
     if (!userState.currentUser) {
       navigate('/login')
@@ -63,43 +65,67 @@ const UserStatusPage = () => {
   return (
     <div className='user-status-page'>
       <NavBar />
+      <br />
       <h1>User Info</h1>
       <br />
-      <p>Lend List</p>
-      {lendState.userLends.map((lend, idx) => (
-        <div key={`mylend_${idx}`}>
-          <BookListEntity
-            id={lend.id}
-            image={lend.book_info.image}
-            title={lend.book_info.title}
-          />
-        </div>
-      ))}
       <br />
-      <p>Borrow List</p>
-      {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
-        <div key={`myborrow_${idx}`}>
-          <BookListEntity
-            id={borrow.lend_id}
-            image={borrow.image}
-            title={borrow.book_title}
-          // TODO: add book info to borrow slice
-          />
-        </div>
-      ))}
+      <h3>Lend List</h3>
+      <div className='booklist'>
+        {lendState.userLends.length
+          ? lendState.userLends.map((lend, idx) => (
+              <div key={`mylend_${idx}`}>
+                <BookListEntity
+                  id={lend.id}
+                  image={lend.book_info.image}
+                  title={lend.book_info.title}
+                />
+              </div>
+          ))
+          : <>
+              <h5><br/><br/><br/><br/></h5>
+              <h5 className='empty-text'>Empty</h5>
+            </>
+        }
+      </div>
       <br />
-      <p>Watch List</p>
-      {/* TODO: implement Watch List */}
-      {userState.watch_list.map((watch, idx) => (
-        <div key={`mywatch_${idx}`}>
-          <BookListEntity
-            id={watch.id}
-            image={watch.book_info.image}
-            title={watch.book_info.title}
-            available={watch.status === null}
-          />
-        </div>
-      ))}
+      <h3>Borrow List</h3>
+      <div className='booklist'>
+        { borrowList.length
+          ? borrowList.map((borrow, idx) => (
+            <div key={`myborrow_${idx}`}>
+              <BookListEntity
+                id={borrow.lend_id}
+                image={borrow.image}
+                title={borrow.book_title}
+              />
+            </div>
+          ))
+          : <>
+            <h5><br/><br/><br/><br/></h5>
+            <h5 className='empty-text'>Empty</h5>
+          </>
+      }
+      </div>
+      <br />
+      <h3>Watch List</h3>
+      <div className='booklist'>
+        { userState.watch_list.length
+          ? userState.watch_list.map((watch, idx) => (
+            <div key={`mywatch_${idx}`}>
+              <BookListEntity
+                id={watch.id}
+                image={watch.book_info.image}
+                title={watch.book_info.title}
+                available={watch.status === null}
+              />
+            </div>
+          ))
+          : <>
+              <h5><br/><br/><br/><br/></h5>
+              <h5 className='empty-text'>Empty</h5>
+            </>
+      }
+      </div>
       <br />
       <Form>
         <InputGroup as={Row} className='input-class' id='tags-input-form'>

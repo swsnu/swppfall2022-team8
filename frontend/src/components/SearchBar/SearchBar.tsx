@@ -83,6 +83,7 @@ const SearchBar = (props: IProps) => {
             id={`search-bar-${category.toLowerCase()}`}
             value={inputs[idx]}
             onChange={event => changeInputHandler(event.target.value, idx)}
+            onKeyDown={event => { if (event.key === 'Enter') clickSearchHandler() }}
             {...(
               category === 'Tag'
                 ? {
