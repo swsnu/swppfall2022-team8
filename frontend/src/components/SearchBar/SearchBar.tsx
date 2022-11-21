@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Button, Dropdown, DropdownButton, Form, InputGroup, Overlay, Popover } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import QueryString from 'qs'
 
@@ -10,114 +10,114 @@ interface IProps {
 };
 
 const SearchBar = (props: IProps) => {
-  const [content, setContent] = useState<string>('')
-  const [title, setTitle] = useState<string>(props.title ?? '')
-  const [author, setAuthor] = useState<string>(props.author ?? '')
-  const [tags, setTags] = useState<string[]>(props.tag ?? [])
+  const [inputs, setInputs] = useState<string[]>(['', '', ''])
+  const [dropdownIdx, setDropdownIdx] = useState<number>(0)
+  const [popoverShow, setPopoverShow] = useState<boolean>(false)
+  const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null)
 
   const navigate = useNavigate()
 
-  const clickAddTitleHandler = () => {
-    setTitle(content.trim())
-    setContent('')
-  }
+  const categories = ['Title', 'Author', 'Tag']
+  const dropdowns = [...categories, 'Advanced']
 
-  const clickAddAuthorHandler = () => {
-    setAuthor(content.trim())
-    setContent('')
-  }
-
-  const clickAddTagHandler = () => {
-    if (content && (tags.find(val => val === content) === undefined)) {
-      if (/^[0-9A-Za-z\s-]+$/.test(content)) {
-        const newTags = [...tags, content.trim().toLowerCase().replace(' ', '-')]
-        setTags(newTags)
-      } else {
-        alert('Tag should consist of alpabets, numbers and dashes(or whitespaces) only.')
-        return
-      }
+  useEffect(() => {
+    const entries = [props.title ?? '', props.author ?? '', props.tag?.join(' ') ?? '']
+    const filledNum = entries.filter(val => Boolean(val)).length
+    if (filledNum >= 2) {
+      setDropdownIdx(3)
+    } else if (filledNum === 1) {
+      setDropdownIdx(entries.map(val => Boolean(val)).indexOf(true))
     }
-    setContent('')
+    setInputs(entries)
+  }, [])
+
+  const changeInputHandler = (value: string, idx: number) => {
+    const newInputs = [...inputs]
+    newInputs[idx] = value
+    setInputs(newInputs)
   }
 
-  const clickResetHandler = () => {
-    setContent('')
-    setTitle('')
-    setAuthor('')
-    setTags([])
-  }
-
-  const clickDeleteTagHandler = (targetIdx: number) => {
-    const newTags = tags.filter((_tag, idx) => (idx !== targetIdx))
-    setTags(newTags)
+  const clickDropDownHandler = (idx: number) => {
+    setDropdownIdx(idx)
+    setInputs(['', '', ''])
   }
 
   const clickSearchHandler = () => {
-    if (title || author || tags.length) {
-      const params = {
-        title: title || undefined,
-        author: author || undefined,
-        tag: tags
-      }
-      navigate(`/search?${QueryString.stringify(params)}`)
-    } else {
-      alert('Search parameter cannot be empty.')
+    const params = {
+      title: inputs[0].trim() || undefined,
+      author: inputs[1].trim() || undefined,
+      tag: inputs[2].trim() ? inputs[2].trim().split(' ') : undefined
     }
+
+    if (params.tag && !params.tag.every(tag => /^[0-9A-Za-z-]+$/.test(tag))) {
+      alert('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.')
+      return
+    }
+
+    navigate(`/search?${QueryString.stringify(params)}`)
   }
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => clickAddTitleHandler()}
-      >&nbsp;Add title&nbsp;</button>
-      <button
-        type="button"
-        onClick={() => clickAddAuthorHandler()}
-      >&nbsp;Add author&nbsp;</button>
-      <button
-        type="button"
-        onClick={() => clickAddTagHandler()}
-      >&nbsp;Add tag&nbsp;</button>
-      <button
-        type="button"
-        onClick={() => clickResetHandler()}
-      >&nbsp;Reset&nbsp;</button>
-      <br />
-      <InputGroup className="mb-3"
-        id="search-bar">
-        <Form.Control
-          placeholder="search"
-          aria-label="Recipient's username"
-          aria-describedby="basic-addon2"
-          id="search-bar"
-          value={content}
-          onChange={event => setContent(event.target.value)}
-        />
-        <Button variant="outline-primary" id="search-button"
+      <InputGroup className="mb-3" id="search-bar">
+        <DropdownButton
+          variant="outline-primary"
+          title={dropdowns[dropdownIdx]}
+          id="search-category-dropdown"
+        >
+          {dropdowns.map((dropdown, idx) => (
+            <Dropdown.Item
+              key={`search-dropdown-${idx}`}
+              href="#"
+              onClick={() => clickDropDownHandler(idx)}
+            >{dropdown}</Dropdown.Item>
+          ))}
+        </DropdownButton>
+        {categories.map((category, idx) => (
+          <Form.Control
+            key={`search-bar-${category.toLowerCase()}`}
+            hidden={dropdowns[dropdownIdx] !== 'Advanced' && dropdowns[dropdownIdx] !== category}
+            placeholder={`${category} search`}
+            aria-label="Recipient's username"
+            aria-describedby="basic-addon2"
+            id={`search-bar-${category.toLowerCase()}`}
+            value={inputs[idx]}
+            onChange={event => changeInputHandler(event.target.value, idx)}
+            {...(
+              category === 'Tag'
+                ? {
+                    onMouseOver: event => { setPopoverShow(true); setPopoverTarget(event.currentTarget) },
+                    onMouseOut: _event => { setPopoverShow(false) }
+                  }
+                : null
+            )}
+          />
+        ))}
+        <Overlay
+          show={popoverShow}
+          target={popoverTarget}
+          placement="bottom-start"
+          container={null}
+          containerPadding={0}
+        >
+          <Popover id="popover-tag-hint">
+            <Popover.Header as="h3">Tag Search Hint</Popover.Header>
+            <Popover.Body>
+              &middot; A tag consists of alpabets, numbers, and dashes only.<br />
+              &middot; Tags are separated by single space.<br /><br />
+              Ex&#41; classics science-fiction-fantasy
+            </Popover.Body>
+          </Popover>
+        </Overlay>
+        <Button
+          id="search-button"
+          variant="outline-primary"
+          disabled={inputs.map(input => input.trim()).every(input => !input)}
           onClick={() => clickSearchHandler()}
         >
           Search
         </Button>
       </InputGroup>
-      {title && (
-        <div>
-          Title: {title}
-          <button type="button" onClick={() => setTitle('')}>&nbsp;x&nbsp;</button>
-        </div>
-      )}
-      {author && (
-        <div>
-          Author: {author}
-          <button type="button" onClick={() => setAuthor('')}>&nbsp;x&nbsp;</button>
-        </div>
-      )}
-      {tags.map((tag, idx) => (
-        <div key={`tag_${tag}_${idx}`}>
-          #{tag}
-          <button type="button" onClick={() => clickDeleteTagHandler(idx)}>&nbsp;x&nbsp;</button>
-        </div>
-      ))}
     </>
   )
 }
