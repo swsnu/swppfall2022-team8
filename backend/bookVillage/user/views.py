@@ -167,12 +167,22 @@ class UserViewSet(viewsets.GenericViewSet):
             status=status.HTTP_200_OK,
         )
 
-    # PUT /api/user/recommend/
-    @recommend.mapping.put
-    def put_recommend(self, request):
+    # POST /api/user/recommend/
+    @recommend.mapping.post
+    def post_recommend(self, request):
         self._recommend(request.user)
         request.user.recommend.enqueue()
-        return Response({"update_requested": True}, status=status.HTTP_200_OK)
+        return Response({"enqueued": True}, status=status.HTTP_200_OK)
+
+    @recommend.mapping.put
+    def put_recommend(self, request):
+        recommend = request.user.recommend
+        enqueued = False
+        if recommend.is_queueable:
+            self._recommend(request.user)
+            recommend.enqueue()
+            enqueued = True
+        return Response({"enqueued": enqueued}, status=status.HTTP_200_OK)
 
     @staticmethod
     def _recommend(user):
