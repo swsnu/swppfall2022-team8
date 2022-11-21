@@ -9,6 +9,7 @@ describe('lend reducer', () => {
     id: 2,
     book: 1,
     book_info: {
+      image: '',
       title: 'LEND_TEST_TITLE',
       author: 'LEND_TEST_AUTHOR',
       tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
@@ -45,6 +46,7 @@ describe('lend reducer', () => {
       createLend({
         book: 1,
         book_info: {
+          image: '',
           title: 'LEND_TEST_TITLE',
           author: 'LEND_TEST_AUTHOR',
           tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
@@ -79,6 +81,7 @@ describe('lend reducer', () => {
       createLend({
         book: 1,
         book_info: {
+          image: '',
           title: 'LEND_TEST_TITLE',
           author: 'LEND_TEST_AUTHOR',
           tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
@@ -99,6 +102,7 @@ describe('lend reducer', () => {
       createLend({
         book: 1,
         book_info: {
+          image: '',
           title: 'LEND_TEST_TITLE',
           author: 'LEND_TEST_AUTHOR',
           tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
@@ -128,6 +132,7 @@ describe('lend reducer', () => {
       createLend({
         book: 1,
         book_info: {
+          image: '',
           title: 'LEND_TEST_TITLE',
           author: 'LEND_TEST_AUTHOR',
           tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],

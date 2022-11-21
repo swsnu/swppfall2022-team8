@@ -3,6 +3,27 @@ import { RootState } from '../../store'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import ChattingRightMenu from './ChattingRightMenu'
 
+const fakeLender = {
+  id: 1,
+  username: 'lender_test_username'
+}
+
+const fakeBorrower = {
+  id: 2,
+  username: 'borrower_test_username'
+}
+
+const fakeRoom = {
+  id: 3,
+  lend_id: 4,
+  lender: fakeLender.id,
+  lender_username: fakeLender.username,
+  borrower: fakeBorrower.id,
+  borrower_username: fakeBorrower.username,
+  questions: ['RIGHTMENU_TEST_QUESTION'],
+  answers: ['RIGHTMENU_TEST_ANSWER']
+}
+
 const preloadedState: RootState = rootInitialState
 
 const mockClickConfirmLendingHandler = jest.fn()
@@ -12,8 +33,22 @@ describe('<ChattingRightMenu />', () => {
   it('should navigate when clicked (group=lend borrowable=true, borrowd=false)', async () => {
     // given
     renderWithProviders(
-      <ChattingRightMenu group='lend' borrowable={true} borrowed={false} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={true}
+        borrowed={false}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
+        }
+      }
     )
     const button = await screen.findByText('Confirm lending')
 
@@ -26,8 +61,22 @@ describe('<ChattingRightMenu />', () => {
   it('should navigate when clicked (group=lend borrowable=false, borrowd=true)', async () => {
     // given
     renderWithProviders(
-      <ChattingRightMenu group='lend' borrowable={false} borrowed={true} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={false}
+        borrowed={true}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
+        }
+      }
     )
     const button = await screen.findByText('Confirm return')
 
@@ -40,8 +89,22 @@ describe('<ChattingRightMenu />', () => {
   it('should render (group=lend borrowable=false, borrowd=false)', async () => {
     // given
     const { container } = renderWithProviders(
-      <ChattingRightMenu group='lend' borrowable={false} borrowed={false} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={false}
+        borrowed={false}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
+        }
+      }
     )
 
     // when
@@ -53,8 +116,22 @@ describe('<ChattingRightMenu />', () => {
   it('should render (group=borrow borrowable=true, borrowd=false)', async () => {
     // given
     const { container } = renderWithProviders(
-      <ChattingRightMenu group='borrow' borrowable={true} borrowed={false} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={true}
+        borrowed={false}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeBorrower
+          }
+        }
+      }
     )
 
     // when
@@ -66,8 +143,22 @@ describe('<ChattingRightMenu />', () => {
   it('should render (group=borrow borrowable=false, borrowd=true)', async () => {
     // given
     const { container } = renderWithProviders(
-      <ChattingRightMenu group='borrow' borrowable={false} borrowed={true} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={false}
+        borrowed={true}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeBorrower
+          }
+        }
+      }
     )
 
     // when
@@ -79,8 +170,22 @@ describe('<ChattingRightMenu />', () => {
   it('should render (group=borrow borrowable=false, borrowd=false)', async () => {
     // given
     const { container } = renderWithProviders(
-      <ChattingRightMenu group='borrow' borrowable={false} borrowed={false} clickConfirmLendingHandler={mockClickConfirmLendingHandler} clickConfirmReturnHandler={mockClickConfirmReturnHandler} />,
-      { preloadedState }
+      <ChattingRightMenu
+        room={fakeRoom}
+        borrowable={false}
+        borrowed={false}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeBorrower
+          }
+        }
+      }
     )
 
     // when
@@ -88,5 +193,33 @@ describe('<ChattingRightMenu />', () => {
 
     // then
     expect(info.item(0)?.innerHTML).toEqual('Someone has already borrowed this book...')
+  })
+  it('should not display answer when answers are empty', async () => {
+    // given
+    renderWithProviders(
+      <ChattingRightMenu
+        room={{
+          ...fakeRoom,
+          answers: []
+        }}
+        borrowable={true}
+        borrowed={false}
+        clickConfirmLendingHandler={mockClickConfirmLendingHandler}
+        clickConfirmReturnHandler={mockClickConfirmReturnHandler}
+      />,
+      {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
+        }
+      }
+    )
+
+    const qna = screen.getAllByRole('heading')[1]
+
+    expect(qna.innerHTML).toEqual('Answer to question 1: ')
   })
 })

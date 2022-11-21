@@ -66,43 +66,40 @@ const UserStatusPage = () => {
       <h1>User Info</h1>
       <br />
       <p>Lend List</p>
-      <div className='booklist'>
-        {lendState.userLends.map((lend, idx) => (
-          <div key={`mylend_${idx}`}>
-            <BookListEntity
-              id={lend.id}
-              title={lend.book_info.title}
-            />
-          </div>
-        ))}
-      </div>
+      {lendState.userLends.map((lend, idx) => (
+        <div key={`mylend_${idx}`}>
+          <BookListEntity
+            id={lend.id}
+            image={lend.book_info.image}
+            title={lend.book_info.title}
+          />
+        </div>
+      ))}
       <br />
       <p>Borrow List</p>
-      <div className='booklist'>
-        {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
-          <div key={`myborrow_${idx}`}>
-            <BookListEntity
-              id={borrow.lend_id}
-              title={`lend_id: ${borrow.lend_id}`}
-            // TODO: add book info to borrow slice
-            />
-          </div>
-        ))}
-      </div>
+      {borrowState.userBorrows.filter((borrow, idx) => borrow.active).map((borrow, idx) => (
+        <div key={`myborrow_${idx}`}>
+          <BookListEntity
+            id={borrow.lend_id}
+            image={borrow.image}
+            title={borrow.book_title}
+          // TODO: add book info to borrow slice
+          />
+        </div>
+      ))}
       <br />
       <p>Watch List</p>
       {/* TODO: implement Watch List */}
-      <div className='booklist'>
-        {userState.watch_list.map((watch, idx) => (
-          <div key={`mywatch_${idx}`}>
-            <BookListEntity
-              id={watch.id}
-              title={watch.book_info.title}
-              available={watch.status === null}
-            />
-          </div>
-        ))}
-      </div>
+      {userState.watch_list.map((watch, idx) => (
+        <div key={`mywatch_${idx}`}>
+          <BookListEntity
+            id={watch.id}
+            image={watch.book_info.image}
+            title={watch.book_info.title}
+            available={watch.status === null}
+          />
+        </div>
+      ))}
       <br />
       <Form>
         <InputGroup as={Row} className='input-class' id='tags-input-form'>

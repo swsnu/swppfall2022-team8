@@ -50,10 +50,9 @@ const BookRequestPage = () => {
       return
     }
 
-    const response = await dispatch(createRoom({ lend_id: Number(id) }))
+    const response = await dispatch(createRoom({ lend_id: Number(id), answers }))
 
     if (response.type === `${createRoom.typePrefix}/fulfilled`) {
-      // TODO: send a message contains questions and corresponding answer
       navigate('/chat')
     } else {
       alert('You cannot request same book twice.')

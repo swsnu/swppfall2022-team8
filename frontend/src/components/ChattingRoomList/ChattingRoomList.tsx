@@ -1,36 +1,45 @@
-import { useSelector } from 'react-redux'
-import { SelectedChatGroup } from '../../containers/ChattingPage/ChattingPage'
-import { selectRoom } from '../../store/slices/room/room'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { fetchNextUserRooms, RoomType, selectRoom } from '../../store/slices/room/room'
+import { selectUser } from '../../store/slices/user/user'
 
 export interface IProps {
-  group: SelectedChatGroup
-  clickRoomHandler: (idx: number, group: SelectedChatGroup) => Promise<void>
+  enterRoom: (room: RoomType) => void
 }
 
 const ChattingRoomList = (props: IProps) => {
+  const dispatch = useDispatch<AppDispatch>()
   const roomState = useSelector(selectRoom)
+  const userState = useSelector(selectUser)
 
-  const rooms = {
-    lend: roomState.rooms_lend,
-    borrow: roomState.rooms_borrow
+  const clickLoadRoomHandler = () => {
+    dispatch(fetchNextUserRooms())
   }
 
   return (
     <>
-      {rooms[props.group].map((room, idx) => {
-        const otherUsername = {
-          lend: room.borrower_username,
-          borrow: room.lender_username
-        }
+      {roomState.rooms.map(room => {
+        const isUserLender = room.lender === userState.currentUser?.id
+        const othersPosition = isUserLender
+          ? 'Borrower'
+          : 'Lender'
+        const othersUsername = isUserLender
+          ? room.borrower_username
+          : room.lender_username
         return (
           <div key={`room_${room.id}`}>
             <button
               type="button"
-              onClick={() => props.clickRoomHandler(idx, props.group)}
-            >chat with {otherUsername[props.group]}</button>
+              onClick={() => props.enterRoom(room)}
+            >[{othersPosition}] chat with {othersUsername}</button>
           </div>
         )
       })}
+      <button
+        type="button"
+        disabled={!roomState.next}
+        onClick={() => clickLoadRoomHandler()}
+      >&darr;</button>
     </>
   )
 }

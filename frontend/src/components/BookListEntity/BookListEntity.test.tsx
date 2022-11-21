@@ -15,7 +15,7 @@ describe('<BookListEntity />', () => {
   it('should navigate when clicked (available)', async () => {
     // given
     const { container } = renderWithProviders(
-      <BookListEntity id={1} title='test-title' available={false} />,
+      <BookListEntity id={1} image='' title='test-title' available={false} />,
       { preloadedState }
     )
     const button = container.getElementsByClassName('book-list-entity')
@@ -29,7 +29,7 @@ describe('<BookListEntity />', () => {
   it('should navigate when clicked (borrowed)', async () => {
     // given
     const { container } = renderWithProviders(
-      <BookListEntity id={1} title='test-title' available={true} />,
+      <BookListEntity id={1} image='' title='test-title' available={true} />,
       { preloadedState }
     )
     const info = container.getElementsByTagName('h2')
