@@ -2,9 +2,11 @@ import NavBar from '../../components/NavBar/NavBar'
 import Recommend from '../../components/Recommend/Recommend'
 import SearchBar from '../../components/SearchBar/SearchBar'
 
+import './MainPage.css'
+
 const MainPage = () => {
   return (
-    <>
+    <div id='mainpage'>
       <NavBar />
       <br />
       <h1>Welcome to BookVillage!</h1>
@@ -18,7 +20,7 @@ const MainPage = () => {
 
       {/* TODO: add ML recommendation feature */}
       <Recommend />
-    </>
+    </div>
   )
 }
 
