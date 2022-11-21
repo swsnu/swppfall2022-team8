@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Dropdown, DropdownButton, Form, InputGroup } from 'react-bootstrap'
+import { Button, Dropdown, DropdownButton, Form, InputGroup, Overlay, Popover } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import QueryString from 'qs'
 
@@ -10,8 +10,10 @@ interface IProps {
 };
 
 const SearchBar = (props: IProps) => {
-  const [dropdownIdx, setDropdownIdx] = useState<number>(0)
   const [inputs, setInputs] = useState<string[]>(['', '', ''])
+  const [dropdownIdx, setDropdownIdx] = useState<number>(0)
+  const [popoverShow, setPopoverShow] = useState<boolean>(false)
+  const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null)
 
   const navigate = useNavigate()
 
@@ -81,8 +83,32 @@ const SearchBar = (props: IProps) => {
             id={`search-bar-${category.toLowerCase()}`}
             value={inputs[idx]}
             onChange={event => changeInputHandler(event.target.value, idx)}
+            {...(
+              category === 'Tag'
+                ? {
+                    onMouseOver: event => { setPopoverShow(true); setPopoverTarget(event.currentTarget) },
+                    onMouseOut: _event => { setPopoverShow(false) }
+                  }
+                : null
+            )}
           />
         ))}
+        <Overlay
+          show={popoverShow}
+          target={popoverTarget}
+          placement="bottom-start"
+          container={null}
+          containerPadding={0}
+        >
+          <Popover id="popover-tag-hint">
+            <Popover.Header as="h3">Tag Search Hint</Popover.Header>
+            <Popover.Body>
+              &middot; A tag consists of alpabets, numbers, and dashes only.<br />
+              &middot; Tags are separated by single space.<br /><br />
+              Ex&#41; classics science-fiction-fantasy
+            </Popover.Body>
+          </Popover>
+        </Overlay>
         <Button
           id="search-button"
           variant="outline-primary"

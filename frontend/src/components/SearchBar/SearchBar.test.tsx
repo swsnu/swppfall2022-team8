@@ -64,4 +64,25 @@ describe('<SearchBar />', () => {
     // then
     await waitFor(() => expect(screen.getAllByText('Advanced').length).toEqual(2))
   })
+  it('should show hints if mouse is on tag search bar / remove hints if mouse goes out from tag search bar', async () => {
+    // given
+    await act(async () => {
+      render(<SearchBar />)
+    })
+    const tagButton = await screen.findByText('Tag')
+    fireEvent.click(tagButton)
+
+    // when
+    const tagInput = await screen.findByPlaceholderText('Tag search')
+    fireEvent.mouseOver(tagInput)
+
+    // then
+    const hint = await screen.findByText('Tag Search Hint')
+
+    // when
+    fireEvent.mouseOut(tagInput)
+
+    // then
+    await waitFor(() => expect(hint).not.toBeInTheDocument())
+  })
 })
