@@ -1,3 +1,4 @@
+import { Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import './BookListEntity.css'
 
@@ -14,14 +15,17 @@ const BookListEntity = (props: IProps) => {
     <div
       className="book-list-entity"
       onClick={() => navigate(`/book/${props.id}`)}
-    > <div className='image-grid'>
-        <div className='image-small'>
-          image
-        </div>
-      </div>
-      <h2>{props.title}</h2>
-      <br />
-      <h2>{props.available ? '  Available!' : null}</h2>
+    >
+      <Card style={ { width: '18rem' } }>
+        { /* 이미지 들어오면 합칠예정 */ }
+        <Card.Img variant='top' src='holder.js/100px180'/>
+        <Card.Body>
+          <Card.Title>{props.title}</Card.Title>
+          <Card.Text>
+            {props.available}
+          </Card.Text>
+        </Card.Body>
+      </Card>
     </div>
   )
 }
