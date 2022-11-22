@@ -5,7 +5,6 @@ import reducer, { LendState, fetchQueryLends, createLend, fetchLend, deleteLend,
 
 describe('lend reducer', () => {
   let store: EnhancedStore<{ lend: LendState }, AnyAction, [ThunkMiddleware<{ lend: LendState }, AnyAction, undefined>]>
-  const mockData = new FormData()
   const fakeLend = {
     id: 2,
     book: 1,
@@ -25,6 +24,9 @@ describe('lend reducer', () => {
     cost: 3000,
     additional: 'LEND_TEST_ADDITIONAL',
     status: null
+  }
+  const mockData = {
+    ...fakeLend
   }
   beforeAll(() => {
     store = configureStore({ reducer: { lend: reducer } })
@@ -71,7 +73,7 @@ describe('lend reducer', () => {
     jest.spyOn(axios, 'put').mockResolvedValue({
       data: { ...fakeLend, additional: 'LEND_TEST_ADDITIONAL_CHNAGED' }
     })
-    await store.dispatch(updateLend({ lendData: mockData, id: '0' }))
+    await store.dispatch(updateLend(mockData))
     await waitFor(() => expect(store.getState().lend.lends.find(lend => lend.id === fakeLend.id)?.additional).toEqual('LEND_TEST_ADDITIONAL_CHNAGED'))
   })
   it('should handle createLend error', async () => {

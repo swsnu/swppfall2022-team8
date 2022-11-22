@@ -121,7 +121,10 @@ class LendImageViewSet(viewsets.GenericViewSet):
                 {"error": "exceeded image counts"}, status=status.HTTP_400_BAD_REQUEST
             )
         image = LendImage.objects.create(lend=lend_info, image=data["image"])
-        return Response({"id": image.id}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"image_id": image.id, "image": image.url, "lend_id": lend_info.id},
+            status=status.HTTP_201_CREATED,
+        )
 
     # DELETE /api/lend/image/delete_pk
     def destroy(self, request, pk=None):
@@ -131,5 +134,6 @@ class LendImageViewSet(viewsets.GenericViewSet):
                 {"error": "You can't edit image on other's image"},
                 status=status.HTTP_403_FORBIDDEN,
             )
+        data = {"image_id": image.id, "lend_id": image.lend.id}
         image.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
