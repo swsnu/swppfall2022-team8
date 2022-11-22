@@ -121,7 +121,7 @@ class LendImageViewSet(viewsets.GenericViewSet):
                 {"error": "exceeded image counts"}, status=status.HTTP_400_BAD_REQUEST
             )
         image = LendImage.objects.create(lend=lend_info, image=data["image"])
-        return Response(image.id, status=status.HTTP_201_CREATED)
+        return Response({"id": image.id}, status=status.HTTP_201_CREATED)
 
     # DELETE /api/lend/image/delete_pk
     def destroy(self, request, pk=None):
