@@ -21,7 +21,7 @@ const BookListPage = () => {
   }, [search, dispatch])
 
   return (
-    <>
+    <div className='page'>
       <NavBar />
       <h1>BookListPage</h1>
       <br />
@@ -40,7 +40,7 @@ const BookListPage = () => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   )
 }
 

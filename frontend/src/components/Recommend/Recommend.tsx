@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { fetchRecommend, selectUser } from '../../store/slices/user/user'
@@ -18,25 +19,28 @@ const Recommend = () => {
 
   return (
     <>
-      <button onClick={onClickHandler}>
+      <br/>
+      <Button onClick={onClickHandler}>
         {userState.recommend_list.length
           ? 'Refresh '
           : ''
         }
         Recommend!
-      </button>
+      </Button>
       <br />
       <br />
       {loading && <p>Loading...</p>}
-      {userState.recommend_list.map((recommend, idx) => (
-        <div key={`recommendlist_${idx}`}>
-          <RecommendEntity
-            idx={idx + 1}
-            image={recommend.image}
-            title={recommend.title}
-          />
-        </div>
-      ))}
+      <div className='booklist'>
+        {userState.recommend_list.map((recommend, idx) => (
+          <div key={`recommendlist_${idx}`}>
+            <RecommendEntity
+              idx={idx + 1}
+              image={recommend.image}
+              title={recommend.title}
+            />
+          </div>
+        ))}
+      </div>
     </>
   )
 }

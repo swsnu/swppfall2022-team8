@@ -1,3 +1,4 @@
+import { Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 
 interface IProps {
@@ -10,14 +11,17 @@ const RecommendEntity = (props: IProps) => {
   const navigate = useNavigate()
 
   return (
-    <div onClick={() => navigate(`/search?title=${props.title}`)} >
-      <img alt='Image Not Found' width={'100px'} src={props.image} />
-      <p>
-        {props.idx}
-        {'. '}
-        {props.title}
-      </p>
-    </div>
+    <Card
+      style={ { width: '18rem' } }
+      className='book-list-entity'
+      onClick={() => navigate(`/search?title=${props.title}`)}
+      >
+      <Card.Img variant='top' src={props.image} className='book-entity-image'/>
+      <Card.Body>
+        <Card.Title>{props.idx}</Card.Title>
+        <Card.Text>{props.title}</Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
 

@@ -39,7 +39,7 @@ const BookDetailPage = () => {
   }
 
   return (
-    <>
+    <div className='page'>
       <NavBar />
       <br />
       <div className='book-detail-page'>
@@ -112,7 +112,7 @@ const BookDetailPage = () => {
           </>
         }
       </div>
-    </>
+    </div>
   )
 }
 

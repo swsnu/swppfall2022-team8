@@ -6,7 +6,7 @@ import './MainPage.css'
 
 const MainPage = () => {
   return (
-    <div id='mainpage'>
+    <div className='page'>
       <NavBar />
       <br />
       <h1>Welcome to BookVillage!</h1>
