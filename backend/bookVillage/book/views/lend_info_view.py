@@ -110,6 +110,9 @@ class LendImageViewSet(viewsets.GenericViewSet):
     # POST /api/lend/image/
     def create(self, request):
         data = request.data
+        if "lend_id" not in data or "image" not in data:
+            return Response({"error": "keyerror"}, status=status.HTTP_400_BAD_REQUEST)
+
         lend_info = get_object_or_404(LendInfo, id=data["lend_id"])
         if lend_info.owner != request.user:
             return Response(
