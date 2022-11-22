@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from book.pagination import LendPageNumberPagination
 from book.models.lend_info import LendInfo
 from book.serializers.lend_info_serializers import LendInfoSerializer
 from rest_framework.decorators import action
@@ -9,6 +10,7 @@ from rest_framework.decorators import action
 class LendInfoViewSet(viewsets.GenericViewSet):
     serializer_class = LendInfoSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = LendPageNumberPagination
 
     def get_permissions(self):
         return self.permission_classes

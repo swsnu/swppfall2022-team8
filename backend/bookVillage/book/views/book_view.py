@@ -1,6 +1,8 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from book.pagination import BookPageNumberPagination
 from book.models.book import Book, BookImage, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
 
@@ -9,6 +11,8 @@ class BookViewSet(viewsets.GenericViewSet):
     queryset = Book.objects.all().prefetch_related("tags")
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = BookPageNumberPagination
+    page_size = 12
 
     def get_permissions(self):
         return self.permission_classes
@@ -77,3 +81,13 @@ class BookViewSet(viewsets.GenericViewSet):
         book = self.get_object()
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=["GET"])
+    def tag(self, request):
+        name = request.data.get("name", "")
+        tags = Tag.objects.filter(name__icontain=name)
+        data = []
+        for tag in tags.all():
+            data.append(tag.name)
+
+        return Response(data, status=status.HTTP_200_OK)

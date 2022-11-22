@@ -2,6 +2,7 @@ from django.utils.datetime_safe import datetime
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from book.pagination import BorrowPageNumberPagination
 from book.models.borrow_info import BorrowInfo
 from book.models.lend_info import LendInfo
 from book.serializers.borrrow_info_serializers import BorrowInfoSerializer
@@ -12,6 +13,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
     queryset = BorrowInfo.objects.all()
     serializer_class = BorrowInfoSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = BorrowPageNumberPagination
 
     def get_permissions(self):
         return self.permission_classes
