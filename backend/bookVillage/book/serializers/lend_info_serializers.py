@@ -1,6 +1,7 @@
 from json import JSONDecodeError
 
 from rest_framework import serializers
+from rest_framework.fields import empty
 
 from book.models.lend_info import LendInfo, LendImage
 from django.conf import settings
@@ -14,6 +15,7 @@ class LendInfoSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     owner_username = serializers.ReadOnlyField(source="owner.username")
     images = serializers.SerializerMethodField()
+    user_id = 0
 
     class Meta:
         model = LendInfo
@@ -52,11 +54,16 @@ class LendInfoSerializer(serializers.ModelSerializer):
         data.pop("id")
         return data
 
+    def set_sercurity(self, user_id):
+        self.user_id = user_id
+
     def get_status(self, lend_info):
         from book.serializers.borrrow_info_serializers import BorrowInfoSerializer
 
         borrow_info = lend_info.current_borrow
         if borrow_info:
+            if self.user_id not in (0, lend_info.owner.id, borrow_info.borrower.id):
+                return "borrowed"
             serializer = BorrowInfoSerializer(borrow_info)
             data = serializer.data.copy()
             return data
@@ -69,36 +76,3 @@ class LendInfoSerializer(serializers.ModelSerializer):
             data.append({"id": image.id, "image": image.image})
 
         return data
-
-    def validate(self, data):
-        validated_data = super(LendInfoSerializer, self).validate(data)
-        validated_data["new_images"] = data.get("new_images")
-        validated_data["delete_images"] = data.get("delete_images")
-        return validated_data
-
-    def update(self, instance, validated_data):
-        instance.cost = validated_data.get("cost", instance.cost)
-        instance.additional = validated_data.get("additional", instance.additional)
-        new_images = validated_data.pop("new_images", [])
-
-        if new_images:
-            for image in new_images:
-                instance.add_image(image)
-
-        delete_images = validated_data.pop("delete_images", [])
-        if delete_images:
-            for image_id in delete_images:
-                image = LendImage.objects.get(id=image_id)
-                image.delete()
-
-        instance.save()
-        return instance
-
-    def create(self, validated_data):
-        validated_data.pop("delete_images")
-        new_images = validated_data.pop("new_images", [])
-        lend_info = LendInfo.objects.create(**validated_data)
-        if new_images:
-            for image in new_images:
-                lend_info.add_image(image)
-        return lend_info

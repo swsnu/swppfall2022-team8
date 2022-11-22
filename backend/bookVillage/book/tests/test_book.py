@@ -23,7 +23,7 @@ class BookTest(APITestCase):
     def test_list(self):
         # when
         res = self.client.get("/api/book/")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -32,7 +32,7 @@ class BookTest(APITestCase):
     def test_list_query_title_부분문자열(self):
         # when
         res = self.client.get("/api/book/?title=0")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -42,7 +42,7 @@ class BookTest(APITestCase):
     def test_list_query_author_부분문자열(self):
         # when
         res = self.client.get("/api/book/?author=b")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -52,7 +52,7 @@ class BookTest(APITestCase):
     def test_list_query_tag_부분문자열_실패(self):
         # when
         res = self.client.get("/api/book/?tag[]=0")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -61,7 +61,7 @@ class BookTest(APITestCase):
     def test_list_query_tag_성공(self):
         # when
         res = self.client.get("/api/book/?tag[]=tag0")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK

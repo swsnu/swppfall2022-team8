@@ -35,7 +35,8 @@ class BookViewSet(viewsets.GenericViewSet):
         books = books[:100]
         page = self.paginate_queryset(books)
         if page is not None:
-            books = page
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         data = self.get_serializer(books, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
@@ -90,6 +91,7 @@ class BookViewSet(viewsets.GenericViewSet):
         tags = Tag.objects.filter(name__icontains=name)
         page = self.paginate_queryset(tags)
         if page is not None:
-            tags = page
+            serializer = TagSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

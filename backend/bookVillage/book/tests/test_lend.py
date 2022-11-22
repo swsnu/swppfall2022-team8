@@ -31,7 +31,7 @@ class LendTest(APITestCase):
 
         # when
         res = self.client_0.get("/api/lend/")
-        data = res.data
+        data = res.data["results"]
 
         # then
         from book.serializers.book_serializers import BookSerializer
@@ -52,7 +52,7 @@ class LendTest(APITestCase):
 
         # when
         res = self.client_0.get("/api/lend/")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert len(data) == 2
@@ -67,7 +67,7 @@ class LendTest(APITestCase):
 
         # when
         res = self.client_0.get("/api/lend/?title=bo&author=a")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -81,7 +81,7 @@ class LendTest(APITestCase):
 
         # when
         res = self.client_0.get("/api/lend/?tag[]=tag0")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -210,4 +210,4 @@ class LendTest(APITestCase):
         res = self.client_0.get("/api/lend/user/")
 
         # then
-        assert len(res.data) == 1
+        assert len(res.data["results"]) == 1
