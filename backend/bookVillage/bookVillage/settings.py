@@ -156,3 +156,4 @@ CHANNEL_LAYERS = {
 # for Image
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "mediafiles")
 MEDIA_URL = "/media/"
+DEFAULT_IMAGE_PATH = None

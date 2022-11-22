@@ -75,25 +75,7 @@ class BookTest(APITestCase):
         res = self.client.post("/api/book/", data=body, format="json")
 
         # then
-        assert res.status_code == status.HTTP_201_CREATED
-        assert Book.objects.count() == 3
-        assert Tag.objects.all().count() == 2
-        assert res.data["tags"] == ["tag0"]
-
-    def test_이미지_테스트(self):
-        # given
-        image = tempfile.NamedTemporaryFile(suffix=".jpg").name
-        body = {
-            "title": "c",
-            "author": "c",
-            "tags": ["tag0"],
-            "brief": "c",
-            "image": image,
-        }
-        # when
-        res = self.client.post("/api/book/", data=body, format="json")
-
-        # then
+        print(res.status_code)
         assert res.status_code == status.HTTP_201_CREATED
         assert Book.objects.count() == 3
         assert Tag.objects.all().count() == 2
