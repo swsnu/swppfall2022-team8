@@ -2,7 +2,7 @@ import tempfile
 
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
-from book.models.book import Book, Tag, BookTag, BookImage
+from book.models.book import Book, Tag, BookTag
 from book.models.borrow_info import BorrowInfo
 from book.models.lend_info import LendInfo
 from django.contrib.auth.models import User
@@ -17,7 +17,6 @@ class BorrowTest(APITestCase):
         cls.tag_1 = Tag.objects.create(name="tag1")
         cls.image = tempfile.NamedTemporaryFile(suffix=".jpg").name
         cls.book_0 = Book.objects.create(title="book0", author="aa")
-        cls.image0 = BookImage.objects.create(book=cls.book_0, image=cls.image)
         cls.book_1 = Book.objects.create(title="book1", author="bb")
         BookTag.objects.create(tag=cls.tag_0, book=cls.book_0)
         BookTag.objects.create(tag=cls.tag_1, book=cls.book_1)
