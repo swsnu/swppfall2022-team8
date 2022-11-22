@@ -61,7 +61,7 @@ export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
   })
 }
 
-export function renderWithProviders(
+export function renderWithProviders (
   ui: React.ReactElement,
   {
     preloadedState,
@@ -69,7 +69,7 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
-  function Wrapper({ children }: PropsWithChildren): JSX.Element {
+  function Wrapper ({ children }: PropsWithChildren): JSX.Element {
     return <Provider store={store}>{children}</Provider>
   }
 
