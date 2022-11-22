@@ -55,34 +55,37 @@ const ChattingRoom = (props: IProps) => {
 
   return (
     <>
-      <p>Chatting with {othersUsername}</p>
-      <div id="chat-box">
-        <button
-          type="button"
-          disabled={!props.chatCursor}
-          onClick={() => clickLoadChatHandler()}
-        >&uarr;</button>
-        {chatList.map(chat => (
-          <div
-            key={`chat_${chat.id}`}
-            className={`chat-message-${(chat.author === userID) ? 'me' : 'other'} ${chat.rank}`}
-          >
-            <p>{chat.content}</p>
-          </div>
-        ))}
+      <div id='chatting-room'>
+        <h2 id='other-users-name'>{othersUsername}</h2>
+        <div id="chat-box">
+          <button
+            type="button"
+            disabled={!props.chatCursor}
+            onClick={() => clickLoadChatHandler()}
+          >&uarr;</button>
+          {chatList.map(chat => (
+            <div
+              key={`chat_${chat.id}`}
+              className={`chat-message-${(chat.author === userID) ? 'me' : 'other'} ${chat.rank}`}
+            >
+              <p className={`chat-text-${(chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
+            </div>
+          ))}
+        </div>
+        <div>
+          <input
+            id="chat-input"
+            type="text"
+            value={chatInput}
+            onChange={event => setChatInput(event.target.value)}
+            onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
+          />
+          <button
+            type="button"
+            onClick={() => clickSendChatHandler()}
+          >Send chat</button>
+        </div>
       </div>
-      <br />
-      <input
-        id="chat-input"
-        type="text"
-        value={chatInput}
-        onChange={event => setChatInput(event.target.value)}
-        onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
-      />
-      <button
-        type="button"
-        onClick={() => clickSendChatHandler()}
-      >Send chat</button>
     </>
   )
 }

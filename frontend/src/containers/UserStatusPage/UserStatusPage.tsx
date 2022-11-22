@@ -107,9 +107,8 @@ const UserStatusPage = () => {
             </div>
           ))
           : <>
-            <h5><br/><br/><br/><br/></h5>
-            <h5 className='empty-text'>Empty</h5>
-          </>
+              <h5 className='empty-text'></h5>
+            </>
       }
       </div>
       <br />
@@ -127,8 +126,7 @@ const UserStatusPage = () => {
             </div>
           ))
           : <>
-              <h5><br/><br/><br/><br/></h5>
-              <h5 className='empty-text'>Empty</h5>
+              <h5 className='empty-text'></h5>
             </>
       }
       </div>

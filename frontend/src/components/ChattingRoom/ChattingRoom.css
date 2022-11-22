@@ -1,8 +1,17 @@
+
+#chatting-room {
+  margin: 50px auto;
+  display: grid;
+  grid-template-rows: 1fr 4fr 1fr;
+}
+
 #chat-box {
-  border: 1px solid black;
+  border: 2px solid grey;
+  border-radius: 10px;
   width: 500px;
   height: 400px;
   margin: 0 auto;
+  padding: 20px;
   overflow-y: scroll
 }
 
@@ -11,6 +20,17 @@
 }
 
 .chat-message-me {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: green;
+  text-align: right;
+  width: auto;
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+.chat-text-me {
   text-align: right;
 }
 

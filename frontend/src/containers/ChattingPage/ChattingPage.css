@@ -1,3 +1,4 @@
-.chatting-page {
-    background-color: white;
+#chatting-page {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
 }
