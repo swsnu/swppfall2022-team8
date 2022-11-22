@@ -40,8 +40,7 @@ let preloadedState: RootState = {
     }
   },
   room: {
-    rooms_lend: [],
-    rooms_borrow: []
+    ...rootInitialState.room
   }
 }
 
