@@ -14,7 +14,7 @@ books = pd.read_csv("./bookDatas/books.csv", encoding="ISO-8859-1")
 book_tags = pd.read_csv("./bookDatas/book_tags.csv", encoding="ISO-8859-1")
 tags = pd.read_csv("./bookDatas/tags.csv")
 
-from book.models.book import BookImage, Tag, Book, BookTag
+from book.models.book import Tag, Book, BookTag
 from django.contrib.auth.models import User
 from book.models.lend_info import LendInfo
 
@@ -51,6 +51,13 @@ def download(url):
 
 
 for i in range(len(books)):
+    image_url = books["image_url"][i]
+    temp_file = download(image_url)
+    file_name = "{urlparse}.{ext}".format(
+        urlparse=urlparse(image_url).path.split("/")[-1].split(".")[0],
+        ext=urlparse(image_url).path.split("/")[-1].split(".")[1],
+    )
+
     book = Book(
         id=books["book_id"][i],
         title=books["title"][i],
@@ -58,20 +65,12 @@ for i in range(len(books)):
         brief=books["original_title"][i],
     )
     book.save()
+    book.image.save(file_name, File(temp_file))
 
     current_tags_list = book_tags[book_tags["goodreads_book_id"] == books["book_id"][i]]
     for tag_id in current_tags_list["tag_id"]:
         tag, created = Tag.objects.get_or_create(id=tag_id)
         BookTag.objects.create(book=book, tag=tag)
-
-    image_url = books["image_url"][i]
-    temp_file = download(image_url)
-    bookimage = BookImage.objects.create(book=book)
-    file_name = "{urlparse}.{ext}".format(
-        urlparse=urlparse(image_url).path.split("/")[-1].split(".")[0],
-        ext=urlparse(image_url).path.split("/")[-1].split(".")[1],
-    )
-    bookimage.image.save(file_name, File(temp_file))
 
     lend = LendInfo(
         book=book, owner=user, cost=1000, additional="DEFAULT", questions=["Default"]

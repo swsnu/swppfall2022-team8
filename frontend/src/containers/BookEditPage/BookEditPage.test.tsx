@@ -22,6 +22,12 @@ const fakeLend = {
   },
   owner: fakeUser.id,
   owner_username: fakeUser.username,
+  images: [
+    {
+      id: 1,
+      image: ''
+    }
+  ],
   questions: ['EDIT_TEST_QUESTION'],
   cost: 3000,
   additional: 'EDIT_TEST_ADDITIONAL',
