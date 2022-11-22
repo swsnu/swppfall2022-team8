@@ -11,7 +11,6 @@ const MainPage = () => {
 
       <SearchBar />
 
-      {/* TODO: add ML recommendation feature */}
       <Recommend />
     </>
   )
