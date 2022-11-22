@@ -4,7 +4,8 @@ from book.models.book import Book, Tag, BookTag
 from book.models.borrow_info import BorrowInfo
 from book.models.lend_info import LendInfo
 from django.contrib.auth.models import User
-from user.models import WatchLend
+from user.models import WatchLend, UserRecommend
+from unittest.mock import patch, MagicMock
 
 
 class UserTest(APITestCase):
@@ -92,6 +93,8 @@ class UserRelatedTest(APITestCase):
         )
         BookTag.objects.create(tag=cls.tag_0, book=cls.book_0)
         BookTag.objects.create(tag=cls.tag_1, book=cls.book_1)
+        UserRecommend.objects.create(user=cls.user_0)
+        UserRecommend.objects.create(user=cls.user_1)
 
     def setUp(self) -> None:
         self.client_0 = APIClient()
@@ -221,7 +224,8 @@ class UserRelatedTest(APITestCase):
         assert res.status_code == status.HTTP_200_OK
         assert len(data) == 1
 
-    def test_recommend(self):
+    @patch("celery.app.task.Task.delay")
+    def test_recommend(self, celery_task):
         # given
         _ = self.client_0.put("/api/user/tag/", data={"tag": "tag0"}, format="json")
         _ = self.client_0.put("/api/user/tag/", data={"tag": "tag1"}, format="json")
@@ -232,4 +236,4 @@ class UserRelatedTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_200_OK
-        assert len(data) == 2
+        celery_task.assert_called_once()

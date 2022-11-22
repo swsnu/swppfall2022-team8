@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
-import { fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
+import { fetchRecommend, fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
@@ -40,6 +40,12 @@ const UserStatusPage = () => {
       dispatch(fetchWatch())
     }
   }, [navigate, dispatch])
+
+  useEffect(() => {
+    return () => {
+      dispatch(fetchRecommend())
+    }
+  }, [dispatch])
 
   const clickAddTagHandler = async () => {
     const newTags: string[] = [...tags, tag]

@@ -78,18 +78,18 @@ const BookEditPage = () => {
       <div className='book-edit'>
         <div className='book-main-info'>
           <div className="image-test">
-            image
+            <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
           </div>
           <div className='input-class'>
             <div className='book-detail-info'>
               <h1>{lendState.selectedLend?.book_info.title}</h1>
-              <br/>
+              <br />
               <h5 id='edit-author'>written by {lendState.selectedLend?.book_info.author}</h5>
-              <br/>
-              <p/>
+              <br />
+              <p />
               {lendState.selectedLend?.book_info.brief}
-              <br/>
-              <p/>
+              <br />
+              <p />
               {lendState.selectedLend?.book_info.tags.map((t) => ('#' + t + ' '))}
             </div>
           </div>
@@ -97,21 +97,21 @@ const BookEditPage = () => {
         <hr id='hr-line' />
         <Form>
           <Form.Group as={Row} className='input-class'>
-              <Form.Label>
-                <h5>Borrowing Cost :</h5>
-                <h5 id='h5-cost'>{cost}</h5>
-                <br />
-                <br />
-                <div id='borrowing-cost-range'>
-                  <Form.Range
-                    min="0"
-                    max="5000"
-                    step="100"
-                    value={cost}
-                    onChange={event => setCost(Number(event.target.value))}
-                  />
-                </div>
-              </Form.Label>
+            <Form.Label>
+              <h5>Borrowing Cost :</h5>
+              <h5 id='h5-cost'>{cost}</h5>
+              <br />
+              <br />
+              <div id='borrowing-cost-range'>
+                <Form.Range
+                  min="0"
+                  max="5000"
+                  step="100"
+                  value={cost}
+                  onChange={event => setCost(Number(event.target.value))}
+                />
+              </div>
+            </Form.Label>
           </Form.Group>
           <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
             <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
@@ -128,36 +128,36 @@ const BookEditPage = () => {
             </Form.Label>
           </Form.Group>
           <Form.Group as={Row} className='input-class' id='questions-input-form'>
-              <Form.Label id='questions-text'>
-                <h5>Questions</h5>
-                <div className='questions-input-button'>
-                  <Form.Control
-                    id='questions-input'
-                    type='text' value={question}
-                    onChange={event => setQuestion(event.target.value)}
-                  />
-                </div>
-              </Form.Label>
-                <div className='questions-display'>
-                {questions.map((question, index) => (
-                  <div key={index} className='display-tag'>
-                    <h5 id='questions-display-text'>{question}</h5>
-                    <Button
-                      type="button"
-                      variant='outline-secondary'
-                      onClick={() => clickDeleteQuestionHandler(index)}
-                      className='delete-button'
-                    >X</Button>
-                  </div>
-                ))}
-                <Button
-                  variant="primary"
-                  className='add-button'
-                  onClick={() => clickAddQuestionHandler()}
-                  disabled={!question}
-                >add</Button>
+            <Form.Label id='questions-text'>
+              <h5>Questions</h5>
+              <div className='questions-input-button'>
+                <Form.Control
+                  id='questions-input'
+                  type='text' value={question}
+                  onChange={event => setQuestion(event.target.value)}
+                />
               </div>
-            </Form.Group>
+            </Form.Label>
+            <div className='questions-display'>
+              {questions.map((question, index) => (
+                <div key={index} className='display-tag'>
+                  <h5 id='questions-display-text'>{question}</h5>
+                  <Button
+                    type="button"
+                    variant='outline-secondary'
+                    onClick={() => clickDeleteQuestionHandler(index)}
+                    className='delete-button'
+                  >X</Button>
+                </div>
+              ))}
+              <Button
+                variant="primary"
+                className='add-button'
+                onClick={() => clickAddQuestionHandler()}
+                disabled={!question}
+              >add</Button>
+            </div>
+          </Form.Group>
         </Form>
       </div>
       <Button
