@@ -25,9 +25,11 @@ Django==4.1.2
 django-debug-toolbar==3.7.0
 djangorestframework==3.14.0
 docopt==0.6.2
+exceptiongroup==1.0.4
 hyperlink==21.0.0
 idna==3.4
 incremental==22.10.0
+iniconfig==1.1.1
 joblib==1.2.0
 kombu==5.2.4
 msgpack==1.0.4
@@ -38,12 +40,15 @@ pandas==1.5.1
 pathspec==0.10.1
 Pillow==9.3.0
 platformdirs==2.5.2
+pluggy==1.0.0
 prompt-toolkit==3.0.32
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.21
 pyOpenSSL==22.1.0
 pyparsing==3.0.9
+pytest==7.2.0
+pytest-django==4.5.2
 python-dateutil==2.8.2
 pytz==2022.5
 redis==4.3.4
