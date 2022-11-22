@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button'
 import { selectUser, toggleWatch } from '../../store/slices/user/user'
 import './BookDetailPage.css'
 import NavBar from '../../components/NavBar/NavBar'
+import Carousel from 'react-bootstrap/Carousel'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
@@ -17,6 +18,11 @@ const BookDetailPage = () => {
   const dispatch = useDispatch<AppDispatch>()
   const lendState = useSelector(selectLend)
   const userState = useSelector(selectUser)
+
+  const [lendImageIdx, setLendImageIdx] = useState(0)
+  const handleSelect = (selectedIndex: number, e: any) => {
+    setLendImageIdx(selectedIndex)
+  }
 
   useEffect(() => {
     dispatch(fetchLend(Number(id)))
@@ -46,6 +52,26 @@ const BookDetailPage = () => {
         <div className="image-test">
           <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
         </div>
+
+        <div>
+          {lendState.selectedLend?.images
+            ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+              {lendState.selectedLend?.images.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    src={image.image}
+                    width={'100%'}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <p>{idx + 1}/{lendState.selectedLend?.images.length} image</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+          </Carousel>
+            : null}
+        </div>
+
         <div className='book-detail-info'>
           <h1>{lendState.selectedLend?.book_info.title}</h1>
           <h5>written by {lendState.selectedLend?.book_info.author}</h5>

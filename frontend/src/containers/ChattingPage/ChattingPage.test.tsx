@@ -340,18 +340,20 @@ describe('<ChattingPage />', () => {
         }
       }
     })
-    const roomButton = await screen.findByText('chat0')
-    await act(() => {
+
+    await act(async () => {
+      const roomButton = await screen.findByText('chat0')
       fireEvent.click(roomButton)
     })
 
     // when
-    await act(() => {
+    await act(async () => {
+      const roomButton = await screen.findByText('chat0')
       fireEvent.click(roomButton)
     })
 
     // then
-    await waitFor(() => expect(axios.get).toBeCalledTimes(2))
+    await waitFor(() => expect(axios.get).toBeCalledTimes(3))
   })
   it('should handle error on fetching lending information', async () => {
     // given
