@@ -351,7 +351,7 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(axios.get).toBeCalledTimes(3))
+    await waitFor(() => expect(axios.get).toBeCalledTimes(2))
   })
   it('should handle error on fetching lending information', async () => {
     // given
