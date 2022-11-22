@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import session from 'redux-persist/lib/storage/session'
+import storageSession from 'redux-persist/lib/storage/session'
 import {
   persistStore,
   persistReducer,
@@ -18,6 +18,10 @@ import borrowReducer from './slices/borrow/borrow'
 import userReducer, { userActions } from './slices/user/user'
 import roomReducer from './slices/room/room'
 
+/*
+ * Token expiration handling logic
+ */
+
 axios.interceptors.response.use(
   response => response,
   async (error) => {
@@ -31,7 +35,7 @@ axios.interceptors.response.use(
 )
 
 /*
- * Non-persisted Store (only for testing)
+ * Non-persisted Store (only for testing / typescript typing)
  */
 
 export const store = configureStore({
@@ -62,7 +66,7 @@ const reducers = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage: session
+  storage: storageSession
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

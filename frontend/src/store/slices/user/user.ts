@@ -78,6 +78,7 @@ export const requestLogout = createAsyncThunk(
   'user/requestLogout',
   async (data: never, { dispatch }) => {
     const response = await axios.put('/api/user/logout/')
+    axios.defaults.headers.common.Authorization = ''
     dispatch(userActions.logout())
     return response.data
   }
