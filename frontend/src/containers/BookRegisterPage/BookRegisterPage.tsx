@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { SetStateAction, useState } from 'react'
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router'
@@ -9,12 +9,19 @@ import { BookType, createBook } from '../../store/slices/book/book'
 import { createLend, selectLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
+import Carousel from 'react-bootstrap/Carousel'
+
+export const maxLendImage = 3
 
 const BookRegisterPage = () => {
   const [bookImage, setBookImage] = useState<File | null>(null)
   const [lendImage, setLendImage] = useState<File[]>([])
-  const maxLendImage = 3
   const [lendImageIdx, setLendImageIdx] = useState(0)
+
+  const handleSelect = (selectedIndex: SetStateAction<number>, e: any) => {
+    setLendImageIdx(selectedIndex)
+  }
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [cost, setCost] = useState(0)
@@ -107,7 +114,7 @@ const BookRegisterPage = () => {
       const { id } = responseBook.payload as BookType
       const bookData = responseBook.payload
       const lendData = new FormData()
-      lendImage.forEach((image, idx) => lendData.append('lend_image', image))
+      lendImage.forEach((image, idx) => lendData.append('new_images', image))
       lendData.append('book', String(id))
       lendData.append('book_info', bookData)
       lendData.append('owner', String(userState.currentUser.id))
@@ -165,24 +172,31 @@ const BookRegisterPage = () => {
 
           <div>
             <h2>Upload Book Images You Want To Lend</h2>
-            {lendImage.length
-              ? <div>
-                <button onClick={() => setLendImageIdx((lendImageIdx + lendImage.length - 1) % lendImage.length)}>left</button>
-                <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(lendImage[lendImageIdx])} />
-                <button onClick={() => setLendImageIdx((lendImageIdx + 1) % lendImage.length)}>right</button>
-                <br />
-                {lendImageIdx + 1}/{lendImage.length}
-                <button onClick={() => clickDeleteLendImage()}>x</button>
-              </div>
-              : null }
-            <br />
-
-            <input
+          {lendImage.length
+            ? <div>
+            <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+                {lendImage.map((image, idx) => (
+                  <Carousel.Item key={`lendImage_${idx}`}>
+                    <img
+                      src={URL.createObjectURL(image)}
+                      width={'100%'}
+                      alt="Image Not Found"
+                    />
+                    <Carousel.Caption>
+                      <p>{idx + 1}/{lendImage.length} image</p>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                ))}
+            </Carousel>
+            <button onClick={() => clickDeleteLendImage()}>delete</button>
+            </div>
+            : null}
+          <input
               type='file'
               multiple
               accept="image/*"
               onChange={lendImageChangedHandler}
-            />
+          />
           </div>
 
           <Form>

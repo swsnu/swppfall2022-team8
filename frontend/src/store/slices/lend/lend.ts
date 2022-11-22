@@ -10,12 +10,18 @@ import { UserType } from '../user/user'
  * Type definitions
  */
 
+export interface ImageType {
+  id: number
+  image: string
+}
+
 export interface LendType {
   id: number
   book: BookType['id']
   book_info: Omit<BookType, 'id'>
   owner: UserType['id']
   owner_username: UserType['username']
+  images: ImageType[]
   questions: string[]
   cost: number
   additional: string
@@ -59,9 +65,8 @@ export const fetchLend = createAsyncThunk(
 
 export const updateLend = createAsyncThunk(
   'lend/updateLend',
-  async (lend: Omit<LendType, 'status'>, { dispatch }) => {
-    const { id, ...data } = lend
-    const response = await axios.put(`/api/lend/${id}/`, data)
+  async (data: { lendData: FormData, id: string }, { dispatch }) => {
+    const response = await axios.put(`/api/lend/${data.id}/`, data.lendData)
     dispatch(lendActions.updateLend(response.data))
     return response.data
   }
