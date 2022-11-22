@@ -25,6 +25,7 @@ class UserViewSet(viewsets.GenericViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated(),)
+    pagination_class = UserPageNumberPagination
 
     def get_permissions(self):
         if self.action in ("create", "login"):
@@ -82,7 +83,11 @@ class UserViewSet(viewsets.GenericViewSet):
     def watch(self, request):
         from book.serializers.lend_info_serializers import LendInfoSerializer
 
-        data = LendInfoSerializer(request.user.watching_lends, many=True).data
+        qs = request.user.watching_lends.all()
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            qs = page
+        data = LendInfoSerializer(qs, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
     # PUT /api/user/watch/
@@ -119,11 +124,14 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET /api/user/tag/
     @action(detail=False)
     def tag(self, request):
-        data = []
-        for tag in request.user.subscribed_tags.all():
-            data.append(tag.name)
+        from book.serializers.book_serializers import TagSerializer
 
-        return Response(data, status=status.HTTP_200_OK)
+        qs = request.user.subscribed_tags.all()
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            qs = page
+        serializer = TagSerializer(qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # PUT /api/user/tag/
     @tag.mapping.put

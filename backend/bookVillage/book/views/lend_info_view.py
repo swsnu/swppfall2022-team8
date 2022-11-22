@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import mixins
 from book.pagination import LendPageNumberPagination
 from book.models.lend_info import LendInfo
 from book.serializers.lend_info_serializers import LendInfoSerializer
@@ -21,6 +22,14 @@ class LendInfoViewSet(viewsets.GenericViewSet):
             return qs.prefetch_related("book", "book__tags", "owner")
         return qs
 
+    @staticmethod
+    def _parse_borrow(data, user_id):
+        if data["status"] and user_id not in (
+            data["owner"],
+            data["status"]["borrower"],
+        ):
+            data["status"] = "borrowed"
+
     # GET /api/lend/
     def list(self, request):
         title = request.GET.get("title", "")
@@ -36,14 +45,14 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         )
         if tags:
             lend_infos = lend_infos.filter(book__tags__name__in=tags)
-        lend_infos = lend_infos[:100]
-        datas = self.get_serializer(lend_infos, many=True).data
+        page = self.paginate_queryset(lend_infos)
+        if page is not None:
+            lend_infos = page
+
+        serializer = self.get_serializer(lend_infos, many=True)
+        datas = serializer.data
         for data in datas:
-            if data["status"] and request.user.id not in (
-                data["owner"],
-                data["status"]["borrower"],
-            ):
-                data["status"] = "borrowed"
+            self._parse_borrow(data, request.user.id)
         return Response(datas, status=status.HTTP_200_OK)
 
     # POST /api/lend/
@@ -60,11 +69,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         lend_info = self.get_object()
         data = self.get_serializer(lend_info).data
-        if data["status"] and request.user.id not in (
-            data["owner"],
-            data["status"]["borrower"],
-        ):
-            data["status"] = "borrowed"
+        self._parse_borrow(data, request.user.id)
         return Response(data, status=status.HTTP_200_OK)
 
     # PUT /api/lend/{lend_info_id}
@@ -96,6 +101,9 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=["GET"])
     def user(self, request):
         user = request.user
-        lend_infos = user.lend_infos
+        lend_infos = user.lend_infos.all()
+        page = self.paginate_queryset(lend_infos)
+        if page is not None:
+            lend_infos = page
         data = self.get_serializer(lend_infos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
