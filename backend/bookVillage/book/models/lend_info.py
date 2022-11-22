@@ -24,9 +24,6 @@ class LendInfo(models.Model):
                 return borrow_info
         return None
 
-    def add_image(self, image):
-        return LendImage.objects.create(lend=self, image=image)
-
 
 def lend_image_upload_to(instance, filename):
     return f"{instance.lend.id}/lend_{filename}"

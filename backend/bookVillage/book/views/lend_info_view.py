@@ -1,9 +1,10 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from book.models.lend_info import LendInfo
+from book.models.lend_info import LendInfo, LendImage
 from book.serializers.lend_info_serializers import LendInfoSerializer
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 
 
 class LendInfoViewSet(viewsets.GenericViewSet):
@@ -14,7 +15,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         return self.permission_classes
 
     def get_queryset(self):
-        qs = LendInfo.objects.all().prefetch_related("history")
+        qs = LendInfo.objects.all().prefetch_related("history", "images")
         if self.action == "list" or self.action == "user":
             return qs.prefetch_related("book", "book__tags", "owner")
         return qs
@@ -97,3 +98,38 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         lend_infos = user.lend_infos
         data = self.get_serializer(lend_infos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+
+
+class LendImageViewSet(viewsets.GenericViewSet):
+    queryset = LendImage.objects.all()
+    permission_classes = (IsAuthenticated(),)
+
+    def get_permissions(self):
+        return self.permission_classes
+
+    # POST /api/lend/image/
+    def create(self, request):
+        data = request.data
+        lend_info = get_object_or_404(LendInfo, id=data["lend_id"])
+        if lend_info.owner != request.user:
+            return Response(
+                {"error": "You can't edit image on other's image"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if lend_info.images.count() > 2:
+            return Response(
+                {"error": "exceeded image counts"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        image = LendImage.objects.create(lend=lend_info, image=data["image"])
+        return Response(image.id, status=status.HTTP_201_CREATED)
+
+    # DELETE /api/lend/image/delete_pk
+    def destroy(self, request, pk=None):
+        image = self.get_object()
+        if image.lend.owner != request.user:
+            return Response(
+                {"error": "You can't edit image on other's image"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        image.delete()
+        return Response(status=status.HTTP_200_OK)
