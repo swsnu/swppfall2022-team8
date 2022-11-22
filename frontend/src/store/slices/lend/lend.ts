@@ -67,7 +67,7 @@ export const postImage = createAsyncThunk(
     const formData = new FormData()
     formData.append('image', data.image)
     formData.append('lend_id', String(data.id))
-    const response = await axios.post('/api/lend/image/', formData)
+    const response = await axios.post('/api/lend_image/', formData)
     dispatch(lendActions.addImage(response.data))
     return response.data
   }
@@ -76,7 +76,7 @@ export const postImage = createAsyncThunk(
 export const deleteImage = createAsyncThunk(
   'lend/postImage',
   async (data: { image_id: number }, { dispatch }) => {
-    const response = await axios.delete(`/api/lend/image/${data.image_id}/`)
+    const response = await axios.delete(`/api/lend_image/${data.image_id}/`)
     dispatch(lendActions.deleteImage(response.data))
   }
 )

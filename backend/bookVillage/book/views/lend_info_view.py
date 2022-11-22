@@ -125,7 +125,7 @@ class LendImageViewSet(viewsets.GenericViewSet):
             )
         image = LendImage.objects.create(lend=lend_info, image=data["image"])
         return Response(
-            {"image_id": image.id, "image": image.url, "lend_id": lend_info.id},
+            {"image_id": image.id, "image": image.image.url, "lend_id": lend_info.id},
             status=status.HTTP_201_CREATED,
         )
 
