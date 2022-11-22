@@ -11,7 +11,10 @@ import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
 
 const BookRegisterPage = () => {
-  const [image, setImage] = useState<File | null>(null)
+  const [bookImage, setBookImage] = useState<File | null>(null)
+  const [lendImage, setLendImage] = useState<File[]>([])
+  const maxLendImage = 3
+  const [lendImageIdx, setLendImageIdx] = useState(0)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [cost, setCost] = useState(0)
@@ -27,6 +30,23 @@ const BookRegisterPage = () => {
   const navigate = useNavigate()
   const lendState = useSelector(selectLend)
   const userState = useSelector(selectUser)
+
+  const lendImageChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files !== null) {
+      if (files.length + lendImage.length > maxLendImage) {
+        alert(`You can only post up to ${maxLendImage} images.`)
+      } else {
+        setLendImage(lendImage.concat(Array.from(files)))
+      }
+    }
+  }
+
+  const clickDeleteLendImage = () => {
+    const newLendImage = lendImage.filter((image, idx) => idx !== lendImageIdx)
+    setLendImageIdx(lendImageIdx % (lendImage.length - 1))
+    setLendImage(newLendImage)
+  }
 
   const clickAddTagHandler = () => {
     const newTags: string[] = [...tags, tag]
@@ -56,8 +76,8 @@ const BookRegisterPage = () => {
       return
     }
 
-    const validationCheckList = [image, title, author, brief, tags.length]
-    const validationMessages = ['image', 'title', 'author', 'brief summary', 'at least one tag']
+    const validationCheckList = [bookImage, title, author, brief, tags.length, lendImage.length]
+    const validationMessages = ['book cover image', 'title', 'author', 'brief summary', 'at least one tag', 'at least one lend image']
 
     if (validationCheckList.some(val => !val)) {
       const messageBuffer = ['Should fill in :']
@@ -71,8 +91,8 @@ const BookRegisterPage = () => {
     }
 
     const formData = new FormData()
-    if (image) {
-      formData.append('image', image)
+    if (bookImage) {
+      formData.append('image', bookImage)
     }
     formData.append('title', title)
     formData.append('author', author)
@@ -86,15 +106,15 @@ const BookRegisterPage = () => {
     if (responseBook.type === `${createBook.typePrefix}/fulfilled`) {
       const { id } = responseBook.payload as BookType
       const bookData = responseBook.payload
-      const lendData = {
-        book: id,
-        book_info: bookData,
-        owner: userState.currentUser.id,
-        owner_username: userState.currentUser.username,
-        questions,
-        cost,
-        additional: info
-      }
+      const lendData = new FormData()
+      lendImage.forEach((image, idx) => lendData.append('lend_image', image))
+      lendData.append('book', String(id))
+      lendData.append('book_info', bookData)
+      lendData.append('owner', String(userState.currentUser.id))
+      lendData.append('owner_username', userState.currentUser.username)
+      questions.forEach((question, idx) => lendData.append('questions', question))
+      lendData.append('cost', String(cost))
+      lendData.append('additional', info)
 
       const responseLend = await dispatch(createLend(lendData))
 
@@ -124,21 +144,44 @@ const BookRegisterPage = () => {
 
           {/* TODO: add image upload field */}
           <div>
-            {image && (
+            <h2>Upload Book Cover Image</h2>
+            {bookImage && (
               <div>
-                <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(image)} />
+                <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(bookImage)} />
               </div>
             )}
             <br />
 
             <input
               type='file'
-              accept="image/jpeg,image/png,image/gif"
+              accept="image/*"
               onChange={(event) => {
                 if (event.target?.files) {
-                  setImage(event.target?.files[0])
+                  setBookImage(event.target?.files[0])
                 }
               }}
+            />
+          </div>
+
+          <div>
+            <h2>Upload Book Images You Want To Lend</h2>
+            {lendImage.length
+              ? <div>
+                <button onClick={() => setLendImageIdx((lendImageIdx + lendImage.length - 1) % lendImage.length)}>left</button>
+                <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(lendImage[lendImageIdx])} />
+                <button onClick={() => setLendImageIdx((lendImageIdx + 1) % lendImage.length)}>right</button>
+                <br />
+                {lendImageIdx + 1}/{lendImage.length}
+                <button onClick={() => clickDeleteLendImage()}>x</button>
+              </div>
+              : null }
+            <br />
+
+            <input
+              type='file'
+              multiple
+              accept="image/*"
+              onChange={lendImageChangedHandler}
             />
           </div>
 

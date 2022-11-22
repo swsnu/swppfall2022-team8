@@ -42,7 +42,7 @@ export const fetchQueryLends = createAsyncThunk(
 
 export const createLend = createAsyncThunk(
   'lend/createLend',
-  async (data: Omit<LendType, 'id' | 'status'>, { dispatch }) => {
+  async (data: FormData, { dispatch }) => {
     const response = await axios.post('/api/lend/', data)
     dispatch(lendActions.addLend(response.data))
     return response.data
