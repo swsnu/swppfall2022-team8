@@ -1,0 +1,25 @@
+#request-form {
+    width: 50vw;
+    min-height: 400px;
+    margin: 0 auto;
+}
+
+#request-page {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+#request-question { 
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.request-question {
+    font-size: larger;
+    font-weight: bold;
+}
+
+#request-send-button {
+    margin-bottom: 0;
+}

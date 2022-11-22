@@ -2,14 +2,21 @@ h1 {
     font-weight: bold;
 }
 
+#login-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 2fr 1fr;
+}
+
+.blank {
+    height: 30vh;
+}
+
 .login-page {
     border-radius: 5px;
-    background-color: white;
     border: 10px solid rgb(119, 170, 235);
-    width: 600px;
-    height: 350px;
-    margin: auto;
-    margin-top: 300px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .signin-input-class {

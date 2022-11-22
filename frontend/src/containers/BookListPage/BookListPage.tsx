@@ -23,12 +23,13 @@ const BookListPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <h1>BookListPage</h1>
+      <br/>
+      <br/>
       <br />
 
       <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
       <br />
-      <h3>Result</h3>
+      <h3><b>Result</b></h3>
       <div className='booklist'>
         {lendState.lends.map(lend => (
           <div key={`lendlist_${lend.id}`} className='booklist-item'>

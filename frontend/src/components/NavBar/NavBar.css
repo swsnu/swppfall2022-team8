@@ -11,7 +11,8 @@
 #nav-bar {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    background-color: rgb(111, 219, 255);
+    background-color: rgb(198, 238, 255) !important;
+    border-bottom: 2px solid rgb(52, 106, 255);
 }
 
 .nav-instances {

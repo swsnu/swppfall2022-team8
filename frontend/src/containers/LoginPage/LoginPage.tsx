@@ -21,7 +21,11 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='page'>
+    <div className='page' id='login-grid'>
+      <div className='blank'></div>
+      <div></div>
+      <div></div>
+      <div></div>
       <div className='login-page'>
         <p/>
         <h1>Sign in to BookVillage!</h1>
@@ -73,6 +77,10 @@ const LoginPage = () => {
           >Sign up</Button>
         </div>
       </div>
+      <div></div>
+      <div className='blank'></div>
+      <div className='blank'></div>
+      <div className='blank'></div>
     </div>
   )
 }

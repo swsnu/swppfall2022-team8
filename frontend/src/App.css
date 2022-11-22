@@ -9,8 +9,8 @@
   height: 80vh;
   min-height: 800px;
   min-width: 70vw;
-  width: 80vw;
   margin: auto;
+  text-align: center;
 }
 
 .App {

@@ -25,7 +25,7 @@ const Recommend = () => {
           Refresh!
         </button>
         <p>Calculating in progress with changed tags... Please refresh after a while.</p>
-        {userState.recommend.recommend_list.map((recommend, idx) => (
+        {userState.recommend.recommend_list.map((recommend, idx: number) => (
           <div key={`recommendlist_${idx}`}>
             <RecommendEntity
               idx={idx + 1}
@@ -45,7 +45,7 @@ const Recommend = () => {
   } else {
     return (
       <>
-        {userState.recommend.recommend_list.map((recommend, idx) => (
+        {userState.recommend.recommend_list.map((recommend, idx: number) => (
           <div key={`recommendlist_${idx}`}>
             <RecommendEntity
               idx={idx + 1}
