@@ -72,6 +72,6 @@ class LendInfoSerializer(serializers.ModelSerializer):
     def get_images(self, lend_info):
         data = []
         for image in lend_info.images.all():
-            data.append({"id": image.id, "image": image.image})
+            data.append({"id": image.id, "image": image.image.url})
 
         return data
