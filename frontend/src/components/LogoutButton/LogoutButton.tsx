@@ -3,13 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../store'
-import { requestLogout } from '../../store/slices/user/user'
+import { fetchRecommend, requestLogout } from '../../store/slices/user/user'
 import './LogoutButton.css'
 
 const LogoutButton = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const clickLogoutHandler = async () => {
+    await dispatch(fetchRecommend())
     dispatch(requestLogout())
   }
 
