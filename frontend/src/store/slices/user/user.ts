@@ -6,6 +6,11 @@ import { LendType } from '../lend/lend'
 import { BookType } from '../book/book'
 
 /*
+ * Token expiration time setting (unit: seconds)
+ */
+export const tokenExpireSeconds: number = 300
+
+/*
  * Type definitions
  */
 export interface UserType {
@@ -56,7 +61,9 @@ export const requestSignup = createAsyncThunk(
     const response = await axios.post('/api/user/', data)
     const { token, ...userData } = response.data
     if (token) {
-      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
+      const drfToken = `Token ${String(token)}`
+      document.cookie = `drfToken=${drfToken}; max-age=${tokenExpireSeconds}` // TODO: secure
+      axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
     return userData
@@ -69,7 +76,9 @@ export const requestLogin = createAsyncThunk(
     const response = await axios.post('/api/user/login/', data)
     const { token, ...userData } = response.data
     if (token) {
-      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
+      const drfToken = `Token ${String(token)}`
+      document.cookie = `drfToken=${drfToken}; max-age=${tokenExpireSeconds}` // TODO: secure
+      axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
     return userData
@@ -81,6 +90,7 @@ export const requestLogout = createAsyncThunk(
   async (data: never, { dispatch }) => {
     const response = await axios.put('/api/user/logout/')
     axios.defaults.headers.common.Authorization = ''
+    document.cookie = 'drfToken=; max-age=0'
     dispatch(userActions.logout())
     return response.data
   }

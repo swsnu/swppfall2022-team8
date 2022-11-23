@@ -1,0 +1,9 @@
+#search {
+    width: 40vw;
+    margin: 0 auto;
+}
+
+#search-bar {
+    background-color: white;
+    border-radius: 5px;
+}

@@ -3,6 +3,8 @@ import { Button, Dropdown, DropdownButton, Form, InputGroup, Overlay, Popover } 
 import { useNavigate } from 'react-router'
 import QueryString from 'qs'
 
+import './SearchBar.css'
+
 interface IProps {
   title?: string
   author?: string
@@ -58,7 +60,8 @@ const SearchBar = (props: IProps) => {
   }
 
   return (
-    <>
+    <div id='search'>
+      <br/>
       <InputGroup className="mb-3" id="search-bar">
         <DropdownButton
           variant="outline-primary"
@@ -83,6 +86,7 @@ const SearchBar = (props: IProps) => {
             id={`search-bar-${category.toLowerCase()}`}
             value={inputs[idx]}
             onChange={event => changeInputHandler(event.target.value, idx)}
+            onKeyDown={event => { if (event.key === 'Enter') clickSearchHandler() }}
             {...(
               category === 'Tag'
                 ? {
@@ -118,7 +122,7 @@ const SearchBar = (props: IProps) => {
           Search
         </Button>
       </InputGroup>
-    </>
+    </div>
   )
 }
 

@@ -16,59 +16,74 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const clickLoginHandler = () => {
-    const data = { username, password }
-    dispatch(requestLogin(data))
+    if (username && password) {
+      const data = { username, password }
+      dispatch(requestLogin(data))
+    }
   }
 
   return (
-    <div className='login-page'>
-      <p/>
-      <h1>Sign in to BookVillage!</h1>
-      <br />
-      <br />
-      <div>
-        <Form className='signin-input-class'>
-          <InputGroup as={Row} className='signin'>
-            <Form.Label>
-              Username
-              <p/>
-              <Form.Control
-                id="login-username"
-                type='text'
-                placeholder='username'
-                value={username}
-                onChange={event => setUsername(event.target.value)}
-              />
-            </Form.Label>
-          </InputGroup>
-          <InputGroup as={Row} className='signin'>
-            <Form.Label>
-              Password
-              <p/>
-              <Form.Control
-                id="login-password"
-                type="password"
-                value={password}
-                placeholder='password'
-                onChange={event => setPassword(event.target.value)}
-              />
-            </Form.Label>
-          </InputGroup>
-        </Form>
+    <div className='page' id='login-grid'>
+      <div className='blank'></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div className='login-page'>
+        <p/>
+        <h1>Sign in to BookVillage!</h1>
+        <br />
+        <br />
+        <div>
+          <Form className='signin-input-class'>
+            <InputGroup as={Row} className='signin'>
+              <Form.Label>
+                Username
+                <p/>
+                <Form.Control
+                  id="login-username"
+                  type='text'
+                  placeholder='username'
+                  value={username}
+                  onChange={event => setUsername(event.target.value)}
+                  onKeyDown={event => { if (event.key === 'Enter') clickLoginHandler() }}
+                />
+              </Form.Label>
+            </InputGroup>
+            <InputGroup as={Row} className='signin'>
+              <Form.Label>
+                Password
+                <p/>
+                <Form.Control
+                  id="login-password"
+                  type="password"
+                  value={password}
+                  placeholder='password'
+                  onChange={event => setPassword(event.target.value)}
+                  onKeyDown={event => { if (event.key === 'Enter') clickLoginHandler() }}
+                />
+              </Form.Label>
+            </InputGroup>
+          </Form>
+        </div>
+        <br />
+        <div className='signin-buttons'>
+          <Button
+            disabled={!(username && password)}
+            onClick={() => clickLoginHandler()}
+            id='login-button'
+            variant='outline-primary'
+          >Login</Button>
+          <Button
+            onClick={() => navigate('/signup')}
+            id='signup-button'
+            variant='outline-success'
+          >Sign up</Button>
+        </div>
       </div>
-      <br />
-      <div className='signin-buttons'>
-        <Button
-          onClick={() => clickLoginHandler()}
-          id='login-button'
-          variant='outline-primary'
-        >Login</Button>
-        <Button
-          onClick={() => navigate('/signup')}
-          id='signup-button'
-          variant='outline-success'
-        >Sign up</Button>
-      </div>
+      <div></div>
+      <div className='blank'></div>
+      <div className='blank'></div>
+      <div className='blank'></div>
     </div>
   )
 }

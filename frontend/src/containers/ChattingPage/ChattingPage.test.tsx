@@ -331,14 +331,16 @@ describe('<ChattingPage />', () => {
           }
       return Promise.resolve({ data })
     })
-    renderWithProviders(<ChattingPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeLender
+    await act(async () => {
+      renderWithProviders(<ChattingPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
         }
-      }
+      })
     })
 
     await act(async () => {

@@ -1,15 +1,22 @@
 .book-list-entity {
-  border: 5px solid rgb(119, 170, 235);
-  display: grid;
+  border: 2px solid rgb(199, 199, 199);
+  display: inline-block;
+  position: relative;
+  border-radius: 10px;
   grid-template-columns: 300px 1fr;
-  height: 300px;
-  margin: 10px;
+  height: 450px;
+  width: 375px;
+  margin: 20px auto;
+  padding: 10px;
   word-break: break-all;
   word-wrap: break-word;
+  transition: all 0.2s linear;
+  overflow: hidden;
 }
 
 .book-list-entity:hover {
-  background-color: rgb(119, 170, 235);
+  background-color: rgb(199, 199, 199);
+  transform: scale(1.1);
   cursor: pointer;
 }
 
@@ -21,13 +28,4 @@
   border: 2px solid black;
   height: 240px;
   width: 180px;
-}
-
-
-h2 {
-  border-left: 2px solid black;
-  padding-top: 20px;
-  padding-left: 20px;
-  text-align: left;
-  font-weight: bold;
 }

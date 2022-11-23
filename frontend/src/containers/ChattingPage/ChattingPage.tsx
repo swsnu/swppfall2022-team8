@@ -11,6 +11,8 @@ import { fetchLend, LendType } from '../../store/slices/lend/lend'
 import { fetchUserRooms, RoomType, selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
 
+import './ChattingPage.css'
+
 export type ChatRank = 'chat' | 'info'
 
 export interface ChatType {
@@ -202,7 +204,7 @@ const ChattingPage = () => {
    * HTML structure
    */
   return (
-    <>
+    <div className='page'>
       <NavBar />
       <h1>ChattingPage</h1>
       <br />
@@ -243,7 +245,7 @@ const ChattingPage = () => {
       }
       <br />
       <hr />
-    </>
+    </div>
   )
 }
 

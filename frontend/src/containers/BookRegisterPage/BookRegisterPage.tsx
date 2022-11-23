@@ -144,7 +144,7 @@ const BookRegisterPage = () => {
     return <Navigate to={`/book${(lendState.selectedLend !== null) ? `/${lendState.selectedLend.id}` : ''}`} />
   } else {
     return (
-      <>
+      <div id='register-page'>
         <div className='nav-bar'>
           <NavBar />
         </div>
@@ -341,7 +341,7 @@ const BookRegisterPage = () => {
             Register
           </Button>
         </div>
-      </>
+      </div>
     )
   }
 }

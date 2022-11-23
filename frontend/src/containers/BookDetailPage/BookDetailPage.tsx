@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
+import { Collapse } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Carousel from 'react-bootstrap/Carousel'
 
+import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
-import Button from 'react-bootstrap/Button'
 import { selectUser, toggleWatch } from '../../store/slices/user/user'
 import './BookDetailPage.css'
-import NavBar from '../../components/NavBar/NavBar'
-import Carousel from 'react-bootstrap/Carousel'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
@@ -44,7 +45,7 @@ const BookDetailPage = () => {
   }
 
   return (
-    <>
+    <div className='page'>
       <NavBar />
       <br />
       <div className='book-detail-page'>
@@ -94,11 +95,15 @@ const BookDetailPage = () => {
             <Button variant="outline-primary"
               type="button"
               onClick={() => setInfoVisible(!infoVisible)}
+              aria-controls='add-information'
+              aria-expanded={infoVisible}
             >Additional Info</Button>
             <br />
-            <div className="info-box" hidden={!infoVisible}>
-              {lendState.selectedLend?.additional}
-            </div>
+            <Collapse in={infoVisible}>
+              <div id='add-information' className="info-box" hidden={!infoVisible}>
+                {lendState.selectedLend?.additional}
+              </div>
+            </Collapse>
           </div>
         </div>
       </div>
@@ -112,7 +117,7 @@ const BookDetailPage = () => {
               id="detail-edit-button"
               onClick={() => navigate(`/book/${id}/edit`)}
             >Edit</Button>
-            <Button variant="outline-primary"
+            <Button variant="outline-danger"
               type="button"
               className='detail-page-buttons'
               onClick={() => clickDeleteHandler()}
@@ -124,7 +129,7 @@ const BookDetailPage = () => {
               id="detail-request-button"
               onClick={() => navigate(`/book/${id}/request`)}
             >Request</Button>
-            <Button variant="outline-primary"
+            <Button variant="outline-warning  "
               type="button"
               className='detail-page-buttons'
               id="detail-watch-button"
@@ -133,7 +138,7 @@ const BookDetailPage = () => {
           </>
         }
       </div>
-    </>
+    </div>
   )
 }
 

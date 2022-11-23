@@ -15,22 +15,35 @@ import {
 import bookReducer from './slices/book/book'
 import lendReducer from './slices/lend/lend'
 import borrowReducer from './slices/borrow/borrow'
-import userReducer, { userActions } from './slices/user/user'
+import userReducer, { userActions, tokenExpireSeconds } from './slices/user/user'
 import roomReducer from './slices/room/room'
 
 /*
  * Token expiration handling logic
  */
 
+const getDrfToken = () => {
+  const drfToken = document.cookie.split('; ').find(key => key.startsWith('drfToken='))?.split('=')[1]
+  return drfToken ?? ''
+}
+
+axios.interceptors.request.use(
+  async (config) => {
+    config.headers = { Authorization: getDrfToken() }
+    return config
+  }
+)
+
 axios.interceptors.response.use(
-  response => response,
+  async (response) => {
+    document.cookie = `drfToken=${getDrfToken()}; max-age=${tokenExpireSeconds}` // TODO: secure
+    return response
+  },
   async (error) => {
     if (error.response.status === 401) {
-      axios.defaults.headers.common.Authorization = ''
       persistedStore.dispatch(userActions.logout())
       alert('Token has been expired')
-    }
-    throw error
+    } else throw error
   }
 )
 
