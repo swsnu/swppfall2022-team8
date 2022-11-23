@@ -16,8 +16,10 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const clickLoginHandler = () => {
-    const data = { username, password }
-    dispatch(requestLogin(data))
+    if (username && password) {
+      const data = { username, password }
+      dispatch(requestLogin(data))
+    }
   }
 
   return (
@@ -66,6 +68,7 @@ const LoginPage = () => {
         <br />
         <div className='signin-buttons'>
           <Button
+            disabled={!(username && password)}
             onClick={() => clickLoginHandler()}
             id='login-button'
             variant='outline-primary'

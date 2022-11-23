@@ -36,8 +36,12 @@ describe('<LoginPage />', () => {
     const loginButton = screen.getByText('Login')
 
     // when
+    fireEvent.keyDown(username, { key: 'Ctrl' })
+    fireEvent.keyDown(username, { key: 'Enter' })
     fireEvent.change(username, { target: { value: 'test_username' } })
     await screen.findByDisplayValue('test_username')
+    fireEvent.keyDown(password, { key: 'Ctrl' })
+    fireEvent.keyDown(password, { key: 'Enter' })
     fireEvent.change(password, { target: { value: 'test_password' } })
     await screen.findByDisplayValue('test_password')
     fireEvent.click(loginButton)

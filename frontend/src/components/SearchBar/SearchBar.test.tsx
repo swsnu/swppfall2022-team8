@@ -11,7 +11,7 @@ const mockAlert = jest.fn()
 window.alert = mockAlert
 
 describe('<SearchBar />', () => {
-  it('should handle normal use case at MainPage', async () => {
+  it('should handle normal use case at MainPage (search by button)', async () => {
     // given
     await act(async () => {
       render(<SearchBar />)
@@ -28,7 +28,7 @@ describe('<SearchBar />', () => {
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/search?author=TEST_AUTHOR'))
   })
-  it('should reject search if tag name is invalid', async () => {
+  it('should reject search if tag name is invalid (search by enter key)', async () => {
     // given
     globalThis.alert = jest.fn()
     await act(async () => {
@@ -39,9 +39,9 @@ describe('<SearchBar />', () => {
     const tagButton = await screen.findByText('Tag')
     fireEvent.click(tagButton)
     const tagInput = await screen.findByPlaceholderText('Tag search')
+    fireEvent.keyDown(tagInput, { key: 'Ctrl' })
     fireEvent.change(tagInput, { target: { value: 'fake_tag1 fake_tag2' } })
-    const searchButton = await screen.findByText('Search')
-    fireEvent.click(searchButton)
+    fireEvent.keyDown(tagInput, { key: 'Enter' })
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.'))
