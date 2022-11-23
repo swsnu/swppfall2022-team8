@@ -54,7 +54,7 @@ const BookDetailPage = () => {
         </div>
 
         <div>
-          {lendState.selectedLend?.images.length
+          {lendState.selectedLend?.images?.length
             ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
               {lendState.selectedLend?.images.map((image, idx) => (
                 <Carousel.Item key={`lendImage_${idx}`}>
