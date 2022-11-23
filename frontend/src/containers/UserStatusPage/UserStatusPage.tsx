@@ -43,7 +43,9 @@ const UserStatusPage = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(fetchRecommend())
+      if (sessionStorage.getItem('drf-token')) {
+        dispatch(fetchRecommend())
+      }
     }
   }, [dispatch])
 
