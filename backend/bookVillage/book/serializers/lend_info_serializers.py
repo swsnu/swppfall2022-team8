@@ -43,6 +43,12 @@ class LendInfoSerializer(serializers.ModelSerializer):
                 "questions must be list string input or nothing"
             )
 
+    def validate_new_images(self, new_images):
+        return new_images
+
+    def validate_delete_images(self, delete_images):
+        return delete_images
+
     def get_book_info(self, lend_info):
         from book.serializers.book_serializers import BookSerializer
 
@@ -66,39 +72,6 @@ class LendInfoSerializer(serializers.ModelSerializer):
     def get_images(self, lend_info):
         data = []
         for image in lend_info.images.all():
-            data.append({"id": image.id, "image": image.image})
+            data.append({"id": image.id, "image": image.image.url})
 
         return data
-
-    def validate(self, data):
-        validated_data = super(LendInfoSerializer, self).validate(data)
-        validated_data["new_images"] = data.get("new_images")
-        validated_data["delete_images"] = data.get("delete_images")
-        return validated_data
-
-    def update(self, instance, validated_data):
-        instance.cost = validated_data.get("cost", instance.cost)
-        instance.additional = validated_data.get("additional", instance.additional)
-        new_images = validated_data.pop("new_images", [])
-
-        if new_images:
-            for image in new_images:
-                instance.add_image(image)
-
-        delete_images = validated_data.pop("delete_images", [])
-        if delete_images:
-            for image_id in delete_images:
-                image = LendImage.objects.get(id=image_id)
-                image.delete()
-
-        instance.save()
-        return instance
-
-    def create(self, validated_data):
-        validated_data.pop("delete_images")
-        new_images = validated_data.pop("new_images", [])
-        lend_info = LendInfo.objects.create(**validated_data)
-        if new_images:
-            for image in new_images:
-                lend_info.add_image(image)
-        return lend_info

@@ -1,9 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+
 import App from './App'
+import { persistor, persistedStore } from './store'
+
 import './index.css'
-import { store } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const root = ReactDOM.createRoot(
@@ -11,8 +14,10 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
+    <Provider store={persistedStore}>
+      <PersistGate loading={null} persistor={persistor}>
+       <App />
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 )

@@ -6,7 +6,7 @@ import { Navigate, useNavigate } from 'react-router'
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook } from '../../store/slices/book/book'
-import { createLend, selectLend } from '../../store/slices/lend/lend'
+import { createLend, LendType, postImage, selectLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
 import Carousel from 'react-bootstrap/Carousel'
@@ -113,19 +113,24 @@ const BookRegisterPage = () => {
     if (responseBook.type === `${createBook.typePrefix}/fulfilled`) {
       const { id } = responseBook.payload as BookType
       const bookData = responseBook.payload
-      const lendData = new FormData()
-      lendImage.forEach((image, idx) => lendData.append('new_images', image))
-      lendData.append('book', String(id))
-      lendData.append('book_info', bookData)
-      lendData.append('owner', String(userState.currentUser.id))
-      lendData.append('owner_username', userState.currentUser.username)
-      questions.forEach((question, idx) => lendData.append('questions', question))
-      lendData.append('cost', String(cost))
-      lendData.append('additional', info)
+      const lendData = {
+        book: id,
+        book_info: bookData,
+        owner: userState.currentUser.id,
+        owner_username: userState.currentUser.username,
+        questions,
+        cost,
+        additional: info
+      }
 
       const responseLend = await dispatch(createLend(lendData))
 
       if (responseLend.type === `${createLend.typePrefix}/fulfilled`) {
+        const { id } = responseLend.payload as LendType
+        lendImage.forEach((image, idx) => {
+          dispatch(postImage({ image, id }))
+        })
+
         setSubmitted(true)
       } else {
         alert('Error on Register a book (lend)')
@@ -172,31 +177,31 @@ const BookRegisterPage = () => {
 
           <div>
             <h2>Upload Book Images You Want To Lend</h2>
-          {lendImage.length
-            ? <div>
-            <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
-                {lendImage.map((image, idx) => (
-                  <Carousel.Item key={`lendImage_${idx}`}>
-                    <img
-                      src={URL.createObjectURL(image)}
-                      width={'100%'}
-                      alt="Image Not Found"
-                    />
-                    <Carousel.Caption>
-                      <p>{idx + 1}/{lendImage.length} image</p>
-                    </Carousel.Caption>
-                  </Carousel.Item>
-                ))}
-            </Carousel>
-            <button onClick={() => clickDeleteLendImage()}>delete</button>
-            </div>
-            : null}
-          <input
+            {lendImage.length
+              ? <div>
+                <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+                  {lendImage.map((image, idx) => (
+                    <Carousel.Item key={`lendImage_${idx}`}>
+                      <img
+                        src={URL.createObjectURL(image)}
+                        width={'100%'}
+                        alt="Image Not Found"
+                      />
+                      <Carousel.Caption>
+                        <p>{idx + 1}/{lendImage.length} image</p>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+                <button onClick={() => clickDeleteLendImage()}>delete</button>
+              </div>
+              : null}
+            <input
               type='file'
               multiple
               accept="image/*"
               onChange={lendImageChangedHandler}
-          />
+            />
           </div>
 
           <Form>

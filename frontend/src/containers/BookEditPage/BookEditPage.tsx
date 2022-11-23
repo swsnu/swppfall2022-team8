@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
-import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
+import { deleteImage, fetchLend, postImage, selectLend, updateLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
+import Carousel from 'react-bootstrap/Carousel'
 
 import './BookEditPage.css'
+import { maxLendImage } from '../BookRegisterPage/BookRegisterPage'
 
 const BookEditPage = () => {
   const id = useParams().id as string
@@ -42,6 +44,14 @@ const BookEditPage = () => {
   const [questions, setQuestions] = useState<string[]>(lendState.selectedLend?.questions ?? [])
   const [info, setInfo] = useState(lendState.selectedLend?.additional ?? '')
 
+  const [deletedImages, setDeletedImages] = useState<number[]>([])
+  const [oldImages, setOldImages] = useState(lendState.selectedLend?.images ?? [])
+  const [newImages, setNewImages] = useState<File[]>([])
+  const [lendImageIdx, setLendImageIdx] = useState(0)
+  const handleSelect = (selectedIndex: number, e: any) => {
+    setLendImageIdx(selectedIndex)
+  }
+
   const clickAddQuestionHandler = () => {
     const newQuestions: string[] = [...questions, question]
     setQuestions(newQuestions)
@@ -52,21 +62,52 @@ const BookEditPage = () => {
     setQuestions(newQuestions)
   }
 
+  const lendImageChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files !== null) {
+      if (files.length + oldImages.length + newImages.length > maxLendImage) {
+        alert(`You can only post up to ${maxLendImage} images.`)
+      } else {
+        setNewImages(newImages.concat(Array.from(files)))
+      }
+    }
+  }
+
+  const onOldDeleteHandler = (imageId: number) => {
+    setDeletedImages([...deletedImages, imageId])
+    const newOldImages = oldImages.filter(image => image.id !== imageId)
+    setOldImages(newOldImages)
+  }
+
+  const onNewDeleteHandler = (id: number) => {
+    const newNewImages = newImages.filter((image, idx) => idx !== id)
+    setLendImageIdx(lendImageIdx % (oldImages.length + newImages.length - 1))
+    setNewImages(newNewImages)
+  }
+
   const clickConfirmEditHanler = async () => {
     if (lendState.selectedLend != null) {
-      const lendData = new FormData()
+      const lendData = {
+        id: lendState.selectedLend.id,
+        book: lendState.selectedLend.book,
+        book_info: lendState.selectedLend.book_info,
+        owner: lendState.selectedLend.owner,
+        owner_username: lendState.selectedLend.owner_username,
+        questions,
+        cost,
+        additional: info
+      }
 
-      // lendImage.forEach((image, idx) => lendData.append('new_images', image))
-      lendData.append('id', String(lendState.selectedLend.id))
-      lendData.append('book', String(lendState.selectedLend.book))
-      lendData.append('book_info', JSON.stringify(lendState.selectedLend.book_info))
-      lendData.append('owner', String(lendState.selectedLend.owner))
-      lendData.append('owner_username', lendState.selectedLend.owner_username)
-      questions.forEach((question, idx) => lendData.append('questions', question))
-      lendData.append('cost', String(cost))
-      lendData.append('additional', info)
+      const response = await dispatch(updateLend(lendData))
 
-      await dispatch(updateLend({ lendData, id }))
+      if (response.type === `${updateLend.typePrefix}/fulfilled`) {
+        deletedImages.forEach(imageId => {
+          dispatch(deleteImage({ image_id: imageId }))
+        })
+        newImages.forEach((image, idx) => {
+          dispatch(postImage({ image, id: lendData.id }))
+        })
+      }
       navigate(`/book/${lendState.selectedLend.id}`)
     }
   }
@@ -80,40 +121,78 @@ const BookEditPage = () => {
       <div className='book-edit'>
         <div className='book-main-info'>
           <div className="image-test">
-            image
+            <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
           </div>
           <div className='input-class'>
             <div className='book-detail-info'>
               <h1>{lendState.selectedLend?.book_info.title}</h1>
-              <br/>
+              <br />
               <h5 id='edit-author'>written by {lendState.selectedLend?.book_info.author}</h5>
-              <br/>
-              <p/>
+              <br />
+              <p />
               {lendState.selectedLend?.book_info.brief}
-              <br/>
-              <p/>
+              <br />
+              <p />
               {lendState.selectedLend?.book_info.tags.map((t) => ('#' + t + ' '))}
             </div>
           </div>
         </div>
         <hr id='hr-line' />
+
+        <div>
+          {oldImages.length > 0 || newImages.length > 0
+            ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+              {oldImages.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    src={image.image}
+                    width={'100%'}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <button onClick={() => onOldDeleteHandler(image.id)}>x</button>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+              {newImages.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    src={URL.createObjectURL(image)}
+                    width={'100%'}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <button onClick={() => onNewDeleteHandler(idx)}>x</button>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+            : null}
+          <input
+            type='file'
+            multiple
+            accept="image/*"
+            onChange={lendImageChangedHandler}
+          />
+        </div>
+
         <Form>
           <Form.Group as={Row} className='input-class'>
-              <Form.Label>
-                <h5>Borrowing Cost :</h5>
-                <h5 id='h5-cost'>{cost}</h5>
-                <br />
-                <br />
-                <div id='borrowing-cost-range'>
-                  <Form.Range
-                    min="0"
-                    max="5000"
-                    step="100"
-                    value={cost}
-                    onChange={event => setCost(Number(event.target.value))}
-                  />
-                </div>
-              </Form.Label>
+            <Form.Label>
+              <h5>Borrowing Cost :</h5>
+              <h5 id='h5-cost'>{cost}</h5>
+              <br />
+              <br />
+              <div id='borrowing-cost-range'>
+                <Form.Range
+                  min="0"
+                  max="5000"
+                  step="100"
+                  value={cost}
+                  onChange={event => setCost(Number(event.target.value))}
+                />
+              </div>
+            </Form.Label>
           </Form.Group>
           <Form.Group as={Row} className='input-class' id='additional-info-input-form'>
             <Form.Label id='additional-info-text'><h5>Additional Information (Optional!)</h5>
@@ -130,36 +209,36 @@ const BookEditPage = () => {
             </Form.Label>
           </Form.Group>
           <Form.Group as={Row} className='input-class' id='questions-input-form'>
-              <Form.Label id='questions-text'>
-                <h5>Questions</h5>
-                <div className='questions-input-button'>
-                  <Form.Control
-                    id='questions-input'
-                    type='text' value={question}
-                    onChange={event => setQuestion(event.target.value)}
-                  />
-                </div>
-              </Form.Label>
-                <div className='questions-display'>
-                {questions.map((question, index) => (
-                  <div key={index} className='display-tag'>
-                    <h5 id='questions-display-text'>{question}</h5>
-                    <Button
-                      type="button"
-                      variant='outline-secondary'
-                      onClick={() => clickDeleteQuestionHandler(index)}
-                      className='delete-button'
-                    >X</Button>
-                  </div>
-                ))}
-                <Button
-                  variant="primary"
-                  className='add-button'
-                  onClick={() => clickAddQuestionHandler()}
-                  disabled={!question}
-                >add</Button>
+            <Form.Label id='questions-text'>
+              <h5>Questions</h5>
+              <div className='questions-input-button'>
+                <Form.Control
+                  id='questions-input'
+                  type='text' value={question}
+                  onChange={event => setQuestion(event.target.value)}
+                />
               </div>
-            </Form.Group>
+            </Form.Label>
+            <div className='questions-display'>
+              {questions.map((question, index) => (
+                <div key={index} className='display-tag'>
+                  <h5 id='questions-display-text'>{question}</h5>
+                  <Button
+                    type="button"
+                    variant='outline-secondary'
+                    onClick={() => clickDeleteQuestionHandler(index)}
+                    className='delete-button'
+                  >X</Button>
+                </div>
+              ))}
+              <Button
+                variant="primary"
+                className='add-button'
+                onClick={() => clickAddQuestionHandler()}
+                disabled={!question}
+              >add</Button>
+            </div>
+          </Form.Group>
         </Form>
       </div>
       <Button
