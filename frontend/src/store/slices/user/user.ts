@@ -6,11 +6,6 @@ import { LendType } from '../lend/lend'
 import { BookType } from '../book/book'
 
 /*
- * Token expiration time setting (unit: seconds)
- */
-export const tokenExpireSeconds: number = 300
-
-/*
  * Type definitions
  */
 export interface UserType {
@@ -62,7 +57,7 @@ export const requestSignup = createAsyncThunk(
     const { token, ...userData } = response.data
     if (token) {
       const drfToken = `Token ${String(token)}`
-      document.cookie = `drfToken=${drfToken}; max-age=${tokenExpireSeconds}` // TODO: secure
+      sessionStorage.setItem('drf-token', drfToken)
       axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
@@ -77,7 +72,7 @@ export const requestLogin = createAsyncThunk(
     const { token, ...userData } = response.data
     if (token) {
       const drfToken = `Token ${String(token)}`
-      document.cookie = `drfToken=${drfToken}; max-age=${tokenExpireSeconds}` // TODO: secure
+      sessionStorage.setItem('drf-token', drfToken)
       axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
@@ -90,7 +85,7 @@ export const requestLogout = createAsyncThunk(
   async (data: never, { dispatch }) => {
     const response = await axios.put('/api/user/logout/')
     axios.defaults.headers.common.Authorization = ''
-    document.cookie = 'drfToken=; max-age=0'
+    sessionStorage.removeItem('drf-token')
     dispatch(userActions.logout())
     return response.data
   }
