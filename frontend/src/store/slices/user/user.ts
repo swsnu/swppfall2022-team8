@@ -6,11 +6,6 @@ import { LendType } from '../lend/lend'
 import { BookType } from '../book/book'
 
 /*
- * Token expiration time setting (unit: seconds)
- */
-export const tokenExpireSeconds: number = 300
-
-/*
  * Type definitions
  */
 export interface UserType {
