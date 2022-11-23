@@ -1,4 +1,7 @@
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { ChatRank, ChatType } from '../../containers/ChattingPage/ChattingPage'
 import { RoomType } from '../../store/slices/room/room'
@@ -73,17 +76,18 @@ const ChattingRoom = (props: IProps) => {
           ))}
         </div>
         <div>
-          <input
-            id="chat-input"
-            type="text"
-            value={chatInput}
-            onChange={event => setChatInput(event.target.value)}
-            onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
-          />
-          <button
-            type="button"
-            onClick={() => clickSendChatHandler()}
-          >Send chat</button>
+          <InputGroup className='mb-3' id='chat-input'>
+            <Form.Control
+              id='chat-input'
+              type='text'
+              value={chatInput}
+              onChange={event => setChatInput(event.target.value)}
+              onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
+            />
+            <Button id='send-button' onClick={() => clickSendChatHandler()}>
+              <FontAwesomeIcon id='paper-plane' icon={faPaperPlane}/>
+            </Button>
+          </InputGroup>
         </div>
       </div>
     </>

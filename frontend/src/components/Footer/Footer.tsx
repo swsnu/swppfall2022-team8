@@ -3,7 +3,7 @@ const Footer = () => {
     <div className='footer'>
       <br/>
       <br/>
-      Suisei
+      Suisei FUck
       <br/>
     </div>
   )

@@ -20,7 +20,7 @@
 }
 
 .chat-message-me {
-  display: flex;
+  display: block;
   padding-left: 10px;
   padding-right: 10px;
   background-color: green;
