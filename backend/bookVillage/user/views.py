@@ -125,15 +125,11 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET /api/user/tag/
     @action(detail=False)
     def tag(self, request):
-        from book.serializers.book_serializers import TagSerializer
+        data = []
+        for tag in request.user.subscribed_tags.all():
+            data.append(tag.name)
 
-        qs = request.user.subscribed_tags.all()
-        page = self.paginate_queryset(qs)
-        if page is not None:
-            serializer = TagSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = TagSerializer(qs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
 
     # PUT /api/user/tag/
     @tag.mapping.put
@@ -189,6 +185,7 @@ class UserViewSet(viewsets.GenericViewSet):
         request.user.recommend.enqueue()
         return Response({"enqueued": True}, status=status.HTTP_200_OK)
 
+    # PUT /api/user/recommend/
     @recommend.mapping.put
     def put_recommend(self, request):
         recommend = request.user.recommend

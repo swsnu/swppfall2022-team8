@@ -217,7 +217,7 @@ class UserRelatedTest(APITestCase):
 
         # when
         res = self.client_0.get("/api/user/tag/")
-        data = res.data["results"]
+        data = res.data
 
         # then
 

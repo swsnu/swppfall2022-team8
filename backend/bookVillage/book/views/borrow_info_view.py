@@ -70,6 +70,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
             self.get_serializer(borrow_info).data, status=status.HTTP_200_OK
         )
 
+    # GET /api/borrow/user/
     @action(detail=False, methods=["GET"])
     def user(self, request):
         user = request.user

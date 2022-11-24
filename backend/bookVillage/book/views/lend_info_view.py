@@ -57,14 +57,14 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # GET /api/lend/{lend_info_id}
+    # GET /api/lend/{lend_info_id}/
     def retrieve(self, request, pk=None):
         lend_info = self.get_object()
         serializer = self.get_serializer(lend_info)
         serializer.set_sercurity(request.user.id)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # PUT /api/lend/{lend_info_id}
+    # PUT /api/lend/{lend_info_id}/
     def update(self, request, pk=None):
         data = request.data
         lend_info = self.get_object()
@@ -78,7 +78,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         serializer.save()
         return Response(self.get_serializer(lend_info).data, status=status.HTTP_200_OK)
 
-    # DELETE /api/lend/{lend_info_id}
+    # DELETE /api/lend/{lend_info_id}/
     def destroy(self, request, pk=None):
         lend_info = self.get_object()
         if lend_info.owner != request.user:
@@ -132,7 +132,7 @@ class LendImageViewSet(viewsets.GenericViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    # DELETE /api/lend/image/delete_pk
+    # DELETE /api/lend/image/delete_pk/
     def destroy(self, request, pk=None):
         image = self.get_object()
         if image.lend.owner != request.user:

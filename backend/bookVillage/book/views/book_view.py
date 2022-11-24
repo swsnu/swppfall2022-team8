@@ -57,12 +57,12 @@ class BookViewSet(viewsets.GenericViewSet):
             BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # GET /api/book/{book_id}
+    # GET /api/book/{book_id}/
     def retrieve(self, request, pk=None):
         book = self.get_object()
         return Response(self.get_serializer(book).data, status=status.HTTP_200_OK)
 
-    # PUT /api/book/{book_id}
+    # PUT /api/book/{book_id}/
     def update(self, request, pk=None):
         book = self.get_object()
         data = request.data.copy()
@@ -77,12 +77,13 @@ class BookViewSet(viewsets.GenericViewSet):
                 BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # DELETE /api/book/{book_id}
+    # DELETE /api/book/{book_id}/
     def destroy(self, request, pk=None):
         book = self.get_object()
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    # GET /api/book/tag/
     @action(detail=False, methods=["GET"])
     def tag(self, request):
         from book.serializers.book_serializers import TagSerializer
