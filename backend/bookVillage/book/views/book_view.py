@@ -91,6 +91,6 @@ class BookViewSet(viewsets.GenericViewSet):
             .order_by("length")
             .filter(name__istartswith=name)
         )
-        page = self.paginate_queryset(tags)
-        serializer = TagSerializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        tags = tags[:7]
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
