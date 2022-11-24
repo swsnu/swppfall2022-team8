@@ -14,15 +14,18 @@ const fakeUser = {
   username: 'test_username'
 }
 
+const fakeBook = {
+  id: 3,
+  title: 'STATUS_TEST_TITLE',
+  author: 'STATUS_TEST_AUTHOR',
+  tags: ['STATUS_TEST_TAG_1', 'STATUS_TEST_TAG_2'],
+  brief: 'STATUS_TEST_BRIEF'
+}
+
 const fakeLend = {
   id: 2,
-  book: 3,
-  book_info: {
-    title: 'STATUS_TEST_TITLE',
-    author: 'STATUS_TEST_AUTHOR',
-    tags: ['STATUS_TEST_TAG_1', 'STATUS_TEST_TAG_2'],
-    brief: 'STATUS_TEST_BRIEF'
-  },
+  book: fakeBook.id,
+  book_info: fakeBook,
   owner: fakeUser.id,
   owner_username: fakeUser.username,
   questions: ['STATUS_TEST_QUESTION'],
@@ -43,6 +46,13 @@ const fakeBorrow = {
 
 const fakeTag = 'STATUS_TEST_TAG'
 const fakeUpdateTag = 'STATUS_TEST_TAG_UPDATED'
+
+const fakeRecommend = {
+  is_queued: false,
+  is_outdated: false,
+  enqueued: false,
+  recommend_list: [fakeBook]
+}
 
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
@@ -94,6 +104,7 @@ describe('<UserStatusPage />', () => {
         })
       }
     })
+
     await act(() => {
       renderWithProviders(<UserStatusPage />, {
         preloadedState: {
@@ -253,5 +264,36 @@ describe('<UserStatusPage />', () => {
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on add tag'))
+  })
+  it('should start recommend if the page unmounts', async () => {
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const parsedUrl = url.split('/')
+      const op = parsedUrl[2]
+      if (op === 'lend') {
+        return Promise.resolve({ data: [fakeLend] })
+      } else if (op === 'borrow') {
+        return Promise.resolve({ data: [fakeBorrow] })
+      } else { // op === user
+        const op2 = parsedUrl[3]
+        if (op2 === 'tag') {
+          return Promise.resolve({ data: [fakeTag] })
+        } else if (op2 === 'watch') {
+          return Promise.resolve({ data: [fakeLend] })
+        } else {
+          return Promise.resolve({ data: fakeRecommend })
+        }
+      }
+    })
+    sessionStorage.setItem('drf-token', 'mock-token')
+    const { unmount } = renderWithProviders(<UserStatusPage />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          currentUser: fakeUser
+        }
+      }
+    })
+    unmount()
   })
 })

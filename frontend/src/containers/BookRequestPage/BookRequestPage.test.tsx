@@ -92,6 +92,32 @@ describe('<BookRequestPage />', () => {
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/chat'))
   })
+  it('should navigate to BookListPage if user clicks a book image', async () => {
+    // given
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({
+      data: fakeLend
+    }))
+    await act(() => {
+      renderWithProviders(<BookRequestPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          }
+        }
+      })
+    })
+
+    // when
+    await act(async () => {
+      const image = screen.getByRole('img')
+      fireEvent.click(image)
+    })
+
+    // then
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/book/${fakeLend.id}`))
+  })
   it('should handle impossible case (currentUser is null)', async () => {
     // given
     renderWithProviders(<BookRequestPage />, { preloadedState })

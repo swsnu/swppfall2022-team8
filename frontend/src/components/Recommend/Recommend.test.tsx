@@ -3,7 +3,7 @@ import { RootState } from '../../store'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import Recommend from './Recommend'
 
-let preloadedState: RootState = {
+const preloadedState: RootState = {
   book: {
     books: [],
     selectedBook: null
@@ -56,7 +56,7 @@ const spyRecommendEntity = () => (
 jest.mock('../RecommendEntity/RecommendEntity', () => spyRecommendEntity)
 
 describe('<Recommend />', () => {
-  it('should handle click Button', async () => {
+  it('should handle click Button + outdated case', async () => {
     // given
     renderWithProviders(<Recommend />, { preloadedState })
     const button = screen.getByRole('button')
@@ -67,11 +67,45 @@ describe('<Recommend />', () => {
 
     // then
     expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')
+    await screen.findByText('Refresh!')
     await waitFor(() => expect(mockDispatch).toHaveBeenCalled())
   })
-  it('should render when no recommend_list', async () => {
+  it('should render when not outdated and no recommend_list', async () => {
     // given
-    preloadedState = rootInitialState
-    renderWithProviders(<Recommend />, { preloadedState })
+    renderWithProviders(<Recommend />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          recommend: {
+            ...preloadedState.user.recommend,
+            is_outdated: false,
+            recommend_list: []
+          }
+        }
+      }
+    })
+
+    // then
+    await screen.findByText('Please add your preference tag to use recommend system!')
+  })
+  it('should render when not outdated and recommend_list not empty', async () => {
+    // given
+    renderWithProviders(<Recommend />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          recommend: {
+            ...preloadedState.user.recommend,
+            is_outdated: false
+          }
+        }
+      }
+    })
+    const recommendentity = screen.getByTestId('spyRecommendEntity')
+
+    // then
+    expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')
   })
 })

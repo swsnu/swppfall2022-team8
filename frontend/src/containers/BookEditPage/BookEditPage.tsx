@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
-import { fetchLend, selectLend, updateLend } from '../../store/slices/lend/lend'
+import { deleteImage, fetchLend, postImage, selectLend, updateLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
+import Carousel from 'react-bootstrap/Carousel'
 
 import './BookEditPage.css'
+import { maxLendImage } from '../BookRegisterPage/BookRegisterPage'
 
 const BookEditPage = () => {
   const id = useParams().id as string
@@ -42,6 +44,14 @@ const BookEditPage = () => {
   const [questions, setQuestions] = useState<string[]>(lendState.selectedLend?.questions ?? [])
   const [info, setInfo] = useState(lendState.selectedLend?.additional ?? '')
 
+  const [deletedImages, setDeletedImages] = useState<number[]>([])
+  const [oldImages, setOldImages] = useState(lendState.selectedLend?.images ?? [])
+  const [newImages, setNewImages] = useState<File[]>([])
+  const [lendImageIdx, setLendImageIdx] = useState(0)
+  const handleSelect = (selectedIndex: number, e: any) => {
+    setLendImageIdx(selectedIndex)
+  }
+
   const clickAddQuestionHandler = () => {
     const newQuestions: string[] = [...questions, question]
     setQuestions(newQuestions)
@@ -50,6 +60,29 @@ const BookEditPage = () => {
   const clickDeleteQuestionHandler = (index: number) => {
     const newQuestions = questions.filter((_question, idx) => idx !== index)
     setQuestions(newQuestions)
+  }
+
+  const lendImageChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files !== null) {
+      if (files.length + oldImages.length + newImages.length > maxLendImage) {
+        alert(`You can only post up to ${maxLendImage} images.`)
+      } else {
+        setNewImages(newImages.concat(Array.from(files)))
+      }
+    }
+  }
+
+  const onOldDeleteHandler = (imageId: number) => {
+    setDeletedImages([...deletedImages, imageId])
+    const newOldImages = oldImages.filter(image => image.id !== imageId)
+    setOldImages(newOldImages)
+  }
+
+  const onNewDeleteHandler = (id: number) => {
+    const newNewImages = newImages.filter((image, idx) => idx !== id)
+    setLendImageIdx(lendImageIdx % (oldImages.length + newImages.length - 1))
+    setNewImages(newNewImages)
   }
 
   const clickConfirmEditHanler = async () => {
@@ -64,7 +97,17 @@ const BookEditPage = () => {
         cost,
         additional: info
       }
-      await dispatch(updateLend(lendData))
+
+      const response = await dispatch(updateLend(lendData))
+
+      if (response.type === `${updateLend.typePrefix}/fulfilled`) {
+        deletedImages.forEach(imageId => {
+          dispatch(deleteImage({ image_id: imageId }))
+        })
+        newImages.forEach((image, idx) => {
+          dispatch(postImage({ image, id: lendData.id }))
+        })
+      }
       navigate(`/book/${lendState.selectedLend.id}`)
     }
   }
@@ -95,6 +138,44 @@ const BookEditPage = () => {
           </div>
         </div>
         <hr id='hr-line' />
+
+        <div>
+          {oldImages.length > 0 || newImages.length > 0
+            ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+              {oldImages.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    src={image.image}
+                    width={'100%'}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <button onClick={() => onOldDeleteHandler(image.id)}>x</button>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+              {newImages.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    src={URL.createObjectURL(image)}
+                    width={'100%'}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <button onClick={() => onNewDeleteHandler(idx)}>x</button>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+            : null}
+          <input
+            type='file'
+            multiple
+            accept="image/*"
+            onChange={lendImageChangedHandler}
+          />
+        </div>
+
         <Form>
           <Form.Group as={Row} className='input-class'>
             <Form.Label>

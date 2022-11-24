@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Button, Card, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 
@@ -7,6 +8,8 @@ import { AppDispatch } from '../../store'
 import { fetchLend, selectLend } from '../../store/slices/lend/lend'
 import { createRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
+
+import './BookRequestPage.css'
 
 const BookRequestPage = () => {
   const [answers, setAnswers] = useState<string[]>([])
@@ -66,28 +69,48 @@ const BookRequestPage = () => {
   }
 
   return (
-    <>
+    <div className='page'>
       <NavBar />
-      <h1>MainPage</h1>
-      <br />
-
-      <h3>Book Name:&nbsp;{(lendState.selectedLend != null) ? lendState.selectedLend.book_info.title : ''}</h3>
-
-      {(lendState.selectedLend != null)
-        ? lendState.selectedLend.questions.map((question, idx) => (
-          <div key={`question_${idx}`}>
-            <h3>Question: {question}</h3>
-            <h3>Answer:</h3>
-            <input
-              value={answers[idx] ?? ''}
-              onChange={event => changeAnswerHandler(idx, event.target.value)}></input>
-          </div>
-        ))
-        : null}
-
-      <br />
-      <button onClick={() => clickSendButtonHandler()}>Send to lender</button>
-    </>
+      <br/>
+      <div id='request-page'>
+        <div>
+          <Card
+            style={ { width: '18rem' } }
+            onClick={() => navigate(`/book/${(lendState.selectedLend !== null) ? lendState.selectedLend.id : ''}`)}
+            className='book-list-entity'
+          >
+            <Card.Img variant='top' src={lendState.selectedLend?.book_info.image} className='book-entity-image'/>
+            <Card.Body>
+              <Card.Title>{(lendState.selectedLend != null) ? lendState.selectedLend.book_info.title : ''}</Card.Title>
+            </Card.Body>
+          </Card>
+        </div>
+        <Form id='request-form'>
+          {(lendState.selectedLend != null)
+            ? lendState.selectedLend.questions.map((question, idx) => (
+              <Form.Group key={`question_${idx}`}>
+                <Form.Label id={`request-question-${idx}`} className='request-question'>Question {idx + 1}: {question}</Form.Label>
+                <br/>
+                <br/>
+                <Form.Control
+                  value={answers[idx] ?? ''}
+                  type='text'
+                  placeholder='answer to the question...'
+                  onChange={event => changeAnswerHandler(idx, event.target.value)}
+                />
+                <br/>
+              </Form.Group>
+            ))
+            : null}
+            <br/>
+          <Button
+            onClick={() => clickSendButtonHandler()}
+            variant='outline-primary'
+            id='request-send-button'
+          >Send to lender</Button>
+        </Form>
+      </div>
+    </div>
   )
 }
 

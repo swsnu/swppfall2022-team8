@@ -45,6 +45,12 @@ class LendInfoSerializer(serializers.ModelSerializer):
                 "questions must be list string input or nothing"
             )
 
+    def validate_new_images(self, new_images):
+        return new_images
+
+    def validate_delete_images(self, delete_images):
+        return delete_images
+
     def get_book_info(self, lend_info):
         from book.serializers.book_serializers import BookSerializer
 
@@ -73,6 +79,6 @@ class LendInfoSerializer(serializers.ModelSerializer):
     def get_images(self, lend_info):
         data = []
         for image in lend_info.images.all():
-            data.append({"id": image.id, "image": image.image})
+            data.append({"id": image.id, "image": image.image.url})
 
         return data
