@@ -86,7 +86,11 @@ class BookViewSet(viewsets.GenericViewSet):
         from book.serializers.book_serializers import TagSerializer
 
         name = request.GET.get("name", "")
-        tags = Tag.objects.filter(name__istartswith=name)
+        tags = (
+            Tag.objects.extra(select={"length": "Length(name)"})
+            .order_by("length")
+            .filter(name__istartswith=name)
+        )
         page = self.paginate_queryset(tags)
         serializer = TagSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
