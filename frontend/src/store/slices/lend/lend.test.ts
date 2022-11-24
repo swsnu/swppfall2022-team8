@@ -33,13 +33,23 @@ describe('lend reducer', () => {
   })
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
+      count: 0,
+      next: null,
+      prev: null,
       lends: [],
       userLends: [],
       selectedLend: null
     })
   })
   it('should handle fetchQueryLends', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeLend] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
+    })
     await store.dispatch(fetchQueryLends({ title: 'LEND_TEST_TITLE' }))
     expect(store.getState().lend.lends).toEqual([fakeLend])
   })
@@ -86,7 +96,14 @@ describe('lend reducer', () => {
     expect(result.type).toBe(`${createLend.typePrefix}/rejected`)
   })
   it('should handle fetchUserLends', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeLend] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
+    })
     await store.dispatch(fetchUserLends())
     expect(store.getState().lend.userLends).toEqual([fakeLend])
   })

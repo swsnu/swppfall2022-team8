@@ -39,6 +39,8 @@ const fakeBorrow = {
   borrower: fakeUser.id,
   borrower_username: fakeUser.username,
   lend_id: 5,
+  book_title: fakeBook.title,
+  lend_cost: fakeLend.cost,
   active: true,
   lend_start_time: '1970-01-01T00:00:00.000Z',
   lend_end_time: null
@@ -79,15 +81,36 @@ describe('<UserStatusPage />', () => {
       const parsedUrl = url.split('/')
       const op = parsedUrl[2]
       if (op === 'lend') {
-        return Promise.resolve({ data: [fakeLend] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
       } else if (op === 'borrow') {
-        return Promise.resolve({ data: [fakeBorrow] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
       } else { // op === user
         const op2 = parsedUrl[3]
         if (op2 === 'tag') {
           return Promise.resolve({ data: [fakeTag] })
         } else { // op2 === watch
-          return Promise.resolve({ data: [fakeLend] })
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
         }
       }
     })
@@ -150,15 +173,36 @@ describe('<UserStatusPage />', () => {
       const parsedUrl = url.split('/')
       const op = parsedUrl[2]
       if (op === 'lend') {
-        return Promise.resolve({ data: [fakeLend] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
       } else if (op === 'borrow') {
-        return Promise.resolve({ data: [fakeBorrow] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
       } else { // op === user
         const op2 = parsedUrl[3]
         if (op2 === 'tag') {
           return Promise.reject(new Error('mock'))
         } else { // op2 === watch
-          return Promise.resolve({ data: [fakeLend] })
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
         }
       }
     })
@@ -185,15 +229,36 @@ describe('<UserStatusPage />', () => {
       const parsedUrl = url.split('/')
       const op = parsedUrl[2]
       if (op === 'lend') {
-        return Promise.resolve({ data: [fakeLend] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
       } else if (op === 'borrow') {
-        return Promise.resolve({ data: [fakeBorrow] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
       } else { // op === user
         const op2 = parsedUrl[3]
         if (op2 === 'tag') {
           return Promise.resolve({ data: [fakeTag] })
         } else { // op2 === watch
-          return Promise.resolve({ data: [fakeLend] })
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
         }
       }
     })
@@ -227,15 +292,36 @@ describe('<UserStatusPage />', () => {
       const parsedUrl = url.split('/')
       const op = parsedUrl[2]
       if (op === 'lend') {
-        return Promise.resolve({ data: [fakeLend] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
       } else if (op === 'borrow') {
-        return Promise.resolve({ data: [fakeBorrow] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
       } else { // op === user
         const op2 = parsedUrl[3]
         if (op2 === 'tag') {
           return Promise.resolve({ data: [fakeTag] })
         } else { // op2 === watch
-          return Promise.resolve({ data: [fakeLend] })
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
         }
       }
     })

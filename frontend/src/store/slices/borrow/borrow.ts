@@ -15,15 +15,26 @@ export interface BorrowType {
   image: string
   lend_id: number
   book_title: string
+  lend_cost: number
   active: boolean
   lend_start_time: string // serialized Date object
   lend_end_time: string | null // serialized Date object | null
 };
 
 export interface BorrowState {
+  count: number
+  next: string | null
+  prev: string | null
   userBorrows: BorrowType[]
   selectedBorrow: BorrowType | null
 };
+
+export interface BorrowPageResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: BorrowType[]
+}
 
 /*
  * Async thunks
@@ -49,8 +60,8 @@ export const toggleBorrowStatus = createAsyncThunk(
 
 export const fetchUserBorrows = createAsyncThunk(
   'borrow/fetchUserBorrows',
-  async () => {
-    const response = await axios.get<BorrowType[]>('/api/borrow/user/')
+  async (params?: { page: number }) => {
+    const response = await axios.get<BorrowPageResponse>('/api/borrow/user/', { params })
     return response.data
   }
 )
@@ -60,6 +71,9 @@ export const fetchUserBorrows = createAsyncThunk(
  */
 
 const initialState: BorrowState = {
+  count: 0,
+  next: null,
+  prev: null,
   userBorrows: [],
   selectedBorrow: null
 }
@@ -87,7 +101,10 @@ export const borrowSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserBorrows.fulfilled, (state, action) => {
-      state.userBorrows = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.userBorrows = action.payload.results
     })
     builder.addCase(createBorrow.rejected, (_state, action) => {
       console.error(action.error)

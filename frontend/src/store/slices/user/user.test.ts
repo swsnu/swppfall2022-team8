@@ -40,6 +40,9 @@ describe('user reducer', () => {
   })
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
+      count: 0,
+      next: null,
+      prev: null,
       currentUser: null,
       subscribed_tags: [],
       watch_list: [],
@@ -77,7 +80,14 @@ describe('user reducer', () => {
     await waitFor(() => expect(store.getState().user.subscribed_tags.length).toEqual(1))
   })
   it('should handle fetchWatch', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeLend] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
+    })
     await store.dispatch(fetchWatch())
     expect(store.getState().user.watch_list).toEqual([fakeLend])
   })

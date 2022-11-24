@@ -3,44 +3,27 @@ import { RootState } from '../../store'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import Recommend from './Recommend'
 
+const fakeRecommend = {
+  id: 291354,
+  image: '/media/291354/book_291354.jpg',
+  title: 'The Ruby Knight (The Elenium, #2)',
+  author: 'David Eddings',
+  tags: [
+    'fantasy'
+  ],
+  brief: 'The Ruby Knight'
+}
+
 const preloadedState: RootState = {
-  book: {
-    books: [],
-    selectedBook: null
-  },
-  lend: {
-    lends: [],
-    userLends: [],
-    selectedLend: null
-  },
-  borrow: {
-    userBorrows: [],
-    selectedBorrow: null
-  },
+  ...rootInitialState,
   user: {
-    currentUser: null,
-    subscribed_tags: [],
-    watch_list: [],
+    ...rootInitialState.user,
     recommend: {
       is_queued: true,
       is_outdated: true,
       enqueued: true,
-      recommend_list: [
-        {
-          id: 291354,
-          image: '/media/291354/book_291354.jpg',
-          title: 'The Ruby Knight (The Elenium, #2)',
-          author: 'David Eddings',
-          tags: [
-            'fantasy'
-          ],
-          brief: 'The Ruby Knight'
-        }
-      ]
+      recommend_list: [fakeRecommend]
     }
-  },
-  room: {
-    ...rootInitialState.room
   }
 }
 
