@@ -344,11 +344,12 @@ describe('<ChattingPage />', () => {
         }
       })
     })
-
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2))
     await act(async () => {
       const roomButton = await screen.findByText('chat0')
       fireEvent.click(roomButton)
     })
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3))
 
     // when
     await act(async () => {
@@ -536,6 +537,7 @@ describe('<ChattingPage />', () => {
     await act(() => {
       fireEvent.click(confirmLendingButton)
     })
+    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm lending?'))
 
     // when
     const confirmReturnButton = await screen.findByText('Confirm return')
