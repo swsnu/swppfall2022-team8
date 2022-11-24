@@ -85,11 +85,8 @@ class UserViewSet(viewsets.GenericViewSet):
 
         qs = request.user.watching_lends.all()
         page = self.paginate_queryset(qs)
-        if page is not None:
-            serializer = LendInfoSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        data = LendInfoSerializer(qs, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        serializer = LendInfoSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     # PUT /api/user/watch/
     @watch.mapping.put

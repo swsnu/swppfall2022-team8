@@ -34,11 +34,8 @@ class BookViewSet(viewsets.GenericViewSet):
             books = books.filter(tags__name__in=tags).distinct()
         books = books[:100]
         page = self.paginate_queryset(books)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        data = self.get_serializer(books, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     # POST /api/book/
     def create(self, request):
@@ -89,10 +86,11 @@ class BookViewSet(viewsets.GenericViewSet):
         from book.serializers.book_serializers import TagSerializer
 
         name = request.GET.get("name", "")
-        tags = Tag.objects.filter(name__icontains=name)
-        page = self.paginate_queryset(tags)
-        if page is not None:
-            serializer = TagSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        tags = (
+            Tag.objects.extra(select={"length": "Length(name)"})
+            .order_by("length")
+            .filter(name__istartswith=name)
+        )
+        tags = tags[:7]
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

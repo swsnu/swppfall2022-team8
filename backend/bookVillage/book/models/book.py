@@ -4,7 +4,7 @@ import json
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, db_index=True)
     users_subscribed = models.ManyToManyField(
         User, through="user.SubscribeTag", related_name="subscribed_tags"
     )
@@ -15,7 +15,7 @@ def book_image_upload_to(instance, filename):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=200, blank=False, null=False)
+    title = models.CharField(max_length=200, blank=False, null=False, db_index=True)
     author = models.CharField(max_length=200, blank=False, null=False)
     tags = models.ManyToManyField(Tag, through="BookTag", related_name="books")
     brief = models.CharField(max_length=200, blank=True, null=False, default="정보 없음")

@@ -76,8 +76,5 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
         user = request.user
         borrow_infos = user.borrow_history.all()
         page = self.paginate_queryset(borrow_infos)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(borrow_infos, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
