@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from book.pagination import LendPageNumberPagination
 from book.models.lend_info import LendInfo, LendImage
 from book.serializers.lend_info_serializers import LendInfoSerializer
 from rest_framework.decorators import action
@@ -10,6 +11,7 @@ from django.shortcuts import get_object_or_404
 class LendInfoViewSet(viewsets.GenericViewSet):
     serializer_class = LendInfoSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = LendPageNumberPagination
 
     def get_permissions(self):
         return self.permission_classes
@@ -35,15 +37,15 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         )
         if tags:
             lend_infos = lend_infos.filter(book__tags__name__in=tags)
-        lend_infos = lend_infos[:100]
-        datas = self.get_serializer(lend_infos, many=True).data
-        for data in datas:
-            if data["status"] and request.user.id not in (
-                data["owner"],
-                data["status"]["borrower"],
-            ):
-                data["status"] = "borrowed"
-        return Response(datas, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(lend_infos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            serializer.user_id = request.user.id
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(lend_infos, many=True)
+        serializer.set_sercurity(request.user.id)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # POST /api/lend/
     def create(self, request):
@@ -55,18 +57,14 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # GET /api/lend/{lend_info_id}
+    # GET /api/lend/{lend_info_id}/
     def retrieve(self, request, pk=None):
         lend_info = self.get_object()
-        data = self.get_serializer(lend_info).data
-        if data["status"] and request.user.id not in (
-            data["owner"],
-            data["status"]["borrower"],
-        ):
-            data["status"] = "borrowed"
-        return Response(data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(lend_info)
+        serializer.set_sercurity(request.user.id)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # PUT /api/lend/{lend_info_id}
+    # PUT /api/lend/{lend_info_id}/
     def update(self, request, pk=None):
         data = request.data
         lend_info = self.get_object()
@@ -80,7 +78,7 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         serializer.save()
         return Response(self.get_serializer(lend_info).data, status=status.HTTP_200_OK)
 
-    # DELETE /api/lend/{lend_info_id}
+    # DELETE /api/lend/{lend_info_id}/
     def destroy(self, request, pk=None):
         lend_info = self.get_object()
         if lend_info.owner != request.user:
@@ -95,7 +93,12 @@ class LendInfoViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=["GET"])
     def user(self, request):
         user = request.user
-        lend_infos = user.lend_infos
+        lend_infos = user.lend_infos.all()
+        page = self.paginate_queryset(lend_infos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         data = self.get_serializer(lend_infos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
@@ -129,7 +132,7 @@ class LendImageViewSet(viewsets.GenericViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    # DELETE /api/lend/image/delete_pk
+    # DELETE /api/lend/image/delete_pk/
     def destroy(self, request, pk=None):
         image = self.get_object()
         if image.lend.owner != request.user:

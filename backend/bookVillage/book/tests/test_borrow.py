@@ -169,7 +169,7 @@ class BorrowTest(APITestCase):
             f"/api/borrow/{borrow_0.id}/",
         )
         res = self.client_1.get(f"/api/borrow/user/")
-        data = res.data
+        data = res.data["results"]
 
         # then
         assert len(data) == 2

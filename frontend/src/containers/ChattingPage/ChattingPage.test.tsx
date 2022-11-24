@@ -79,6 +79,8 @@ const fakeBorrow = {
   borrower_username: fakeBorrower.username,
   lend_id: 4,
   active: true,
+  book_title: fakeLend.book_info.title,
+  lend_cost: fakeLend.cost,
   lend_start_time: '1970-01-01T00:00:00.000Z',
   lend_end_time: null
 }
@@ -355,7 +357,7 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(axios.get).toBeCalledTimes(3))
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3))
   })
   it('should handle error on fetching lending information', async () => {
     // given
@@ -364,7 +366,13 @@ describe('<ChattingPage />', () => {
     jest.spyOn(axios, 'get').mockImplementation((url: string) => {
       const op = url.split('/')[2]
       if (op === 'room') {
-        return Promise.resolve({ data: { rooms_lend: [fakeRoom], rooms_borrow: [] } })
+        return Promise.resolve({
+          data: {
+            next: null,
+            previous: null,
+            results: [fakeRoom]
+          }
+        })
       } else {
         return Promise.reject(new Error('mock'))
       }

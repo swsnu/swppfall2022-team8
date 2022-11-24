@@ -32,13 +32,23 @@ export interface LendType {
   cost: number
   additional: string
   status: BorrowType | string | null
-};
+}
 
 export interface LendState {
+  count: number
+  next: string | null
+  prev: string | null
   lends: LendType[]
   userLends: LendType[]
   selectedLend: LendType | null
-};
+}
+
+export interface LendPageResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: LendType[]
+}
 
 /*
  * Async thunks
@@ -46,8 +56,8 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
-  async (params: { title?: string, author?: string, tag?: string[] }) => {
-    const response = await axios.get<LendType[]>('/api/lend/', { params })
+  async (params: { title?: string, author?: string, tag?: string[], page?: number }) => {
+    const response = await axios.get<LendPageResponse>('/api/lend/', { params })
     return response.data
   }
 )
@@ -109,8 +119,8 @@ export const deleteLend = createAsyncThunk(
 
 export const fetchUserLends = createAsyncThunk(
   'lend/fetchUserLend',
-  async () => {
-    const response = await axios.get<LendType[]>('/api/lend/user/')
+  async (params?: { page: number }) => {
+    const response = await axios.get<LendPageResponse>('/api/lend/user/', { params })
     return response.data
   }
 )
@@ -120,6 +130,9 @@ export const fetchUserLends = createAsyncThunk(
  */
 
 const initialState: LendState = {
+  count: 0,
+  next: null,
+  prev: null,
   lends: [],
   userLends: [],
   selectedLend: null
@@ -183,7 +196,10 @@ export const lendSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQueryLends.fulfilled, (state, action) => {
-      state.lends = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.lends = action.payload.results
     })
     builder.addCase(fetchLend.fulfilled, (state, action) => {
       state.selectedLend = action.payload
@@ -192,7 +208,10 @@ export const lendSlice = createSlice({
       console.error(action.error)
     })
     builder.addCase(fetchUserLends.fulfilled, (state, action) => {
-      state.userLends = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.userLends = action.payload.results
     })
   }
 })

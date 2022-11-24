@@ -8,6 +8,7 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
     lend_end_time = serializers.DateTimeField(required=False, default=None)
     borrower_username = serializers.ReadOnlyField(source="borrower.username")
     book_title = serializers.ReadOnlyField(source="lend_id.book.title")
+    lend_cost = serializers.ReadOnlyField(source="lend_id.cost")
     image = serializers.SerializerMethodField()
 
     class Meta:
@@ -19,6 +20,7 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
             "image",
             "lend_id",
             "book_title",
+            "lend_cost",
             "active",
             "lend_start_time",
             "lend_end_time",

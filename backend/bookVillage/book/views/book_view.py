@@ -1,6 +1,8 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from book.pagination import BookPageNumberPagination
 from book.models.book import Book, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
 
@@ -9,6 +11,8 @@ class BookViewSet(viewsets.GenericViewSet):
     queryset = Book.objects.all().prefetch_related("tags")
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = BookPageNumberPagination
+    page_size = 12
 
     def get_permissions(self):
         return self.permission_classes
@@ -29,6 +33,10 @@ class BookViewSet(viewsets.GenericViewSet):
         if tags:
             books = books.filter(tags__name__in=tags).distinct()
         books = books[:100]
+        page = self.paginate_queryset(books)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         data = self.get_serializer(books, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
@@ -49,12 +57,12 @@ class BookViewSet(viewsets.GenericViewSet):
             BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # GET /api/book/{book_id}
+    # GET /api/book/{book_id}/
     def retrieve(self, request, pk=None):
         book = self.get_object()
         return Response(self.get_serializer(book).data, status=status.HTTP_200_OK)
 
-    # PUT /api/book/{book_id}
+    # PUT /api/book/{book_id}/
     def update(self, request, pk=None):
         book = self.get_object()
         data = request.data.copy()
@@ -69,8 +77,22 @@ class BookViewSet(viewsets.GenericViewSet):
                 BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # DELETE /api/book/{book_id}
+    # DELETE /api/book/{book_id}/
     def destroy(self, request, pk=None):
         book = self.get_object()
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # GET /api/book/tag/
+    @action(detail=False, methods=["GET"])
+    def tag(self, request):
+        from book.serializers.book_serializers import TagSerializer
+
+        name = request.GET.get("name", "")
+        tags = Tag.objects.filter(name__icontains=name)
+        page = self.paginate_queryset(tags)
+        if page is not None:
+            serializer = TagSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
