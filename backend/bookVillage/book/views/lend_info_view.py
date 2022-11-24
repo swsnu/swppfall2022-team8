@@ -38,14 +38,9 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         if tags:
             lend_infos = lend_infos.filter(book__tags__name__in=tags)
         page = self.paginate_queryset(lend_infos)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            serializer.user_id = request.user.id
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(lend_infos, many=True)
-        serializer.set_sercurity(request.user.id)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        serializer.user_id = request.user.id
+        return self.get_paginated_response(serializer.data)
 
     # POST /api/lend/
     def create(self, request):
@@ -95,12 +90,8 @@ class LendInfoViewSet(viewsets.GenericViewSet):
         user = request.user
         lend_infos = user.lend_infos.all()
         page = self.paginate_queryset(lend_infos)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        data = self.get_serializer(lend_infos, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class LendImageViewSet(viewsets.GenericViewSet):
