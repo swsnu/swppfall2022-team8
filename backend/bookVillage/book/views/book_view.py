@@ -23,7 +23,6 @@ class BookViewSet(viewsets.GenericViewSet):
             .extra(select={"length": "Length(title)"})
             .order_by("title")
             .filter(title__istartswith=title)
-            .distinct()
         )
         books = books[:7]
         serializer = self.get_serializer(books, many=True)
