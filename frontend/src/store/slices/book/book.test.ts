@@ -35,26 +35,13 @@ describe('book reducer', () => {
 
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
-      countBook: 0,
-      nextBook: null,
-      prevBook: null,
       books: [],
       selectedBook: null,
-      countTag: 0,
-      nextTag: null,
-      prevTag: null,
       tags: []
     })
   })
   it('should handle fetchQueryBooks', async () => {
-    axios.get = jest.fn().mockResolvedValue({
-      data: {
-        count: 1,
-        next: null,
-        previous: null,
-        results: [fakeBook1]
-      }
-    })
+    axios.get = jest.fn().mockResolvedValue({ data: [fakeBook1] })
     await store.dispatch(fetchQueryBooks({ title: 'BOOK_TEST_TITLE' }))
     expect(store.getState().book.books).toEqual([fakeBook1])
   })
@@ -101,15 +88,8 @@ describe('book reducer', () => {
     expect(result.type).toBe(`${createBook.typePrefix}/rejected`)
   })
   it('should handle fetchQueryTags', async () => {
-    axios.get = jest.fn().mockResolvedValue({
-      data: {
-        count: 1,
-        next: null,
-        previous: null,
-        results: ['BOOK_TEST_TAG']
-      }
-    })
-    await store.dispatch(fetchQueryTags())
+    axios.get = jest.fn().mockResolvedValue({ data: ['BOOK_TEST_TAG'] })
+    await store.dispatch(fetchQueryTags({ name: 'BOOK_TEST_TAG' }))
     expect(store.getState().book.tags).toEqual(['BOOK_TEST_TAG'])
   })
 })

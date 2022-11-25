@@ -17,30 +17,10 @@ export interface BookType {
 };
 
 export interface BookState {
-  countBook: number
-  nextBook: string | null
-  prevBook: string | null
   books: BookType[]
   selectedBook: BookType | null
-  countTag: number
-  nextTag: string | null
-  prevTag: string | null
   tags: string[]
 };
-
-export interface BookPageResponse {
-  count: number
-  next: string | null
-  previous: string | null
-  results: BookType[]
-}
-
-export interface TagPageResponse {
-  count: number
-  next: string | null
-  previous: string | null
-  results: string[]
-}
 
 /*
  * Async thunks
@@ -48,8 +28,8 @@ export interface TagPageResponse {
 
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
-  async (params: { title?: string, author?: string, tag?: string[], page?: number }) => {
-    const response = await axios.get<BookPageResponse>('/api/book/', { params })
+  async (params: { title: string }) => {
+    const response = await axios.get<BookType[]>('/api/book/', { params })
     return response.data
   }
 )
@@ -91,8 +71,8 @@ export const deleteBook = createAsyncThunk(
 
 export const fetchQueryTags = createAsyncThunk(
   'book/fetchQueryTags',
-  async (params?: { page: number }) => {
-    const response = await axios.get<TagPageResponse>('/api/book/tag/', { params })
+  async (params: { name: string }) => {
+    const response = await axios.get<string[]>('/api/book/tag/', { params })
     return response.data
   }
 )
@@ -102,14 +82,8 @@ export const fetchQueryTags = createAsyncThunk(
  */
 
 const initialState: BookState = {
-  countBook: 0,
-  nextBook: null,
-  prevBook: null,
   books: [],
   selectedBook: null,
-  countTag: 0,
-  nextTag: null,
-  prevTag: null,
   tags: []
 }
 
@@ -145,10 +119,7 @@ export const bookSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQueryBooks.fulfilled, (state, action) => {
-      state.countBook = action.payload.count
-      state.nextBook = action.payload.next
-      state.prevBook = action.payload.previous
-      state.books = action.payload.results
+      state.books = action.payload
     })
     builder.addCase(fetchBook.fulfilled, (state, action) => {
       state.selectedBook = action.payload
@@ -157,10 +128,7 @@ export const bookSlice = createSlice({
       console.error(action.error)
     })
     builder.addCase(fetchQueryTags.fulfilled, (state, action) => {
-      state.countTag = action.payload.count
-      state.nextTag = action.payload.next
-      state.prevTag = action.payload.previous
-      state.tags = action.payload.results
+      state.tags = action.payload
     })
   }
 })

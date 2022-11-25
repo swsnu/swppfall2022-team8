@@ -356,15 +356,36 @@ describe('<UserStatusPage />', () => {
       const parsedUrl = url.split('/')
       const op = parsedUrl[2]
       if (op === 'lend') {
-        return Promise.resolve({ data: [fakeLend] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
       } else if (op === 'borrow') {
-        return Promise.resolve({ data: [fakeBorrow] })
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
       } else { // op === user
         const op2 = parsedUrl[3]
         if (op2 === 'tag') {
           return Promise.resolve({ data: [fakeTag] })
         } else if (op2 === 'watch') {
-          return Promise.resolve({ data: [fakeLend] })
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
         } else {
           return Promise.resolve({ data: fakeRecommend })
         }

@@ -181,10 +181,6 @@ const ChattingPage = () => {
 
     if (response.type === `${fetchLend.typePrefix}/fulfilled`) {
       const data = response.payload as LendType
-      if (!data.status) {
-        alert('Unable to load lending status')
-        return
-      }
       const borrowStatus = data.status as BorrowType
       const toggleResponse = await dispatch(toggleBorrowStatus(borrowStatus.id))
 

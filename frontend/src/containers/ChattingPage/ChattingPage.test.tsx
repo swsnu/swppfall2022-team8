@@ -501,48 +501,6 @@ describe('<ChattingPage />', () => {
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on create borrow'))
   })
-  it('should handle confirm return errors', async () => {
-    // given
-    globalThis.alert = jest.fn()
-    globalThis.confirm = jest.fn().mockReturnValue(true)
-    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
-      const op = url.split('/')[2]
-      const data = (op === 'room')
-        ? { next: fakeCursor, previous: null, results: [fakeRoom] }
-        : fakeLend
-      return Promise.resolve({ data })
-    })
-    jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({
-      data: fakeBorrow
-    }))
-    renderWithProviders(<ChattingPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeLender
-        }
-      }
-    })
-    const roomButton = await screen.findByTestId('spyRoomButton0')
-    await act(() => {
-      fireEvent.click(roomButton)
-    })
-    const confirmLendingButton = await screen.findByText('Confirm lending')
-    await act(() => {
-      fireEvent.click(confirmLendingButton)
-    })
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm lending?'))
-
-    // when
-    const confirmReturnButton = await screen.findByText('Confirm return')
-    await act(() => {
-      fireEvent.click(confirmReturnButton)
-    })
-
-    // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Unable to load lending status'))
-  })
   it('should handle toggle borrow status error', async () => {
     // given
     globalThis.alert = jest.fn()

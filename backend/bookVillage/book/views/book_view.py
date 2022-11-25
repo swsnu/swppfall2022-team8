@@ -2,7 +2,6 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from book.pagination import BookPageNumberPagination
 from book.models.book import Book, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
 
@@ -11,7 +10,6 @@ class BookViewSet(viewsets.GenericViewSet):
     queryset = Book.objects.all().prefetch_related("tags")
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
-    pagination_class = BookPageNumberPagination
     page_size = 12
 
     def get_permissions(self):
@@ -20,22 +18,16 @@ class BookViewSet(viewsets.GenericViewSet):
     # GET /api/book/
     def list(self, request):
         title = request.GET.get("title", "")
-        author = request.GET.get("author", "")
-        tags = request.GET.getlist("tag[]", [])
         books = (
             self.get_queryset()
-            .filter(
-                title__icontains=title,
-                author__icontains=author,
-            )
+            .extra(select={"length": "Length(title)"})
+            .order_by("title")
+            .filter(title__istartswith=title)
             .distinct()
         )
-        if tags:
-            books = books.filter(tags__name__in=tags).distinct()
-        books = books[:100]
-        page = self.paginate_queryset(books)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        books = books[:7]
+        serializer = self.get_serializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # POST /api/book/
     def create(self, request):
