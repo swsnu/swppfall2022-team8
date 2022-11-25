@@ -11,8 +11,8 @@ class BookTest(APITestCase):
         cls.user = User.objects.create_user(username="a", password="a")
         cls.tag_0 = Tag.objects.create(name="tag0")
         cls.tag_1 = Tag.objects.create(name="tag1")
-        cls.book_0 = Book.objects.create(title="book0", author="aa")
-        cls.book_1 = Book.objects.create(title="book1", author="bb")
+        cls.book_0 = Book.objects.create(title="a_book0", author="aa")
+        cls.book_1 = Book.objects.create(title="b_book1", author="bb")
         BookTag.objects.create(tag=cls.tag_0, book=cls.book_0)
         BookTag.objects.create(tag=cls.tag_1, book=cls.book_1)
 
@@ -23,45 +23,16 @@ class BookTest(APITestCase):
     def test_list(self):
         # when
         res = self.client.get("/api/book/")
-        data = res.data["results"]
+        data = res.data
 
         # then
         assert res.status_code == status.HTTP_200_OK
         assert len(data) == 2
 
-    def test_list_query_title_부분문자열(self):
+    def test_list_query_title_검색어로_시작하는_제목_가진_책_반환(self):
         # when
-        res = self.client.get("/api/book/?title=0")
-        data = res.data["results"]
-
-        # then
-        assert res.status_code == status.HTTP_200_OK
-        assert len(data) == 1
-        assert data[0]["id"] == self.book_0.id
-
-    def test_list_query_author_부분문자열(self):
-        # when
-        res = self.client.get("/api/book/?author=b")
-        data = res.data["results"]
-
-        # then
-        assert res.status_code == status.HTTP_200_OK
-        assert len(data) == 1
-        assert data[0]["id"] == self.book_1.id
-
-    def test_list_query_tag_부분문자열_실패(self):
-        # when
-        res = self.client.get("/api/book/?tag[]=0")
-        data = res.data["results"]
-
-        # then
-        assert res.status_code == status.HTTP_200_OK
-        assert len(data) == 0
-
-    def test_list_query_tag_성공(self):
-        # when
-        res = self.client.get("/api/book/?tag[]=tag0")
-        data = res.data["results"]
+        res = self.client.get("/api/book/?title=a")
+        data = res.data
 
         # then
         assert res.status_code == status.HTTP_200_OK
@@ -110,7 +81,7 @@ class BookTest(APITestCase):
 
         # then
         assert res.status_code == status.HTTP_200_OK
-        assert res.data["title"] == "book0"
+        assert res.data["title"] == "a_book0"
 
     def test_retrieve_실패(self):
         # when

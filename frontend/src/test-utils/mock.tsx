@@ -17,14 +17,8 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 
 export const rootInitialState: RootState = {
   book: {
-    countBook: 0,
-    nextBook: null,
-    prevBook: null,
     books: [],
     selectedBook: null,
-    countTag: 0,
-    nextTag: null,
-    prevTag: null,
     tags: []
   },
   lend: {
