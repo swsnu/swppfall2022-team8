@@ -10,8 +10,13 @@ import BookListEntity from '../../components/BookListEntity/BookListEntity'
 import NavBar from '../../components/NavBar/NavBar'
 import { Button, Form, InputGroup, Row } from 'react-bootstrap'
 import './UserStatusPage.css'
+import PageButton from '../../components/PageButton/PageButton'
 
 const UserStatusPage = () => {
+  const [lendPage, setLendPage] = useState<number>(1)
+  const [borrowPage, setBorrowPage] = useState<number>(1)
+  const [watchPage, setWatchPage] = useState<number>(1)
+
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const userState = useSelector(selectUser)
@@ -70,6 +75,21 @@ const UserStatusPage = () => {
     }
   }
 
+  const lendPageClickHandler = (page: number) => {
+    dispatch(fetchUserLends({ page }))
+    setLendPage(page)
+  }
+
+  const borrowPageClickHandler = (page: number) => {
+    dispatch(fetchUserBorrows({ page }))
+    setBorrowPage(page)
+  }
+
+  const watchPageClickHandler = (page: number) => {
+    dispatch(fetchWatch({ page }))
+    setWatchPage(page)
+  }
+
   return (
     <div className='user-status-page'>
       <NavBar />
@@ -95,6 +115,11 @@ const UserStatusPage = () => {
             </>
         }
       </div>
+      <PageButton
+        currPage={lendPage}
+        numPage={Math.ceil(lendState.count / 12)}
+        handleClick={lendPageClickHandler}
+      />
       <br />
       <h3>Borrow List</h3>
       <div className='booklist'>
@@ -109,11 +134,16 @@ const UserStatusPage = () => {
             </div>
           ))
           : <>
-            <h5><br/><br/><br/><br/></h5>
-            <h5 className='empty-text'>Empty</h5>
-          </>
-      }
+              <h5><br/><br/><br/><br/></h5>
+              <h5 className='empty-text'>Empty</h5>
+            </>
+        }
       </div>
+      <PageButton
+        currPage={borrowPage}
+        numPage={Math.ceil(borrowState.count / 12)}
+        handleClick={borrowPageClickHandler}
+      />
       <br />
       <h3>Watch List</h3>
       <div className='booklist'>
@@ -132,8 +162,13 @@ const UserStatusPage = () => {
               <h5><br/><br/><br/><br/></h5>
               <h5 className='empty-text'>Empty</h5>
             </>
-      }
+        }
       </div>
+      <PageButton
+        currPage={watchPage}
+        numPage={Math.ceil(userState.count / 12)}
+        handleClick={watchPageClickHandler}
+      />
       <br />
       <Form>
         <InputGroup as={Row} className='input-class' id='tags-input-form'>

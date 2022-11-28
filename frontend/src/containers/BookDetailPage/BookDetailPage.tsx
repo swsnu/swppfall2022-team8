@@ -13,6 +13,10 @@ import './BookDetailPage.css'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
+  const [tagPage, setTagPage] = useState<number>(1)
+
+  const tagMin = 10 * (tagPage - 1)
+  const tagMax = 10 * tagPage
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -88,7 +92,18 @@ const BookDetailPage = () => {
           <br />
           <br />
           <div>
-            {lendState.selectedLend?.book_info.tags.map((tag) => ('#' + tag + ' '))}
+            {lendState.selectedLend?.book_info.tags.slice(tagMin, tagMax).map((tag) => ('#' + tag + ' '))}
+            <br />
+            <button
+              type="button"
+              disabled={!lendState.selectedLend || tagMin <= 0}
+              onClick={() => setTagPage(old => old - 1)}
+            >Prev</button>
+            <button
+              type="button"
+              disabled={!lendState.selectedLend || tagMax >= lendState.selectedLend.book_info.tags.length}
+              onClick={() => setTagPage(old => old + 1)}
+            >Next</button>
           </div>
           <br />
           <div className='addinfo'>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import QueryString from 'qs'
 
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
@@ -10,15 +10,25 @@ import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
 
 import './BookListPage.css'
+import PageButton from '../../components/PageButton/PageButton'
 
 const BookListPage = () => {
   const { search } = useLocation()
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
   const lendState = useSelector(selectLend)
 
+  const params = QueryString.parse(search, { ignoreQueryPrefix: true })
+
   useEffect(() => {
-    dispatch(fetchQueryLends(QueryString.parse(search, { ignoreQueryPrefix: true })))
+    dispatch(fetchQueryLends(params))
   }, [search, dispatch])
+
+  const pageClickHandler = (page: number) => {
+    params.page = String(page)
+    navigate(`/search?${QueryString.stringify(params)}`)
+    window.scrollTo(0, 0)
+  }
 
   return (
     <div className='page'>
@@ -27,7 +37,7 @@ const BookListPage = () => {
       <br/>
       <br />
 
-      <SearchBar {...QueryString.parse(search, { ignoreQueryPrefix: true })} />
+      <SearchBar {...params} />
       <br />
       <h3><b>Result</b></h3>
       <div className='booklist'>
@@ -41,6 +51,11 @@ const BookListPage = () => {
           </div>
         ))}
       </div>
+      <PageButton
+        currPage={params.page ? Number(params.page) : 1}
+        numPage={Math.ceil(lendState.count / 12)}
+        handleClick={pageClickHandler}
+      />
     </div>
   )
 }

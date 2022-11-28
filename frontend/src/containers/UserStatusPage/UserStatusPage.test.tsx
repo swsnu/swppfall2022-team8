@@ -403,4 +403,78 @@ describe('<UserStatusPage />', () => {
     })
     unmount()
   })
+  it('should handle pagination', async () => {
+    // given
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const parsedUrl = url.split('/')
+      const op = parsedUrl[2]
+      if (op === 'lend') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
+      } else if (op === 'borrow') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
+      } else { // op === user
+        const op2 = parsedUrl[3]
+        if (op2 === 'tag') {
+          return Promise.resolve({ data: [fakeTag] })
+        } else { // op2 === watch
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
+        }
+      }
+    })
+    jest.spyOn(axios, 'put').mockImplementation((url, data) => {
+      const typedData = data as ToggleTagRequestType
+      const tag = typedData.tag
+      if (typeof tag === 'string') {
+        return Promise.resolve({
+          data: { tag: fakeUpdateTag, created: true }
+        })
+      } else {
+        return Promise.resolve({
+          data: { tag: fakeTag, created: false }
+        })
+      }
+    })
+
+    await act(() => {
+      renderWithProviders(<UserStatusPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          }
+        }
+      })
+    })
+
+    // when
+    const buttons = await screen.findAllByText('1')
+    const lendPage = buttons[0]
+    const borrowPage = buttons[1]
+    const watchPage = buttons[2]
+    fireEvent.click(lendPage)
+    fireEvent.click(borrowPage)
+    fireEvent.click(watchPage)
+  })
 })
