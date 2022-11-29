@@ -60,10 +60,14 @@ const BookDetailPage = () => {
           </div>
           <div>
             {lendState.selectedLend?.images?.length
-              ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+              ? <Carousel
+                  activeIndex={lendImageIdx}
+                  onSelect={handleSelect}
+                >
                 {lendState.selectedLend?.images.map((image, idx) => (
                   <Carousel.Item key={`lendImage_${idx}`}>
                     <img
+                      className='lend-image-carousel'
                       src={image.image}
                       width={'100%'}
                       alt="Image Not Found"
