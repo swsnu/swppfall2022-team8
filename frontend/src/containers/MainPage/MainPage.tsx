@@ -35,6 +35,8 @@ const MainPage = () => {
         </div>
       </div>
       <div id='main-recommend'>
+        <br/>
+        <h1><b>Recommendation For You...</b></h1>
         <Recommend />
       </div>
     </div>

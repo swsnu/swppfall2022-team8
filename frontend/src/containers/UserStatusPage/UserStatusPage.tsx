@@ -91,7 +91,7 @@ const UserStatusPage = () => {
           ))
           : <>
               <h5><br/><br/><br/><br/></h5>
-              <h5 className='empty-text'>Empty</h5>
+              <h5 className='empty-text'></h5>
             </>
         }
       </div>

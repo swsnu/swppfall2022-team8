@@ -1,0 +1,21 @@
+#chatting-room-list {
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.chatting-room {
+    border: 2px solid grey;
+    border-radius: 10px;
+    height: 100px;
+    transition: all 0.1s linear;
+    margin: 10px;
+}
+
+.chatting-room:hover {
+    background-color: rgb(199, 199, 199);
+    cursor: pointer;
+}
+
+#chat-with-text {
+    margin-top: auto;
+}

@@ -16,7 +16,7 @@
 
 .book-list-entity:hover {
   background-color: rgb(199, 199, 199);
-  transform: scale(1.1);
+  transform: scale(1.07);
   cursor: pointer;
 }
 
