@@ -12,10 +12,21 @@
   word-wrap: break-word;
   transition: all 0.2s linear;
   overflow: hidden;
+  animation: fadein 1s;
 }
 
+@keyframes fadein {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+
 .book-list-entity:hover {
-  background-color: rgb(199, 199, 199);
+  filter: brightness(70%);
   transform: scale(1.07);
   cursor: pointer;
 }

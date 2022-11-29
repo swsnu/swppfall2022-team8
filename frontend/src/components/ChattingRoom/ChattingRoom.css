@@ -13,6 +13,7 @@
   margin: 0 auto;
   margin-bottom: 10px;
   padding: 20px;
+  overflow-x: visible;
   overflow-y: scroll
 }
 
@@ -26,6 +27,7 @@
   padding-right: 10px;
   text-align: right;
   width: fit-content;
+  max-width: 100%;
   margin-left: auto;
   margin-right: 0px;
 }
@@ -36,6 +38,7 @@
   padding-right: 10px;
   text-align: left;
   width: fit-content;
+  max-width: 100%;
   margin-left: 0px;
   margin-right: auto;
 }
@@ -58,6 +61,8 @@
   border-radius: 5px;
   background-color: rgb(255, 255, 194);
   animation: fadein 0.2s;
+  max-width: 100%;
+  word-wrap:break-word;
 }
 
 .chat-text-other {
@@ -69,6 +74,8 @@
   border-radius: 5px;
   background-color: rgb(194, 248, 255);
   animation: fadein 0.2s;
+  max-width: 100%;
+  word-wrap:break-word;
 }
 
 .chat-text-info {

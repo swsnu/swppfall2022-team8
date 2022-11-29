@@ -33,7 +33,7 @@ const ChattingRoomList = (props: IProps) => {
             className='chatting-room'
             onClick={() => props.enterRoom(room)}
           >
-            <h3 id='chat-with-text'>[{othersPosition}] chat with {othersUsername}</h3>
+            <h3 id='chat-with-text'>[{othersPosition}] {othersUsername}</h3>
           </div>
         )
       })}
