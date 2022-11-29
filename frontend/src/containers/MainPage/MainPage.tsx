@@ -31,7 +31,7 @@ const MainPage = () => {
           <h2 id='register-h2'><b>Register your book and lend it to other people!</b></h2>
           <br/>
           <br/>
-          <div><RegisterButton /></div>
+          <div id='main-register-button'><RegisterButton /></div>
         </div>
       </div>
       <div id='main-recommend'>

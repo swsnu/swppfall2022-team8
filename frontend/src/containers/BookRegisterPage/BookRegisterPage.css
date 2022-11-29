@@ -5,6 +5,12 @@
     padding-bottom: 20px;
 }
 
+#breif-summary-description {
+    font-size: small;
+    color: grey;
+    font-weight: normal;
+}
+
 .book-edit {
     border: 0px solid rgb(119, 170, 235);
     display: inline-block;

@@ -91,7 +91,7 @@ const UserStatusPage = () => {
   }
 
   return (
-    <div className='user-status-page'>
+    <div className='page'>
       <NavBar />
       <br />
       <h1>User Info</h1>
@@ -115,11 +115,15 @@ const UserStatusPage = () => {
             </>
         }
       </div>
-      <PageButton
-        currPage={lendPage}
-        numPage={Math.ceil(lendState.count / 12)}
-        handleClick={lendPageClickHandler}
-      />
+      <div>
+        <div className='page-button'>
+          <PageButton
+            currPage={lendPage}
+            numPage={Math.ceil(lendState.count / 12)}
+            handleClick={lendPageClickHandler}
+          />
+        </div>
+      </div>
       <br />
       <h3>Borrow List</h3>
       <div className='booklist'>
@@ -138,11 +142,15 @@ const UserStatusPage = () => {
             </>
       }
       </div>
-      <PageButton
-        currPage={borrowPage}
-        numPage={Math.ceil(borrowState.count / 12)}
-        handleClick={borrowPageClickHandler}
-      />
+      <div>
+        <div className='page-button'>
+          <PageButton
+            currPage={borrowPage}
+            numPage={Math.ceil(borrowState.count / 12)}
+            handleClick={borrowPageClickHandler}
+          />
+        </div>
+      </div>
       <br />
       <h3>Watch List</h3>
       <div className='booklist'>
@@ -162,11 +170,15 @@ const UserStatusPage = () => {
             </>
         }
       </div>
-      <PageButton
-        currPage={watchPage}
-        numPage={Math.ceil(userState.count / 12)}
-        handleClick={watchPageClickHandler}
-      />
+      <div>
+        <div className='page-button'>
+          <PageButton
+            currPage={watchPage}
+            numPage={Math.ceil(userState.count / 12)}
+            handleClick={watchPageClickHandler}
+          />
+        </div>
+      </div>
       <br />
       <Form>
         <InputGroup as={Row} className='input-class' id='tags-input-form'>

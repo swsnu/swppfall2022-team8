@@ -96,6 +96,11 @@
     animation: fadein 6s;
 }
 
+#main-register-button {
+    margin: auto;
+    width: 50%;
+}
+
 @media (max-width: 1200px) {
     #welcome-description {
         margin-top: 20px;

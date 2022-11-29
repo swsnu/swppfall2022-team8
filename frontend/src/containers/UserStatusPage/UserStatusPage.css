@@ -38,3 +38,8 @@
     height: 200px;
     margin: auto;
 }
+
+.page-button {
+    margin: auto;
+    width: fit-content;
+}

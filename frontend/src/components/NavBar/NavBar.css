@@ -21,3 +21,8 @@
     width: 1500px;
     margin: auto;
 }
+
+.offcanvas-button {
+    margin-right: 0;
+    width: fit-content;
+}
