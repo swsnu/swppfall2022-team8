@@ -6,7 +6,7 @@
 }
 
 .book-edit {
-    border: 3px solid rgb(119, 170, 235);
+    border: 0px solid rgb(119, 170, 235);
     display: inline-block;
     text-align: left;
     width: 1000px
@@ -91,4 +91,8 @@ h1 {
 #register-button {
     text-align: center;
     width: 100%;
+}
+
+@media (max-width: 1200px) {
+
 }

@@ -228,6 +228,7 @@ const BookRegisterPage = () => {
             <Form.Group as={Row} className='input-class' id='brief-summary-input-form'>
               <Form.Label id='brief-summary-text'><h5>Brief Summary</h5>
                 <br />
+                <h5 id='breif-summary-description'>Write down a brief summary of your book</h5>
                 <br />
                 <div>
                   <Form.Control

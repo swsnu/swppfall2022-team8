@@ -4,7 +4,7 @@
 }
 
 .chatting-room {
-    border: 2px solid grey;
+    border: 2px solid grey ;
     border-radius: 10px;
     height: 100px;
     transition: all 0.1s linear;
