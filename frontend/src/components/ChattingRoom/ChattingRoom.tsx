@@ -69,14 +69,19 @@ const ChattingRoom = (props: IProps) => {
           {chatList.map(chat => (
             <div
               key={`chat_${chat.id}`}
-              className={`chat-message-${(chat.author === userID) ? 'me' : 'other'} ${chat.rank}`}
+              className={`chat-message-${
+                (chat.rank === 'info')
+                  ? 'info'
+                  : (chat.author === userID) ? 'me' : 'other'
+                }`
+              }
             >
-              <p className={`chat-text-${(chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
+              <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
             </div>
           ))}
         </div>
         <div>
-          <InputGroup className='mb-3' id='chat-input'>
+          <InputGroup className='mb-3' id='chat-input-group'>
             <Form.Control
               id='chat-input'
               type='text'
