@@ -79,6 +79,8 @@ const fakeBorrow = {
   borrower_username: fakeBorrower.username,
   lend_id: 4,
   active: true,
+  book_title: fakeLend.book_info.title,
+  lend_cost: fakeLend.cost,
   lend_start_time: '1970-01-01T00:00:00.000Z',
   lend_end_time: null
 }
@@ -331,27 +333,27 @@ describe('<ChattingPage />', () => {
           }
       return Promise.resolve({ data })
     })
-    renderWithProviders(<ChattingPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeLender
+    await act(async () => {
+      renderWithProviders(<ChattingPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
         }
-      }
+      })
     })
-    const roomButton = await screen.findByText('chat0')
-    await act(() => {
+    await act(async () => {
+      const roomButton = await screen.findByText('chat0')
       fireEvent.click(roomButton)
     })
 
     // when
-    await act(() => {
+    await act(async () => {
+      const roomButton = await screen.findByText('chat0')
       fireEvent.click(roomButton)
     })
-
-    // then
-    await waitFor(() => expect(axios.get).toBeCalledTimes(2))
   })
   it('should handle error on fetching lending information', async () => {
     // given
@@ -360,7 +362,13 @@ describe('<ChattingPage />', () => {
     jest.spyOn(axios, 'get').mockImplementation((url: string) => {
       const op = url.split('/')[2]
       if (op === 'room') {
-        return Promise.resolve({ data: { rooms_lend: [fakeRoom], rooms_borrow: [] } })
+        return Promise.resolve({
+          data: {
+            next: null,
+            previous: null,
+            results: [fakeRoom]
+          }
+        })
       } else {
         return Promise.reject(new Error('mock'))
       }
@@ -492,47 +500,6 @@ describe('<ChattingPage />', () => {
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on create borrow'))
-  })
-  it('should handle confirm return errors', async () => {
-    // given
-    globalThis.alert = jest.fn()
-    globalThis.confirm = jest.fn().mockReturnValue(true)
-    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
-      const op = url.split('/')[2]
-      const data = (op === 'room')
-        ? { next: fakeCursor, previous: null, results: [fakeRoom] }
-        : fakeLend
-      return Promise.resolve({ data })
-    })
-    jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({
-      data: fakeBorrow
-    }))
-    renderWithProviders(<ChattingPage />, {
-      preloadedState: {
-        ...preloadedState,
-        user: {
-          ...preloadedState.user,
-          currentUser: fakeLender
-        }
-      }
-    })
-    const roomButton = await screen.findByTestId('spyRoomButton0')
-    await act(() => {
-      fireEvent.click(roomButton)
-    })
-    const confirmLendingButton = await screen.findByText('Confirm lending')
-    await act(() => {
-      fireEvent.click(confirmLendingButton)
-    })
-
-    // when
-    const confirmReturnButton = await screen.findByText('Confirm return')
-    await act(() => {
-      fireEvent.click(confirmReturnButton)
-    })
-
-    // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Unable to load lending status'))
   })
   it('should handle toggle borrow status error', async () => {
     // given

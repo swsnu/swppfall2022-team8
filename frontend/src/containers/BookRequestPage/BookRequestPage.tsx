@@ -76,7 +76,7 @@ const BookRequestPage = () => {
         <div>
           <Card
             style={ { width: '18rem' } }
-            onClick={() => navigate(`/book/${(lendState.selectedLend != null) ? lendState.selectedLend.book_info.title : ''}`)}
+            onClick={() => navigate(`/book/${(lendState.selectedLend !== null) ? lendState.selectedLend.id : ''}`)}
             className='book-list-entity'
           >
             <Card.Img variant='top' src={lendState.selectedLend?.book_info.image} className='book-entity-image'/>

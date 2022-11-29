@@ -1,7 +1,7 @@
 import { AnyAction, configureStore, EnhancedStore, ThunkMiddleware } from '@reduxjs/toolkit'
 import { waitFor } from '@testing-library/react'
 import axios from 'axios'
-import reducer, { BookState, createBook, deleteBook, fetchBook, fetchQueryBooks, updateBook } from './book'
+import reducer, { BookState, createBook, deleteBook, fetchBook, fetchQueryBooks, fetchQueryTags, updateBook } from './book'
 
 describe('book reducer', () => {
   let store: EnhancedStore<{ book: BookState }, AnyAction, [ThunkMiddleware<{ book: BookState }, AnyAction, undefined>]>
@@ -36,7 +36,8 @@ describe('book reducer', () => {
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
       books: [],
-      selectedBook: null
+      selectedBook: null,
+      tags: []
     })
   })
   it('should handle fetchQueryBooks', async () => {
@@ -85,5 +86,10 @@ describe('book reducer', () => {
       createBook(formData)
     )
     expect(result.type).toBe(`${createBook.typePrefix}/rejected`)
+  })
+  it('should handle fetchQueryTags', async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: ['BOOK_TEST_TAG'] })
+    await store.dispatch(fetchQueryTags({ name: 'BOOK_TEST_TAG' }))
+    expect(store.getState().book.tags).toEqual(['BOOK_TEST_TAG'])
   })
 })

@@ -25,42 +25,38 @@ describe('lend reducer', () => {
     additional: 'LEND_TEST_ADDITIONAL',
     status: null
   }
+  const mockData = {
+    ...fakeLend
+  }
   beforeAll(() => {
     store = configureStore({ reducer: { lend: reducer } })
   })
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
+      count: 0,
+      next: null,
+      prev: null,
       lends: [],
       userLends: [],
       selectedLend: null
     })
   })
   it('should handle fetchQueryLends', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeLend] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
+    })
     await store.dispatch(fetchQueryLends({ title: 'LEND_TEST_TITLE' }))
     expect(store.getState().lend.lends).toEqual([fakeLend])
   })
   it('should handle createLend', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: fakeLend })
     const result = await store.dispatch(
-      createLend({
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'LEND_TEST_TITLE',
-          author: 'LEND_TEST_AUTHOR',
-          tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
-          brief: 'LEND_TEST_BRIEF'
-        },
-        owner: 3,
-        owner_username: 'LEND_TEST_OWNER_USERNAME',
-        questions: [
-          'LEND_TEST_QUESTION_1',
-          'LEND_TEST_QUESTION_2'
-        ],
-        cost: 3000,
-        additional: 'LEND_TEST_ADDITIONAL'
-      })
+      createLend(mockData)
     )
     expect(result.type).toBe(`${createLend.typePrefix}/fulfilled`)
     expect(store.getState().lend.lends.length).toEqual(2)
@@ -78,50 +74,16 @@ describe('lend reducer', () => {
   it('should handle updateLend', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: fakeLend })
     await store.dispatch(
-      createLend({
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'LEND_TEST_TITLE',
-          author: 'LEND_TEST_AUTHOR',
-          tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
-          brief: 'LEND_TEST_BRIEF'
-        },
-        owner: 3,
-        owner_username: 'LEND_TEST_OWNER_USERNAME',
-        questions: [
-          'LEND_TEST_QUESTION_1',
-          'LEND_TEST_QUESTION_2'
-        ],
-        cost: 3000,
-        additional: 'LEND_TEST_ADDITIONAL'
-      })
+      createLend(mockData)
     )
     jest.spyOn(axios, 'post').mockResolvedValue({ data: { ...fakeLend, id: 3 } })
     await store.dispatch(
-      createLend({
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'LEND_TEST_TITLE',
-          author: 'LEND_TEST_AUTHOR',
-          tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
-          brief: 'LEND_TEST_BRIEF'
-        },
-        owner: 3,
-        owner_username: 'LEND_TEST_OWNER_USERNAME',
-        questions: [
-          'LEND_TEST_QUESTION_1',
-          'LEND_TEST_QUESTION_2'
-        ],
-        cost: 3000,
-        additional: 'LEND_TEST_ADDITIONAL'
-      })
+      createLend(mockData)
     )
     jest.spyOn(axios, 'put').mockResolvedValue({
       data: { ...fakeLend, additional: 'LEND_TEST_ADDITIONAL_CHNAGED' }
     })
-    await store.dispatch(updateLend(fakeLend))
+    await store.dispatch(updateLend(mockData))
     await waitFor(() => expect(store.getState().lend.lends.find(lend => lend.id === fakeLend.id)?.additional).toEqual('LEND_TEST_ADDITIONAL_CHNAGED'))
   })
   it('should handle createLend error', async () => {
@@ -129,29 +91,19 @@ describe('lend reducer', () => {
     window.console.error = mockConsole
     jest.spyOn(axios, 'post').mockRejectedValue({ data: null })
     const result = await store.dispatch(
-      createLend({
-        book: 1,
-        book_info: {
-          image: '',
-          title: 'LEND_TEST_TITLE',
-          author: 'LEND_TEST_AUTHOR',
-          tags: ['LEND_TEST_TAG_1', 'LEND_TEST_TAG_2'],
-          brief: 'LEND_TEST_BRIEF'
-        },
-        owner: 3,
-        owner_username: 'LEND_TEST_OWNER_USERNAME',
-        questions: [
-          'LEND_TEST_QUESTION_1',
-          'LEND_TEST_QUESTION_2'
-        ],
-        cost: 3000,
-        additional: 'LEND_TEST_ADDITIONAL'
-      })
+      createLend(mockData)
     )
     expect(result.type).toBe(`${createLend.typePrefix}/rejected`)
   })
   it('should handle fetchUserLends', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeLend] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
+    })
     await store.dispatch(fetchUserLends())
     expect(store.getState().lend.userLends).toEqual([fakeLend])
   })

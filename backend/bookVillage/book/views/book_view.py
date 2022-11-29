@@ -1,7 +1,8 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from book.models.book import Book, BookImage, Tag, BookTag
+from rest_framework.decorators import action
+from book.models.book import Book, Tag, BookTag
 from book.serializers.book_serializers import BookSerializer
 
 
@@ -9,6 +10,7 @@ class BookViewSet(viewsets.GenericViewSet):
     queryset = Book.objects.all().prefetch_related("tags")
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticated(),)
+    page_size = 12
 
     def get_permissions(self):
         return self.permission_classes
@@ -16,26 +18,19 @@ class BookViewSet(viewsets.GenericViewSet):
     # GET /api/book/
     def list(self, request):
         title = request.GET.get("title", "")
-        author = request.GET.get("author", "")
-        tags = request.GET.getlist("tag[]", [])
         books = (
             self.get_queryset()
-            .filter(
-                title__icontains=title,
-                author__icontains=author,
-            )
-            .distinct()
+            .extra(select={"length": "Length(title)"})
+            .order_by("title")
+            .filter(title__istartswith=title)
         )
-        if tags:
-            books = books.filter(tags__name__in=tags).distinct()
-        books = books[:100]
-        data = self.get_serializer(books, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        books = books[:7]
+        serializer = self.get_serializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # POST /api/book/
     def create(self, request):
         data = request.data
-        image_data = data.pop("image", None)
         tag_data = data.pop("tags", [])
         if not isinstance(tag_data, list):
             return Response(
@@ -48,16 +43,14 @@ class BookViewSet(viewsets.GenericViewSet):
         for name in tag_data:
             tag, created = Tag.objects.get_or_create(name=name)
             BookTag.objects.create(book=book, tag=tag)
-        if image_data:
-            BookImage.objects.create(book=book, image=image_data[0])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # GET /api/book/{book_id}
+    # GET /api/book/{book_id}/
     def retrieve(self, request, pk=None):
         book = self.get_object()
         return Response(self.get_serializer(book).data, status=status.HTTP_200_OK)
 
-    # PUT /api/book/{book_id}
+    # PUT /api/book/{book_id}/
     def update(self, request, pk=None):
         book = self.get_object()
         data = request.data.copy()
@@ -72,8 +65,23 @@ class BookViewSet(viewsets.GenericViewSet):
                 BookTag.objects.create(book=book, tag=tag)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # DELETE /api/book/{book_id}
+    # DELETE /api/book/{book_id}/
     def destroy(self, request, pk=None):
         book = self.get_object()
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # GET /api/book/tag/
+    @action(detail=False, methods=["GET"])
+    def tag(self, request):
+        from book.serializers.book_serializers import TagSerializer
+
+        name = request.GET.get("name", "")
+        tags = (
+            Tag.objects.extra(select={"length": "Length(name)"})
+            .order_by("length")
+            .filter(name__istartswith=name)
+        )
+        tags = tags[:7]
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -11,6 +11,7 @@ describe('borrow reducer', () => {
     borrower_username: 'BORROW_TEST_USERNAME',
     lend_id: 3,
     book_title: 'BORROW_TEST_BOOK_TITLE',
+    lend_cost: 3000,
     active: true,
     lend_start_time: '1970-01-01T00:00:00.000Z', // serialized Date object
     lend_end_time: null
@@ -20,12 +21,22 @@ describe('borrow reducer', () => {
   })
   it('should handle initial state', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual({
+      count: 0,
+      next: null,
+      prev: null,
       userBorrows: [],
       selectedBorrow: null
     })
   })
   it('should handle fetchUserBorrows', async () => {
-    axios.get = jest.fn().mockResolvedValue({ data: [fakeBorrow] })
+    axios.get = jest.fn().mockResolvedValue({
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeBorrow]
+      }
+    })
     await store.dispatch(fetchUserBorrows())
     expect(store.getState().borrow.userBorrows).toEqual([fakeBorrow])
   })
@@ -48,6 +59,8 @@ describe('borrow reducer', () => {
         borrower: 2,
         borrower_username: 'BORROW_TEST_USERNAME_CHANGED',
         lend_id: 3,
+        book_title: 'BORROW_TEST_BOOK_TITLE',
+        lend_cost: 3000,
         active: false,
         lend_start_time: '1970-01-01T00:00:00.000Z', // serialized Date object
         lend_end_time: null

@@ -49,7 +49,12 @@ const preloadedState: RootState = rootInitialState
 describe('<BookListPage />', () => {
   it('should render without error', async () => {
     jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({
-      data: [fakeLend]
+      data: {
+        count: 1,
+        next: null,
+        previous: null,
+        results: [fakeLend]
+      }
     }))
     await act(() => {
       renderWithProviders(<BookListPage />, {

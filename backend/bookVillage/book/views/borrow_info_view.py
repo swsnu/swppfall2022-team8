@@ -2,6 +2,7 @@ from django.utils.datetime_safe import datetime
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from book.pagination import BorrowPageNumberPagination
 from book.models.borrow_info import BorrowInfo
 from book.models.lend_info import LendInfo
 from book.serializers.borrrow_info_serializers import BorrowInfoSerializer
@@ -12,6 +13,7 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
     queryset = BorrowInfo.objects.all()
     serializer_class = BorrowInfoSerializer
     permission_classes = (IsAuthenticated(),)
+    pagination_class = BorrowPageNumberPagination
 
     def get_permissions(self):
         return self.permission_classes
@@ -68,9 +70,11 @@ class BorrowInfoViewSet(viewsets.GenericViewSet):
             self.get_serializer(borrow_info).data, status=status.HTTP_200_OK
         )
 
+    # GET /api/borrow/user/
     @action(detail=False, methods=["GET"])
     def user(self, request):
         user = request.user
-        borrow_infos = user.borrow_history
-        serializer = self.get_serializer(borrow_infos, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        borrow_infos = user.borrow_history.all()
+        page = self.paginate_queryset(borrow_infos)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

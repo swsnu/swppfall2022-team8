@@ -19,6 +19,7 @@ export interface BookType {
 export interface BookState {
   books: BookType[]
   selectedBook: BookType | null
+  tags: string[]
 };
 
 /*
@@ -27,7 +28,7 @@ export interface BookState {
 
 export const fetchQueryBooks = createAsyncThunk(
   'book/fetchQueryBooks',
-  async (params: { title?: string, author?: string, tag?: string[] }) => {
+  async (params: { title: string }) => {
     const response = await axios.get<BookType[]>('/api/book/', { params })
     return response.data
   }
@@ -68,13 +69,22 @@ export const deleteBook = createAsyncThunk(
   }
 )
 
+export const fetchQueryTags = createAsyncThunk(
+  'book/fetchQueryTags',
+  async (params: { name: string }) => {
+    const response = await axios.get<string[]>('/api/book/tag/', { params })
+    return response.data
+  }
+)
+
 /*
  * Book reducer
  */
 
 const initialState: BookState = {
   books: [],
-  selectedBook: null
+  selectedBook: null,
+  tags: []
 }
 
 export const bookSlice = createSlice({
@@ -116,6 +126,9 @@ export const bookSlice = createSlice({
     })
     builder.addCase(createBook.rejected, (_state, action) => {
       console.error(action.error)
+    })
+    builder.addCase(fetchQueryTags.fulfilled, (state, action) => {
+      state.tags = action.payload
     })
   }
 })

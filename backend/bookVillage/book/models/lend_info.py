@@ -23,3 +23,12 @@ class LendInfo(models.Model):
             if borrow_info.active:
                 return borrow_info
         return None
+
+
+def lend_image_upload_to(instance, filename):
+    return f"{instance.lend.id}/lend_{filename}"
+
+
+class LendImage(models.Model):
+    lend = models.ForeignKey(LendInfo, related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=lend_image_upload_to)

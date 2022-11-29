@@ -170,8 +170,8 @@ class UserRelatedTest(APITestCase):
 
         assert res0.status_code == status.HTTP_200_OK
         assert res1.status_code == status.HTTP_200_OK
-        assert len(res0.data) == 0
-        assert len(res1.data) == 2
+        assert len(res0.data["results"]) == 0
+        assert len(res1.data["results"]) == 2
 
     def test_put_tag_body_에_tag_없음(self):
         # when

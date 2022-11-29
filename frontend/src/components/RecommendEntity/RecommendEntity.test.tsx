@@ -1,9 +1,5 @@
-import { waitFor } from '@testing-library/react'
-import { RootState } from '../../store'
-import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
+import { render, waitFor } from '@testing-library/react'
 import RecommendEntity from './RecommendEntity'
-
-const preloadedState: RootState = rootInitialState
 
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
@@ -14,7 +10,7 @@ jest.mock('react-router', () => ({
 describe('<RecommendEntity />', () => {
   it('should handle onClick', async () => {
     // given
-    const { container } = renderWithProviders(<RecommendEntity idx={1} image='' title='test-title' />, { preloadedState })
+    const { container } = render(<RecommendEntity idx={1} image='' title='test-title' />)
     const info = container.getElementsByTagName('p').item(0)
 
     // when

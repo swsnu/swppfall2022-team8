@@ -1,9 +1,5 @@
-import { fireEvent, waitFor } from '@testing-library/react'
-import { RootState } from '../../store'
-import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import BookListEntity from './BookListEntity'
-
-const preloadedState: RootState = rootInitialState
 
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
@@ -12,11 +8,10 @@ jest.mock('react-router', () => ({
 }))
 
 describe('<BookListEntity />', () => {
-  it('should navigate when clicked (available)', async () => {
+  it('should navigate when clicked', async () => {
     // given
-    const { container } = renderWithProviders(
-      <BookListEntity id={1} image='' title='test-title' available={false} />,
-      { preloadedState }
+    const { container } = render(
+      <BookListEntity id={1} image='' title='test-title' available={false} />
     )
     const button = container.getElementsByClassName('book-list-entity')
 
@@ -25,16 +20,5 @@ describe('<BookListEntity />', () => {
 
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/book/1'))
-  })
-  it('should navigate when clicked (borrowed)', async () => {
-    // given
-    const { container } = renderWithProviders(
-      <BookListEntity id={1} image='' title='test-title' available={true} />,
-      { preloadedState }
-    )
-    const info = container.getElementsByTagName('h2')
-
-    // then
-    expect(info.item(1)?.innerHTML).toEqual('  Available!')
   })
 })

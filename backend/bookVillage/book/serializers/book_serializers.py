@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from django.contrib.auth.models import User
 from book.models.book import Book, Tag
+from django.conf import settings
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -11,11 +11,11 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
     title = serializers.CharField(required=True)
     author = serializers.CharField(required=True)
     tags = serializers.SerializerMethodField()
     brief = serializers.CharField(required=False)
+    image = serializers.ImageField(allow_empty_file=True, required=False)
 
     class Meta:
         model = Book
@@ -27,12 +27,6 @@ class BookSerializer(serializers.ModelSerializer):
             "tags",
             "brief",
         )
-
-    def get_image(self, book):
-        if hasattr(book, "bookimage"):
-            return book.bookimage.image.url
-        else:
-            return None
 
     def get_tags(self, book):
         tags = book.tags.all()

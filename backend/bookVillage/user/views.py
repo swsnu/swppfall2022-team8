@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -16,10 +17,15 @@ from user.tasks import recommend_with_tags
 # Create your views here.
 
 
+class UserPageNumberPagination(PageNumberPagination):
+    page_size = 12
+
+
 class UserViewSet(viewsets.GenericViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated(),)
+    pagination_class = UserPageNumberPagination
 
     def get_permissions(self):
         if self.action in ("create", "login"):
@@ -77,8 +83,10 @@ class UserViewSet(viewsets.GenericViewSet):
     def watch(self, request):
         from book.serializers.lend_info_serializers import LendInfoSerializer
 
-        data = LendInfoSerializer(request.user.watching_lends, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        qs = request.user.watching_lends.all()
+        page = self.paginate_queryset(qs)
+        serializer = LendInfoSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     # PUT /api/user/watch/
     @watch.mapping.put
@@ -174,6 +182,7 @@ class UserViewSet(viewsets.GenericViewSet):
         request.user.recommend.enqueue()
         return Response({"enqueued": True}, status=status.HTTP_200_OK)
 
+    # PUT /api/user/recommend/
     @recommend.mapping.put
     def put_recommend(self, request):
         recommend = request.user.recommend

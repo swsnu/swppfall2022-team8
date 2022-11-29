@@ -14,6 +14,9 @@ export interface UserType {
 }
 
 export interface UserState {
+  count: number
+  next: string | null
+  prev: string | null
   currentUser: UserType | null
   subscribed_tags: string[]
   watch_list: LendType[]
@@ -46,6 +49,13 @@ export interface RecommendType {
   recommend_list: BookType[]
 }
 
+export interface WatchPageResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: LendType[]
+}
+
 /*
  * Async thunks
  */
@@ -56,7 +66,9 @@ export const requestSignup = createAsyncThunk(
     const response = await axios.post('/api/user/', data)
     const { token, ...userData } = response.data
     if (token) {
-      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
+      const drfToken = `Token ${String(token)}`
+      sessionStorage.setItem('drf-token', drfToken)
+      axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
     return userData
@@ -69,7 +81,9 @@ export const requestLogin = createAsyncThunk(
     const response = await axios.post('/api/user/login/', data)
     const { token, ...userData } = response.data
     if (token) {
-      axios.defaults.headers.common.Authorization = `Token ${String(token)}`
+      const drfToken = `Token ${String(token)}`
+      sessionStorage.setItem('drf-token', drfToken)
+      axios.defaults.headers.common.Authorization = drfToken
       dispatch(userActions.login(userData))
     }
     return userData
@@ -80,6 +94,8 @@ export const requestLogout = createAsyncThunk(
   'user/requestLogout',
   async (data: never, { dispatch }) => {
     const response = await axios.put('/api/user/logout/')
+    axios.defaults.headers.common.Authorization = ''
+    sessionStorage.removeItem('drf-token')
     dispatch(userActions.logout())
     return response.data
   }
@@ -104,8 +120,8 @@ export const updateTag = createAsyncThunk(
 
 export const fetchWatch = createAsyncThunk(
   'user/fetchWatch',
-  async () => {
-    const response = await axios.get<LendType[]>('/api/user/watch/')
+  async (params?: { page: number }) => {
+    const response = await axios.get<WatchPageResponse>('/api/user/watch/', { params })
     return response.data
   }
 )
@@ -132,6 +148,9 @@ export const fetchRecommend = createAsyncThunk(
  */
 
 const initialState: UserState = {
+  count: 0,
+  next: null,
+  prev: null,
   currentUser: null,
   subscribed_tags: [],
   watch_list: [],
@@ -222,7 +241,10 @@ export const userSlice = createSlice({
       }
     })
     builder.addCase(fetchWatch.fulfilled, (state, action) => {
-      state.watch_list = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.watch_list = action.payload.results
     })
     builder.addCase(fetchRecommend.fulfilled, (state, action) => {
       state.recommend = action.payload

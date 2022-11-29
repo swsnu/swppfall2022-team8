@@ -18,18 +18,28 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export const rootInitialState: RootState = {
   book: {
     books: [],
-    selectedBook: null
+    selectedBook: null,
+    tags: []
   },
   lend: {
+    count: 0,
+    next: null,
+    prev: null,
     lends: [],
     userLends: [],
     selectedLend: null
   },
   borrow: {
+    count: 0,
+    next: null,
+    prev: null,
     userBorrows: [],
     selectedBorrow: null
   },
   user: {
+    count: 0,
+    next: null,
+    prev: null,
     currentUser: null,
     subscribed_tags: [],
     watch_list: [],

@@ -3,44 +3,27 @@ import { RootState } from '../../store'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import Recommend from './Recommend'
 
-let preloadedState: RootState = {
-  book: {
-    books: [],
-    selectedBook: null
-  },
-  lend: {
-    lends: [],
-    userLends: [],
-    selectedLend: null
-  },
-  borrow: {
-    userBorrows: [],
-    selectedBorrow: null
-  },
+const fakeRecommend = {
+  id: 291354,
+  image: '/media/291354/book_291354.jpg',
+  title: 'The Ruby Knight (The Elenium, #2)',
+  author: 'David Eddings',
+  tags: [
+    'fantasy'
+  ],
+  brief: 'The Ruby Knight'
+}
+
+const preloadedState: RootState = {
+  ...rootInitialState,
   user: {
-    currentUser: null,
-    subscribed_tags: [],
-    watch_list: [],
+    ...rootInitialState.user,
     recommend: {
       is_queued: true,
       is_outdated: true,
       enqueued: true,
-      recommend_list: [
-        {
-          id: 291354,
-          image: '/media/291354/book_291354.jpg',
-          title: 'The Ruby Knight (The Elenium, #2)',
-          author: 'David Eddings',
-          tags: [
-            'fantasy'
-          ],
-          brief: 'The Ruby Knight'
-        }
-      ]
+      recommend_list: [fakeRecommend]
     }
-  },
-  room: {
-    ...rootInitialState.room
   }
 }
 
@@ -56,7 +39,7 @@ const spyRecommendEntity = () => (
 jest.mock('../RecommendEntity/RecommendEntity', () => spyRecommendEntity)
 
 describe('<Recommend />', () => {
-  it('should handle click Button', async () => {
+  it('should handle click Button + outdated case', async () => {
     // given
     renderWithProviders(<Recommend />, { preloadedState })
     const button = screen.getByRole('button')
@@ -67,11 +50,45 @@ describe('<Recommend />', () => {
 
     // then
     expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')
+    await screen.findByText('Refresh!')
     await waitFor(() => expect(mockDispatch).toHaveBeenCalled())
   })
-  it('should render when no recommend_list', async () => {
+  it('should render when not outdated and no recommend_list', async () => {
     // given
-    preloadedState = rootInitialState
-    renderWithProviders(<Recommend />, { preloadedState })
+    renderWithProviders(<Recommend />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          recommend: {
+            ...preloadedState.user.recommend,
+            is_outdated: false,
+            recommend_list: []
+          }
+        }
+      }
+    })
+
+    // then
+    await screen.findByText('Please add your preference tag to use recommend system!')
+  })
+  it('should render when not outdated and recommend_list not empty', async () => {
+    // given
+    renderWithProviders(<Recommend />, {
+      preloadedState: {
+        ...preloadedState,
+        user: {
+          ...preloadedState.user,
+          recommend: {
+            ...preloadedState.user.recommend,
+            is_outdated: false
+          }
+        }
+      }
+    })
+    const recommendentity = screen.getByTestId('spyRecommendEntity')
+
+    // then
+    expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')
   })
 })

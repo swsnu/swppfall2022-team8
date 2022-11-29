@@ -1,9 +1,5 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { RootState } from '../../store'
-import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import RegisterBUtton from './RegisterButton'
-
-const preloadedState: RootState = rootInitialState
 
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
@@ -14,7 +10,7 @@ jest.mock('react-router', () => ({
 describe('<RegisterButton />', () => {
   it('should handle click Button', async () => {
     // given
-    renderWithProviders(<RegisterBUtton />, { preloadedState })
+    render(<RegisterBUtton />)
     const button = screen.getByRole('button')
 
     // when

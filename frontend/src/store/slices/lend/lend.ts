@@ -10,23 +10,45 @@ import { UserType } from '../user/user'
  * Type definitions
  */
 
+export interface ImageType {
+  id: number
+  image: string
+}
+
+export interface PostImageType {
+  lend_id: number
+  image_id: number
+  image: string
+}
+
 export interface LendType {
   id: number
   book: BookType['id']
   book_info: Omit<BookType, 'id'>
   owner: UserType['id']
   owner_username: UserType['username']
+  images: ImageType[]
   questions: string[]
   cost: number
   additional: string
   status: BorrowType | string | null
-};
+}
 
 export interface LendState {
+  count: number
+  next: string | null
+  prev: string | null
   lends: LendType[]
   userLends: LendType[]
   selectedLend: LendType | null
-};
+}
+
+export interface LendPageResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: LendType[]
+}
 
 /*
  * Async thunks
@@ -34,18 +56,38 @@ export interface LendState {
 
 export const fetchQueryLends = createAsyncThunk(
   'lend/fetchQueryLends',
-  async (params: { title?: string, author?: string, tag?: string[] }) => {
-    const response = await axios.get<LendType[]>('/api/lend/', { params })
+  async (params: { title?: string, author?: string, tag?: string[], page?: number }) => {
+    const response = await axios.get<LendPageResponse>('/api/lend/', { params })
     return response.data
   }
 )
 
 export const createLend = createAsyncThunk(
   'lend/createLend',
-  async (data: Omit<LendType, 'id' | 'status'>, { dispatch }) => {
+  async (data: Omit<LendType, 'id' | 'status' | 'images'>, { dispatch }) => {
     const response = await axios.post('/api/lend/', data)
     dispatch(lendActions.addLend(response.data))
     return response.data
+  }
+)
+
+export const postImage = createAsyncThunk(
+  'lend/postImage',
+  async (data: { image: File, id: number }, { dispatch }) => {
+    const formData = new FormData()
+    formData.append('image', data.image)
+    formData.append('lend_id', String(data.id))
+    const response = await axios.post('/api/lend_image/', formData)
+    dispatch(lendActions.addImage(response.data))
+    return response.data
+  }
+)
+
+export const deleteImage = createAsyncThunk(
+  'lend/postImage',
+  async (data: { image_id: number }, { dispatch }) => {
+    const response = await axios.delete(`/api/lend_image/${data.image_id}/`)
+    dispatch(lendActions.deleteImage(response.data))
   }
 )
 
@@ -59,7 +101,7 @@ export const fetchLend = createAsyncThunk(
 
 export const updateLend = createAsyncThunk(
   'lend/updateLend',
-  async (lend: Omit<LendType, 'status'>, { dispatch }) => {
+  async (lend: Omit<LendType, 'status' | 'images'>, { dispatch }) => {
     const { id, ...data } = lend
     const response = await axios.put(`/api/lend/${id}/`, data)
     dispatch(lendActions.updateLend(response.data))
@@ -77,8 +119,8 @@ export const deleteLend = createAsyncThunk(
 
 export const fetchUserLends = createAsyncThunk(
   'lend/fetchUserLend',
-  async () => {
-    const response = await axios.get<LendType[]>('/api/lend/user/')
+  async (params?: { page: number }) => {
+    const response = await axios.get<LendPageResponse>('/api/lend/user/', { params })
     return response.data
   }
 )
@@ -88,6 +130,9 @@ export const fetchUserLends = createAsyncThunk(
  */
 
 const initialState: LendState = {
+  count: 0,
+  next: null,
+  prev: null,
   lends: [],
   userLends: [],
   selectedLend: null
@@ -121,11 +166,40 @@ export const lendSlice = createSlice({
         lend => lend.id !== action.payload
       )
       state.selectedLend = null
+    },
+    addImage: (
+      state,
+      action: PayloadAction<PostImageType>
+    ) => {
+      const newImage: PostImageType = { ...action.payload }
+      const lend = state.lends.find(lend => lend.id === newImage.lend_id)
+      if (lend) {
+        lend.images.push({ id: newImage.image_id, image: newImage.image })
+      }
+      if (state.selectedLend?.id === newImage.lend_id) {
+        state.selectedLend.images.push({ id: newImage.image_id, image: newImage.image })
+      }
+    },
+    deleteImage: (
+      state,
+      action: PayloadAction<Omit<PostImageType, 'image'>>
+    ) => {
+      const deletedImage: Omit<PostImageType, 'image'> = { ...action.payload }
+      const lend = state.lends.find(lend => lend.id === deletedImage.lend_id)
+      if (lend) {
+        lend.images = lend.images.filter(image => image.id !== deletedImage.image_id)
+      }
+      if (state.selectedLend?.id === deletedImage.lend_id) {
+        state.selectedLend.images = state.selectedLend.images.filter(image => image.id !== deletedImage.image_id)
+      }
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQueryLends.fulfilled, (state, action) => {
-      state.lends = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.lends = action.payload.results
     })
     builder.addCase(fetchLend.fulfilled, (state, action) => {
       state.selectedLend = action.payload
@@ -134,7 +208,10 @@ export const lendSlice = createSlice({
       console.error(action.error)
     })
     builder.addCase(fetchUserLends.fulfilled, (state, action) => {
-      state.userLends = action.payload
+      state.count = action.payload.count
+      state.next = action.payload.next
+      state.prev = action.payload.previous
+      state.userLends = action.payload.results
     })
   }
 })

@@ -167,7 +167,15 @@ cython_debug/
 # migrations
 migrations/*
 
+# mediafiles
+backend/mediafiles
+
 ###  backend end  ###
 
-backend/bookVillage/.idea/
-backend/mediafiles
+
+### MacOS start ###
+
+.idea/
+.DS_Store
+
+###  MacOS end  ###
