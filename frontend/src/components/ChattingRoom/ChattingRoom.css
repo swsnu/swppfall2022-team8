@@ -55,9 +55,9 @@
 .chat-text-me {
   text-align: right;
   padding-top: 5px;
-  padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  margin-bottom: 2px;
   border-radius: 5px;
   background-color: rgb(255, 255, 194);
   animation: fadein 0.2s;
@@ -68,9 +68,9 @@
 .chat-text-other {
   text-align: left;
   padding-top: 5px;
-  padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  margin-bottom: 2px;
   border-radius: 5px;
   background-color: rgb(194, 248, 255);
   animation: fadein 0.2s;
@@ -81,8 +81,8 @@
 .chat-text-info {
   text-align: center;
   margin-top: 10px;
+  margin-bottom: 4px;
   padding-top: 5px;
-  padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 5px;
@@ -108,6 +108,24 @@
   margin: 0px;
 }
 
+.chat-time-me {
+  font-size: xx-small;
+  text-align: left;
+  color: grey;
+  margin-bottom: 10px;
+}
+
+.chat-time-other {
+  font-size: xx-small;
+  text-align: right;
+  color: grey;
+}
+
+.chat-time-info {
+  font-size: xx-small;
+  text-align: center;
+  color: grey;
+}
 
 @media (max-width: 1200px) {
   #chatting-room {

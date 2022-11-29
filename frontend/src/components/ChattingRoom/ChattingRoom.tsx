@@ -66,19 +66,26 @@ const ChattingRoom = (props: IProps) => {
             disabled={!props.chatCursor}
             onClick={() => clickLoadChatHandler()}
           >&uarr;</button>
-          {chatList.map(chat => (
-            <div
-              key={`chat_${chat.id}`}
-              className={`chat-message-${
-                (chat.rank === 'info')
-                  ? 'info'
-                  : (chat.author === userID) ? 'me' : 'other'
-                }`
-              }
-            >
-              <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
-            </div>
-          ))}
+          {chatList.map(chat => {
+            const date = new Date(chat.timestamp)
+            return (
+              <div
+                key={`chat_${chat.id}`}
+              >
+                <div
+                  className={`chat-message-${
+                    (chat.rank === 'info')
+                      ? 'info'
+                      : (chat.author === userID) ? 'me' : 'other'
+                    }`
+                  }
+                >
+                  <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
+                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><>{date.getHours()} : {date.getMinutes()}</></h5>
+                </div>
+              </div>
+            )
+          })}
         </div>
         <div>
           <InputGroup className='mb-3' id='chat-input-group'>
