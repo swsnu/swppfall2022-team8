@@ -16,10 +16,15 @@ export interface BookType {
   brief: string
 };
 
+export interface BookTagType {
+  id: number
+  name: string
+}
+
 export interface BookState {
   books: BookType[]
   selectedBook: BookType | null
-  tags: string[]
+  tags: BookTagType[]
 };
 
 /*
@@ -72,7 +77,7 @@ export const deleteBook = createAsyncThunk(
 export const fetchQueryTags = createAsyncThunk(
   'book/fetchQueryTags',
   async (params: { name: string }) => {
-    const response = await axios.get<string[]>('/api/book/tag/', { params })
+    const response = await axios.get<BookTagType[]>('/api/book/tag/', { params })
     return response.data
   }
 )

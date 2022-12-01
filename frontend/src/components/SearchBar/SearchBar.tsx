@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Button, Dropdown, DropdownButton, Form, InputGroup, Overlay, Popover } from 'react-bootstrap'
+import { useEffect, useRef, useState } from 'react'
+import { Button, Dropdown, DropdownButton, Form, InputGroup, Overlay, Popover, ListGroup } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import QueryString from 'qs'
 
 import './SearchBar.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { fetchQueryTags, selectBook } from '../../store/slices/book/book'
+import useInterval from '../../utils/useInterval'
 
 interface IProps {
   title?: string
@@ -14,10 +18,15 @@ interface IProps {
 const SearchBar = (props: IProps) => {
   const [inputs, setInputs] = useState<string[]>(['', '', ''])
   const [dropdownIdx, setDropdownIdx] = useState<number>(0)
-  const [popoverShow, setPopoverShow] = useState<boolean>(false)
-  const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null)
+  const [hintShow, setHintShow] = useState<boolean>(false)
+  const [hintTarget, setHintTarget] = useState<HTMLElement | null>(null)
+  const [listShow, setListShow] = useState<boolean>(false)
+  const [listTarget, setListTarget] = useState<HTMLElement | null>(null)
+  const prevTagInput = useRef<string>('')
 
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const bookState = useSelector(selectBook)
 
   const categories = ['Title', 'Author', 'Tag']
   const dropdowns = [...categories, 'Advanced']
@@ -33,10 +42,29 @@ const SearchBar = (props: IProps) => {
     setInputs(entries)
   }, [])
 
+  useInterval(() => {
+    if (listTarget === document.activeElement && inputs[2] !== prevTagInput.current) {
+      const name = inputs[2].split(' ').pop()
+      if (name) {
+        dispatch(fetchQueryTags({ name }))
+      }
+      setListShow(Boolean(name))
+      prevTagInput.current = inputs[2]
+    }
+  }, 200)
+
   const changeInputHandler = (value: string, idx: number) => {
     const newInputs = [...inputs]
     newInputs[idx] = value
     setInputs(newInputs)
+  }
+
+  const appendTagHandler = (name: string) => {
+    listTarget?.focus()
+    const tags = inputs[2].split(' ')
+    tags[tags.length - 1] = name
+    tags.push('')
+    changeInputHandler(tags.join(' '), 2)
   }
 
   const clickDropDownHandler = (idx: number) => {
@@ -80,6 +108,7 @@ const SearchBar = (props: IProps) => {
           <Form.Control
             key={`search-bar-${category.toLowerCase()}`}
             hidden={dropdowns[dropdownIdx] !== 'Advanced' && dropdowns[dropdownIdx] !== category}
+            autoComplete="off"
             placeholder={`${category} search`}
             aria-label="Recipient's username"
             aria-describedby="basic-addon2"
@@ -90,21 +119,23 @@ const SearchBar = (props: IProps) => {
             {...(
               category === 'Tag'
                 ? {
-                    onMouseOver: event => { setPopoverShow(true); setPopoverTarget(event.currentTarget) },
-                    onMouseOut: _event => { setPopoverShow(false) }
+                    onMouseOver: event => { setHintShow(true); setHintTarget(event.currentTarget) },
+                    onMouseOut: _event => { setHintShow(false) },
+                    onFocus: event => { setListShow(Boolean(inputs[2])); setListTarget(event.currentTarget) },
+                    onBlur: _event => { setListShow(false) }
                   }
                 : null
             )}
           />
         ))}
         <Overlay
-          show={popoverShow}
-          target={popoverTarget}
-          placement="bottom-start"
+          show={hintShow}
+          target={hintTarget}
+          placement="left"
           container={null}
           containerPadding={0}
         >
-          <Popover id="popover-tag-hint">
+          <Popover id="hint-tag-hint">
             <Popover.Header as="h3">Tag Search Hint</Popover.Header>
             <Popover.Body>
               &middot; A tag consists of alpabets, numbers, and dashes only.<br />
@@ -112,6 +143,22 @@ const SearchBar = (props: IProps) => {
               Ex&#41; classics science-fiction-fantasy
             </Popover.Body>
           </Popover>
+        </Overlay>
+        <Overlay
+          show={listShow}
+          target={listTarget}
+          placement="bottom"
+          container={null}
+          containerPadding={0}
+        >
+          <ListGroup style={{ width: listTarget?.clientWidth ?? 0 }}>
+            {bookState.tags.map((tag, idx) => (
+              <ListGroup.Item
+                key={`tag_${tag.name}_${idx}`}
+                onClick={() => { appendTagHandler(tag.name) }}
+              >{tag.name}</ListGroup.Item>
+            ))}
+          </ListGroup>
         </Overlay>
         <Button
           id="search-button"
