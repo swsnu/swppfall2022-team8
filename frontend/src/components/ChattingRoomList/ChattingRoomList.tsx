@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { fetchNextUserRooms, RoomType, selectRoom } from '../../store/slices/room/room'
 import { selectUser } from '../../store/slices/user/user'
+import './ChattingRoomList.css'
 
 export interface IProps {
   enterRoom: (room: RoomType) => void
@@ -17,7 +18,7 @@ const ChattingRoomList = (props: IProps) => {
   }
 
   return (
-    <>
+    <div id='chatting-room-list'>
       {roomState.rooms.map(room => {
         const isUserLender = room.lender === userState.currentUser?.id
         const othersPosition = isUserLender
@@ -27,11 +28,12 @@ const ChattingRoomList = (props: IProps) => {
           ? room.borrower_username
           : room.lender_username
         return (
-          <div key={`room_${room.id}`}>
-            <button
-              type="button"
-              onClick={() => props.enterRoom(room)}
-            >[{othersPosition}] chat with {othersUsername}</button>
+          <div
+            key={`room_${room.id}`}
+            className='chatting-room'
+            onClick={() => props.enterRoom(room)}
+          >
+            <h3 id='chat-with-text'>[{othersPosition}] {othersUsername}</h3>
           </div>
         )
       })}
@@ -40,7 +42,7 @@ const ChattingRoomList = (props: IProps) => {
         disabled={!roomState.next}
         onClick={() => clickLoadRoomHandler()}
       >&darr;</button>
-    </>
+    </div>
   )
 }
 

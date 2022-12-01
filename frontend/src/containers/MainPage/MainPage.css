@@ -9,7 +9,7 @@
     animation: fadein 2s;
 }
 
-#image-div {
+.image-div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 0 auto;
@@ -67,6 +67,139 @@
 }
 
 #main-register {
-    background-color: white;
+    padding: 100px;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    background-color: aliceblue;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
     height: 800px;
+}
+
+#register-h2 {
+    font-size: 45px;
+    animation: fadein 2s;
+    text-align: right   ;
+}
+
+#register-book-image1 {
+    height: 500px;
+    margin-left: 20px;
+    margin-right: 20px;
+    animation: fadein 5s;
+}
+
+#register-book-image2 {
+    height: 500px;
+    margin-left: 20px;
+    margin-right: 20px;
+    animation: fadein 6s;
+}
+
+#main-register-button {
+    margin: auto;
+    width: 50%;
+}
+
+@media (max-width: 1200px) {
+    #welcome-description {
+        margin-top: 20px;
+        font-size: 28px;
+        animation: fadein 3s;
+    }
+    
+    #welcome-h1 {
+        font-size: 60px;
+        animation: fadein 2s;
+    }
+    
+    .image-div {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 70%;
+        margin: 0 auto;
+    }
+    
+    #welcome-book-image1 {
+        margin-left: 20px;
+        margin-right: 20px;
+        display: inline;
+        height: 500px;
+        animation: fadein 2s;
+        padding: auto;
+    }
+    
+    #welcome-book-image2 {
+        margin-left: 20px;
+        margin-right: 20px;
+        display: inline;
+        height: 500px;
+        animation: fadein 3s;
+        padding: auto;
+    }
+    
+    @keyframes fadein {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    #mainpage {
+        background-color: white;
+    }
+    
+    #main-searchbar {
+        margin: auto;
+        height: 100px;
+        background-color: dodgerblue;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+    }
+    
+    #main-description {
+        display: grid;
+        grid-template-columns: 1fr;
+        border: 2px solid blue;
+        background-color: aliceblue;
+        margin-left: calc(-50vw + 50%);
+        height: 800px;
+        width: 100vw;
+        padding: 100px;
+        text-align: left;
+    }
+    
+    #main-register {
+        padding: 100px;
+        display: grid;
+        grid-template-columns: 1fr;
+        background-color: aliceblue;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        height: 800px;
+    }
+    
+    #register-h2 {
+        margin-top: 30px;
+        font-size: 45px;
+        animation: fadein 2s;
+        text-align: right;
+    }
+    
+    #register-book-image1 {
+        height: 500px;
+        margin-left: 20px;
+        margin-right: 20px;
+        animation: fadein 5s;
+    }
+    
+    #register-book-image2 {
+        height: 500px;
+        margin-left: 20px;
+        margin-right: 20px;
+        animation: fadein 6s;
+    }
+    
 }

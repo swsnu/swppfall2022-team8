@@ -113,7 +113,7 @@ const BookEditPage = () => {
   }
 
   return (
-    <>
+    <div className='page'>
       <NavBar />
       <h1>Book Edit Page</h1>
       <br />
@@ -245,7 +245,7 @@ const BookEditPage = () => {
         id='edit-button'
         type="button" onClick={() => clickConfirmEditHanler()}
       >Edit</Button>
-    </>
+    </div>
   )
 }
 

@@ -70,7 +70,7 @@ describe('<ChattingRoomList />', () => {
         }
       }
     )
-    const button = screen.getAllByRole('button')[0]
+    const button = screen.getAllByRole('heading')[0]
 
     // when
     fireEvent.click(button)
@@ -109,7 +109,7 @@ describe('<ChattingRoomList />', () => {
 
     // when
     await act(() => {
-      const button = screen.getAllByRole('button')[1]
+      const button = screen.getAllByRole('button')[0]
       fireEvent.click(button)
     })
 

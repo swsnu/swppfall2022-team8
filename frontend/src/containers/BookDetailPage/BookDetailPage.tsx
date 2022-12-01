@@ -54,29 +54,33 @@ const BookDetailPage = () => {
       <br />
       <div className='book-detail-page'>
         {/* TODO: add image field */}
-        <div className="image-test">
-          <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
-        </div>
-
         <div>
-          {lendState.selectedLend?.images?.length
-            ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
-              {lendState.selectedLend?.images.map((image, idx) => (
-                <Carousel.Item key={`lendImage_${idx}`}>
-                  <img
-                    src={image.image}
-                    width={'100%'}
-                    alt="Image Not Found"
-                  />
-                  <Carousel.Caption>
-                    <p>{idx + 1}/{lendState.selectedLend?.images.length} image</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              ))}
-            </Carousel>
-            : null}
+          <div className="image-test">
+          <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
+          </div>
+          <div>
+            {lendState.selectedLend?.images?.length
+              ? <Carousel
+                  activeIndex={lendImageIdx}
+                  onSelect={handleSelect}
+                >
+                {lendState.selectedLend?.images.map((image, idx) => (
+                  <Carousel.Item key={`lendImage_${idx}`}>
+                    <img
+                      className='lend-image-carousel'
+                      src={image.image}
+                      width={'100%'}
+                      alt="Image Not Found"
+                    />
+                    <Carousel.Caption>
+                      <p>{idx + 1}/{lendState.selectedLend?.images.length} image</p>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+              : null}
+          </div>
         </div>
-
         <div className='book-detail-info'>
           <h1>{lendState.selectedLend?.book_info.title}</h1>
           <h5>written by {lendState.selectedLend?.book_info.author}</h5>

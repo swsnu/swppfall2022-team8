@@ -202,45 +202,41 @@ const ChattingPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <h1>ChattingPage</h1>
-      <br />
-      <hr />
-
-      {/* ChattingRoomList component */}
-      <ChattingRoomList
-        enterRoom={enterRoom}
-      />
-      <br />
-      <hr />
-
-      {/* ChattingRoom component */}
-      {(currentRoom)
-        ? <ChattingRoom
-            room={currentRoom}
-            chatCursor={chatCursor.current}
-            oldChatList={oldChatList}
-            newChatList={newChatList}
-            loadMessage={loadMessage}
-            sendMessage={sendMessage}
+      <div id='chatting-page'>
+        {/* ChattingRoomList component */}
+        <div>
+          <ChattingRoomList
+            enterRoom={enterRoom}
           />
-        : <p>Select any chatroom and enjoy chatting!</p>
-      }
-      <br />
-      <hr />
-
-      {/* ChattingRightMenu component */}
-      {(currentRoom)
-        ? <ChattingRightMenu
-            room={currentRoom}
-            borrowable={borrowable}
-            borrowed={borrowed}
-            clickConfirmLendingHandler={clickConfirmLendingHandler}
-            clickConfirmReturnHandler={clickConfirmReturnHandler}
-          />
-        : null
-      }
-      <br />
-      <hr />
+        </div>
+        {/* ChattingRoom component */}
+        <div>
+          {(currentRoom)
+            ? <ChattingRoom
+                room={currentRoom}
+                chatCursor={chatCursor.current}
+                oldChatList={oldChatList}
+                newChatList={newChatList}
+                loadMessage={loadMessage}
+                sendMessage={sendMessage}
+              />
+            : <p>Select any chatroom and enjoy chatting!</p>
+          }
+        </div>
+        <div>
+          {/* ChattingRightMenu component */}
+          {(currentRoom)
+            ? <ChattingRightMenu
+                room={currentRoom}
+                borrowable={borrowable}
+                borrowed={borrowed}
+                clickConfirmLendingHandler={clickConfirmLendingHandler}
+                clickConfirmReturnHandler={clickConfirmReturnHandler}
+              />
+            : null
+          }
+        </div>
+      </div>
     </div>
   )
 }

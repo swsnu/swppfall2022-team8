@@ -7,12 +7,17 @@ import './RegisterButton.css'
 const RegisterButton = () => {
   const navigate = useNavigate()
 
+  const clickRegisterButtonHandler = () => {
+    window.scrollTo(0, 0)
+    navigate('/book/register')
+  }
+
   return (
     <div className='register'>
       <Button
         variant='light'
         type="button"
-        onClick={() => navigate('/book/register')}
+        onClick={() => clickRegisterButtonHandler()}
         id="register-button"
       ><h5><FontAwesomeIcon
           id='register-icon'

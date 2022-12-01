@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar } from 'react-bootstrap'
+import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import ChattingButton from '../ChattingButton/ChattingButton'
 import LogoButton from '../LogoButton/LogoButton'
 import LogoutButton from '../LogoutButton/LogoutButton'
@@ -13,12 +13,23 @@ const NavBar = () => {
         <Container fluid>
           <Navbar.Brand><LogoButton /></Navbar.Brand>
           <Navbar.Toggle aria-controls={'offcanvasNavbar-expand-lg'} />
-          <Nav>
-            <Nav.Link><RegisterButton /></Nav.Link>
-            <Nav.Link><ChattingButton /></Nav.Link>
-            <Nav.Link><UserStatusButton /></Nav.Link>
-            <Nav.Link><LogoutButton /></Nav.Link>
-          </Nav>
+          <Navbar.Offcanvas
+            id='offcanvasNavbar-expand-lg'
+            aria-labelledby='offcanvasNavbarLabel-expand-lg'
+            placement='end'
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className='justify-content-end flex-grow-1 pe-3'>
+                <Nav.Link className='offcanvas-button'><RegisterButton /></Nav.Link>
+                <Nav.Link className='offcanvas-button'><ChattingButton /></Nav.Link>
+                <Nav.Link className='offcanvas-button'><UserStatusButton /></Nav.Link>
+                <Nav.Link className='offcanvas-button'><LogoutButton /></Nav.Link>
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
         </Container>
       </Navbar>
     </>

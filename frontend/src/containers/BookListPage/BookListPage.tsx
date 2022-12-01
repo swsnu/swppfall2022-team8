@@ -41,21 +41,28 @@ const BookListPage = () => {
       <br />
       <h3><b>Result</b></h3>
       <div className='booklist'>
-        {lendState.lends.map(lend => (
-          <div key={`lendlist_${lend.id}`} className='booklist-item'>
-            <BookListEntity
-              id={lend.id}
-              title={lend.book_info.title}
-              image={lend.book_info.image}
-            />
-          </div>
-        ))}
+        { lendState.lends.length
+          ? lendState.lends.map(lend => (
+            <div key={`lendlist_${lend.id}`} className='booklist-item'>
+              <BookListEntity
+                id={lend.id}
+                title={lend.book_info.title}
+                image={lend.book_info.image}
+              />
+            </div>
+          ))
+          : <h5 className='empty-text'></h5>
+        }
       </div>
-      <PageButton
-        currPage={params.page ? Number(params.page) : 1}
-        numPage={Math.ceil(lendState.count / 12)}
-        handleClick={pageClickHandler}
-      />
+      <div>
+        <div className='page-button'>
+          <PageButton
+          currPage={params.page ? Number(params.page) : 1}
+          numPage={Math.ceil(lendState.count / 12)}
+          handleClick={pageClickHandler}
+          />
+        </div>
+      </div>
     </div>
   )
 }

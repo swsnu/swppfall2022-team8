@@ -1,4 +1,7 @@
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { ChatRank, ChatType } from '../../containers/ChattingPage/ChattingPage'
 import { RoomType } from '../../store/slices/room/room'
@@ -55,34 +58,50 @@ const ChattingRoom = (props: IProps) => {
 
   return (
     <>
-      <p>Chatting with {othersUsername}</p>
-      <div id="chat-box">
-        <button
-          type="button"
-          disabled={!props.chatCursor}
-          onClick={() => clickLoadChatHandler()}
-        >&uarr;</button>
-        {chatList.map(chat => (
-          <div
-            key={`chat_${chat.id}`}
-            className={`chat-message-${(chat.author === userID) ? 'me' : 'other'} ${chat.rank}`}
-          >
-            <p>{chat.content}</p>
-          </div>
-        ))}
+      <div id='chatting-room'>
+        <h2 id='other-users-name'>{othersUsername}</h2>
+        <div id="chat-box">
+          <button
+            type="button"
+            disabled={!props.chatCursor}
+            onClick={() => clickLoadChatHandler()}
+          >&uarr;</button>
+          {chatList.map(chat => {
+            const date = new Date(chat.timestamp)
+            return (
+              <div
+                key={`chat_${chat.id}`}
+              >
+                <div
+                  className={`chat-message-${
+                    (chat.rank === 'info')
+                      ? 'info'
+                      : (chat.author === userID) ? 'me' : 'other'
+                    }`
+                  }
+                >
+                  <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
+                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><>{date.getHours()} : {date.getMinutes()}</></h5>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        <div>
+          <InputGroup className='mb-3' id='chat-input-group'>
+            <Form.Control
+              id='chat-input'
+              type='text'
+              value={chatInput}
+              onChange={event => setChatInput(event.target.value)}
+              onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
+            />
+            <Button id='send-button' onClick={() => clickSendChatHandler()}>
+              <FontAwesomeIcon id='paper-plane' icon={faPaperPlane}/>
+            </Button>
+          </InputGroup>
+        </div>
       </div>
-      <br />
-      <input
-        id="chat-input"
-        type="text"
-        value={chatInput}
-        onChange={event => setChatInput(event.target.value)}
-        onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
-      />
-      <button
-        type="button"
-        onClick={() => clickSendChatHandler()}
-      >Send chat</button>
     </>
   )
 }
