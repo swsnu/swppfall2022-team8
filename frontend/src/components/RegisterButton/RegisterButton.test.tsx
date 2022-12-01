@@ -10,6 +10,7 @@ jest.mock('react-router', () => ({
 describe('<RegisterButton />', () => {
   it('should handle click Button', async () => {
     // given
+    window.scrollTo = jest.fn()
     render(<RegisterBUtton />)
     const button = screen.getByRole('button')
 
