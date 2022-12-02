@@ -77,6 +77,9 @@ describe('<BookRegisterPage />', () => {
         }
       }
     })
+    const tabButton = await screen.findByText('Search Book')
+    fireEvent.click(tabButton)
+
     const inputs = container.getElementsByTagName('input')
     const textareas = container.getElementsByTagName('textarea')
     const addButtons = await screen.findAllByText('add')
@@ -84,12 +87,12 @@ describe('<BookRegisterPage />', () => {
 
     // when
     fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[1], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[4], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[5], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
+    fireEvent.change(inputs[5], { target: { files: [fakeFile] } })
     fireEvent.change(inputs[6], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
     fireEvent.change(inputs[7], { target: { value: fakeLend.questions[0] } })
@@ -99,7 +102,7 @@ describe('<BookRegisterPage />', () => {
     fireEvent.click(deleteButtons[0])
     fireEvent.click(deleteButtons[1])
 
-    fireEvent.change(inputs[5], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
     fireEvent.change(inputs[7], { target: { value: fakeLend.questions[0] } })
     fireEvent.click(addButtons[1])
@@ -121,11 +124,14 @@ describe('<BookRegisterPage />', () => {
         }
       }
     })
+    const tabButton = await screen.findByText('Search Book')
+    fireEvent.click(tabButton)
+
     const inputs = container.getElementsByTagName('input')
     const registerButton = await screen.findByText('Register')
 
     // when
-    fireEvent.change(inputs[2], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
     fireEvent.click(registerButton)
 
     // then
@@ -156,6 +162,9 @@ describe('<BookRegisterPage />', () => {
         }
       }
     })
+    const tabButton = await screen.findByText('Search Book')
+    fireEvent.click(tabButton)
+
     const inputs = container.getElementsByTagName('input')
     const textareas = container.getElementsByTagName('textarea')
     const addButtons = await screen.findAllByText('add')
@@ -163,12 +172,12 @@ describe('<BookRegisterPage />', () => {
 
     // when
     fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[1], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[4], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[5], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
+    fireEvent.change(inputs[5], { target: { files: [fakeFile] } })
     fireEvent.change(inputs[6], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
     fireEvent.change(inputs[7], { target: { value: fakeLend.questions[0] } })
@@ -199,6 +208,9 @@ describe('<BookRegisterPage />', () => {
         }
       }
     })
+    const tabButton = await screen.findByText('Search Book')
+    fireEvent.click(tabButton)
+
     const inputs = container.getElementsByTagName('input')
     const textareas = container.getElementsByTagName('textarea')
     const addButtons = await screen.findAllByText('add')
@@ -206,12 +218,12 @@ describe('<BookRegisterPage />', () => {
 
     // when
     fireEvent.change(inputs[0], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[1], { target: { files: [fakeFile] } })
-    fireEvent.change(inputs[2], { target: { value: fakeBook.title } })
-    fireEvent.change(inputs[3], { target: { value: fakeBook.author } })
-    fireEvent.change(inputs[4], { target: { value: fakeBook.brief } })
-    fireEvent.change(inputs[5], { target: { value: fakeBook.tags[0] } })
+    fireEvent.change(inputs[1], { target: { value: fakeBook.title } })
+    fireEvent.change(inputs[2], { target: { value: fakeBook.author } })
+    fireEvent.change(inputs[3], { target: { value: fakeBook.brief } })
+    fireEvent.change(inputs[4], { target: { value: fakeBook.tags[0] } })
     fireEvent.click(addButtons[0])
+    fireEvent.change(inputs[5], { target: { files: [fakeFile] } })
     fireEvent.change(inputs[6], { target: { value: fakeLend.cost } })
     fireEvent.change(textareas[0], { target: { value: fakeLend.additional } })
     fireEvent.change(inputs[7], { target: { value: fakeLend.questions[0] } })

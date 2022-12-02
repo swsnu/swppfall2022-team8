@@ -38,9 +38,6 @@ const BookRegisterPage = () => {
 
   const [submitted, setSubmitted] = useState<boolean>(false)
   const [existingBook, setExistingBook] = useState(true)
-  // const [autoKeyword, setAutoKeyword] = useState('')
-  // const [fetchedBookImage, setFetchedBookImage] = useState('')
-  // const [fetchedBooks, setFetchedBooks] = useState<BookType[]>([])
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null)
 
   const dispatch = useDispatch<AppDispatch>()
@@ -71,31 +68,16 @@ const BookRegisterPage = () => {
     setTag('')
     setTags([])
     setBookImage(null)
-    // setAutoKeyword('')
-    // setFetchedBookImage('')
     setSelectedBook(null)
   }
 
-  // const autoCompleteHandler = async (keyword: string) => {
-  //   setAutoKeyword(keyword)
-  //   if (autoKeyword) {
-  //     await dispatch(fetchQueryBooks({ title: autoKeyword }))
-  //     setFetchedBooks(bookState.books)
-  //   } else {
-  //     setFetchedBooks([])
-  //   }
-  // }
-
   const onClickAutoCompleteHandler = (book: BookType) => {
-    // setAutoKeyword(book.title)
     console.log(book)
     setSelectedBook(book)
     setTitle(book.title)
     setAuthor(book.author)
     setBrief(book.brief)
     setTags(book.tags)
-    // setFetchedBookImage(book.image)
-    // setFetchedBooks([])
   }
 
   const bookImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -285,13 +267,6 @@ const BookRegisterPage = () => {
                       ))}
                     </ListGroup>
                   </Overlay>
-                  {/* {fetchedBooks.length
-                    ? <ul>
-                      {fetchedBooks.map((book, idx) =>
-                        (<li key={`book_${idx}`} onClick={() => onClickAutoCompleteHandler(book.id)}>{book.title}</li>)
-                      )}
-                    </ul>
-                    : null} */}
                 </Form.Group>
                 {selectedBook
                   ? <div>
