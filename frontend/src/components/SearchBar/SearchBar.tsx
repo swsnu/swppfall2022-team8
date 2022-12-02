@@ -89,7 +89,7 @@ const SearchBar = (props: IProps) => {
 
   return (
     <div id='search'>
-      <br/>
+      <br />
       <InputGroup className="mb-3" id="search-bar">
         <DropdownButton
           variant="outline-primary"
@@ -155,6 +155,7 @@ const SearchBar = (props: IProps) => {
             {bookState.tags.map((tag, idx) => (
               <ListGroup.Item
                 key={`tag_${tag.name}_${idx}`}
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => { appendTagHandler(tag.name) }}
               >{tag.name}</ListGroup.Item>
             ))}
