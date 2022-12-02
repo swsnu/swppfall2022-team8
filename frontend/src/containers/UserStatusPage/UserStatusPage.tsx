@@ -121,18 +121,18 @@ const UserStatusPage = () => {
       <div className='booklist'>
         {lendState.userLends.length
           ? lendState.userLends.map((lend, idx) => (
-              <div key={`mylend_${idx}`}>
-                <BookListEntity
-                  id={lend.id}
-                  image={lend.book_info.image}
-                  title={lend.book_info.title}
-                />
-              </div>
+            <div key={`mylend_${idx}`}>
+              <BookListEntity
+                id={lend.id}
+                image={lend.book_info.image}
+                title={lend.book_info.title}
+              />
+            </div>
           ))
           : <>
-              <h5><br/><br/><br/><br/></h5>
-              <h5 className='empty-text'></h5>
-            </>
+            <h5><br /><br /><br /><br /></h5>
+            <h5 className='empty-text'></h5>
+          </>
         }
       </div>
       <div>
@@ -147,7 +147,7 @@ const UserStatusPage = () => {
       <br />
       <h3>Borrow List</h3>
       <div className='booklist'>
-        { borrowList.length
+        {borrowList.length
           ? borrowList.map((borrow, idx) => (
             <div key={`myborrow_${idx}`}>
               <BookListEntity
@@ -158,9 +158,9 @@ const UserStatusPage = () => {
             </div>
           ))
           : <>
-              <h5 className='empty-text'></h5>
-            </>
-      }
+            <h5 className='empty-text'></h5>
+          </>
+        }
       </div>
       <div>
         <div className='page-button'>
@@ -174,7 +174,7 @@ const UserStatusPage = () => {
       <br />
       <h3>Watch List</h3>
       <div className='booklist'>
-        { userState.watch_list.length
+        {userState.watch_list.length
           ? userState.watch_list.map((watch, idx) => (
             <div key={`mywatch_${idx}`}>
               <BookListEntity
@@ -186,8 +186,8 @@ const UserStatusPage = () => {
             </div>
           ))
           : <>
-              <h5 className='empty-text'></h5>
-            </>
+            <h5 className='empty-text'></h5>
+          </>
         }
       </div>
       <div>
@@ -247,6 +247,7 @@ const UserStatusPage = () => {
               {bookState.tags.map((tag, idx) => (
                 <ListGroup.Item
                   key={`tag_${tag.name}_${idx}`}
+                  onMouseDown={(event) => event.preventDefault()}
                   onClick={() => { setTag(tag.name); setListShow(false) }}
                 >{tag.name}</ListGroup.Item>
               ))}
