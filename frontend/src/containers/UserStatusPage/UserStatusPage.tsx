@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
@@ -8,9 +8,11 @@ import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
 import NavBar from '../../components/NavBar/NavBar'
-import { Button, Form, InputGroup, Row } from 'react-bootstrap'
+import { Button, Form, InputGroup, ListGroup, Overlay, Row } from 'react-bootstrap'
 import './UserStatusPage.css'
 import PageButton from '../../components/PageButton/PageButton'
+import useInterval from '../../utils/useInterval'
+import { fetchQueryTags, selectBook } from '../../store/slices/book/book'
 
 const UserStatusPage = () => {
   const [lendPage, setLendPage] = useState<number>(1)
@@ -20,11 +22,15 @@ const UserStatusPage = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const userState = useSelector(selectUser)
+  const bookState = useSelector(selectBook)
   const lendState = useSelector(selectLend)
   const borrowState = useSelector(selectBorrow)
 
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>(userState.subscribed_tags)
+  const [listShow, setListShow] = useState<boolean>(false)
+  const [listTarget, setListTarget] = useState<HTMLElement | null>(null)
+  const prevTagInput = useRef<string>('')
 
   const borrowList = borrowState.userBorrows.filter((borrow, idx) => borrow.active)
 
@@ -46,6 +52,16 @@ const UserStatusPage = () => {
     }
   }, [navigate, dispatch])
 
+  useInterval(() => {
+    if (listTarget === document.activeElement && tag !== prevTagInput.current) {
+      if (tag) {
+        dispatch(fetchQueryTags({ name: tag }))
+      }
+      setListShow(Boolean(tag))
+      prevTagInput.current = tag
+    }
+  }, 200)
+
   useEffect(() => {
     return () => {
       if (sessionStorage.getItem('drf-token')) {
@@ -55,6 +71,10 @@ const UserStatusPage = () => {
   }, [dispatch])
 
   const clickAddTagHandler = async () => {
+    if (tags.find(val => val === tag)) {
+      setTag('')
+      return
+    }
     const newTags: string[] = [...tags, tag]
     const response = await dispatch(updateTag({ tag }))
     if (response.type === `${updateTag.typePrefix}/fulfilled`) {
@@ -187,8 +207,13 @@ const UserStatusPage = () => {
             <div className='tags-input-button'>
               <Form.Control
                 id='tags-input'
-                type='text' value={tag}
+                type='text'
+                autoComplete='off'
+                value={tag}
                 onChange={event => setTag(event.target.value)}
+                onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler() }}
+                onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
+                onBlur={_event => { setListShow(false) }}
               />
             </div>
           </Form.Label>
@@ -211,6 +236,22 @@ const UserStatusPage = () => {
               disabled={!tag}
             >add</Button>
           </div>
+          <Overlay
+            show={listShow}
+            target={listTarget}
+            placement="top"
+            container={null}
+            containerPadding={0}
+          >
+            <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
+              {bookState.tags.map((tag, idx) => (
+                <ListGroup.Item
+                  key={`tag_${tag.name}_${idx}`}
+                  onClick={() => { setTag(tag.name); setListShow(false) }}
+                >{tag.name}</ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Overlay>
         </InputGroup>
       </Form>
 
