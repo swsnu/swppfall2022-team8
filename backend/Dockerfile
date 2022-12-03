@@ -7,6 +7,7 @@ WORKDIR /app
 
 COPY bookVillage/ bookVillage/
 COPY requirements.txt .
+COPY run_backend.sh .
 COPY mediafiles/ mediafiles/
 
 # Environment variables for django deployment
@@ -20,5 +21,3 @@ ENV SECURE_HSTS_INCLUDE_SUBDOMAINS=True
 ENV SECURE_HSTS_PRELOAD=True
 
 RUN pip install -r requirements.txt
-
-ENTRYPOINT sh run_backend.sh

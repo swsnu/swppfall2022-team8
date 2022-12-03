@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  django:
+    container_name : django_backend
+    image: backend:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    entrypoint:
+      - sh
+      - run_backend.sh
+
+  celery:
+    container_name: celery_worker
+    image: backend:latest
+    depends_on:
+      - redis
+    command: sh -c "cd bookVillage && celery -A bookVillage worker -l INFO"
+  
+  redis:
+    container_name: redis_storage
+    image: redis:5
+    ports:
+      - "6379:6379"

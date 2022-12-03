@@ -101,7 +101,7 @@ const ChattingPage = () => {
       chatSocket.current = null
     }
 
-    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room.id}/`)
+    const newSocket = new WebSocket(`wss://bookvillage.shop/ws/chat/${room.id}/`)
 
     chatSocket.current = newSocket
 
