@@ -93,7 +93,7 @@ DATABASES = {
         "NAME": "book_village",
         "USER": "root",
         "PASSWORD": "password",
-        "HOST": "localhost",
+        "HOST": "bookvillage.cdctcvwxon3b.ap-northeast-2.rds.amazonaws.com",
         "PORT": "3306",
     }
 }
