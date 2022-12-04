@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -170,6 +171,21 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+###########################AWS
+AWS_ACCESS_KEY_ID = "AKIAXOVDRB44JWBNZHKM"  # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = (
+    "cVYcNCpmcsR+UeQwfcHiYnNVlPEzB1u3iW2ynim7"  # .csv 파일에 있는 내용을 입력 Secret access key
+)
+AWS_REGION = "ap-northeast-2"
+
+###S3 Storages
+AWS_STORAGE_BUCKET_NAME = "bookvillage-bucket"  # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = "%s.s3.%s.amazonaws.com" % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # for Image
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "mediafiles")
