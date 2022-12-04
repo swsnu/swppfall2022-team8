@@ -3,6 +3,7 @@ from celery import shared_task
 from bookVillage.celery import app
 from book.models.book import Book, BookTag, Tag
 from django.contrib.auth.models import User
+from django.core.cache import cache
 
 
 @app.task
