@@ -20,4 +20,7 @@ ENV CSRF_COOKIE_SECURE=True
 ENV SECURE_HSTS_INCLUDE_SUBDOMAINS=True
 ENV SECURE_HSTS_PRELOAD=True
 
+RUN apt-get update
+RUN apt-get install mysql-server -y
+
 RUN pip install -r requirements.txt

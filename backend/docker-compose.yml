@@ -4,9 +4,6 @@ services:
   django:
     container_name : django_backend
     image: backend:latest
-    volumes:
-      - /home/ubuntu/swppfall2022-team8/backend/bookVillage/db.sqlite3:/app/bookVillage/db.sqlite3
-      - /home/ubuntu/swppfall2022-team8/backend/mediafiles/:/app/mediafiles/
     ports:
       - "8000:8000"
       - "8001:8001"
