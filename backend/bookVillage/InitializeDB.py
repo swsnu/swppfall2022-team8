@@ -28,7 +28,7 @@ from book.models.lend_info import LendInfo
 # LendInfo.objects.all().delete()
 
 for i in range(len(tags)):
-    tag = Tag(id=tags["tag_id"][i], name=tags["tag_name"][i])
+    tag = Tag(id=tags["tag_id"][i] + 1, name=tags["tag_name"][i])
     tag.save()
     print(tag.name)
 
@@ -50,7 +50,8 @@ def download(url):
     return temp_file
 
 
-for i in range(len(books)):
+for j in range(len(books)):
+    i = j + 1
     image_url = books["image_url"][i]
     temp_file = download(image_url)
     file_name = "{urlparse}.{ext}".format(
@@ -59,7 +60,7 @@ for i in range(len(books)):
     )
 
     book = Book(
-        id=books["book_id"][i],
+        id=books["book_id"][i] + 1,
         title=books["title"][i],
         author=books["authors"][i],
         brief=books["original_title"][i],
@@ -69,7 +70,7 @@ for i in range(len(books)):
 
     current_tags_list = book_tags[book_tags["goodreads_book_id"] == books["book_id"][i]]
     for tag_id in current_tags_list["tag_id"]:
-        tag, created = Tag.objects.get_or_create(id=tag_id)
+        tag, created = Tag.objects.get_or_create(id=tag_id + 1)
         BookTag.objects.create(book=book, tag=tag)
 
     lend = LendInfo(

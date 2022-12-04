@@ -99,8 +99,12 @@ WSGI_APPLICATION = "bookVillage.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "book_village",
+        "USER": "root",
+        "PASSWORD": "password",
+        "HOST": "bookvillage.cdctcvwxon3b.ap-northeast-2.rds.amazonaws.com",
+        "PORT": "3306",
     }
 }
 
