@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-public_dns = 'ec2-3-39-222-114.ap-northeast-2.compute.amazonaws.com'
-public_ip = '3.39.222.114'
+public_dns = 'ec2-13-125-211-240.ap-northeast-2.compute.amazonaws.com'
+public_ip = '13.125.211.240'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

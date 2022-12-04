@@ -4,20 +4,17 @@ services:
   django:
     container_name : django_backend
     image: backend:latest
+    volumes:
+      - /home/ubuntu/swppfall2022-team8/backend/bookVillage/db.sqlite3:/app/bookVillage/db.sqlite3
+      - /home/ubuntu/swppfall2022-team8/backend/mediafiles/:/app/mediafiles/
     ports:
       - "8000:8000"
+      - "8001:8001"
     depends_on:
       - redis
     entrypoint:
       - sh
       - run_backend.sh
-
-  celery:
-    container_name: celery_worker
-    image: backend:latest
-    depends_on:
-      - redis
-    command: sh -c "cd bookVillage && celery -A bookVillage worker -l INFO"
   
   redis:
     container_name: redis_storage
