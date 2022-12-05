@@ -6,5 +6,5 @@ python manage.py makemigrations
 python manage.py migrate
 mkdir -p /log # for `uwsgi` logging
 celery -A bookVillage worker -l INFO &
-daphne -p 8001 bookVillage.asgi:application &
+daphne -e ssl:8001:privateKey=/app/ssl/privkey.pem:certKey=/app/ssl/fullchain.pem --access-log /log/daphne.log bookVillage.asgi:application &
 uwsgi --ini uwsgi/uwsgi.ini

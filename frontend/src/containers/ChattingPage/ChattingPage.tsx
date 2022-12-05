@@ -126,7 +126,7 @@ const ChattingPage = () => {
 
     newSocket.addEventListener('close', function (event) {
       if (event.code !== 1000) {
-        console.error('Chat socket closed unexpectedly')
+        console.error(`Chat socket closed unexpectedly (${event.code})`)
       }
     })
   }

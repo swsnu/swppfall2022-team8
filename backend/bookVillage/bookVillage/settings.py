@@ -13,8 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-public_dns = 'ec2-13-125-211-240.ap-northeast-2.compute.amazonaws.com'
-public_ip = '13.125.211.240'
+domain = 'bookvillage.shop'
+public_dns = 'ec2-3-35-207-65.ap-northeast-2.compute.amazonaws.com'
+public_ip = '3.35.207.65'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', secret_key_default)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0', 'localhost', public_dns, public_ip]
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0', 'localhost', public_dns, public_ip, domain]
 
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 31536000))
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'                          # default: False
@@ -146,10 +147,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = [os.path.join(os.path.dirname(BASE_DIR), "mediafiles")]
-
-STATIC_ROOT = BASE_DIR / "static"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -167,7 +164,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis_storage", 6379)],
+            "hosts": ["redis://redis_storage:6379"],
         },
     },
 }

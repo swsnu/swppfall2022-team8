@@ -8,7 +8,6 @@ WORKDIR /app
 COPY bookVillage/ bookVillage/
 COPY requirements.txt .
 COPY run_backend.sh .
-COPY mediafiles/ mediafiles/
 
 # Environment variables for django deployment
 ENV DEBUG=False
@@ -24,3 +23,4 @@ RUN apt-get update
 RUN apt-get install mysql-server -y
 
 RUN pip install -r requirements.txt
+RUN pip install -U Twisted[tls,http2]
