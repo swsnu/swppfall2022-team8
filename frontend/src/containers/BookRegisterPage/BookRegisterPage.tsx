@@ -234,10 +234,12 @@ const BookRegisterPage = () => {
         <div className='book-register'>
           <br />
           <Form>
-            <h3>Book Data</h3>
-            <Button type='button' onClick={changeTabHandler}>
-              {existingBook ? 'Search Book' : 'Register New Book'}
-            </Button>
+            <div className='input-class'>
+              <h3>Book Data</h3>
+              <Button type='button' onClick={changeTabHandler}>
+                {existingBook ? 'Search Book' : 'Register New Book'}
+              </Button>
+            </div>
             {existingBook
               ? <>
                 <Form.Group as={Row} className="input-class" id="title-input-form">
@@ -269,10 +271,11 @@ const BookRegisterPage = () => {
                   </Overlay>
                 </Form.Group>
                 {selectedBook
-                  ? <div>
+                  ? <div className='input-class'>
                     <img alt='Image Not Found' width={'250px'} src={selectedBook.image} />
+                    <h1>title:</h1>
                     <br />
-                    title: {selectedBook.title}
+                    {selectedBook.title}
                     <br />
                     author: {selectedBook.author}
                     <br />
