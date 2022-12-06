@@ -352,13 +352,20 @@ const BookRegisterPage = () => {
                         autoComplete='off'
                         value={tag}
                         onChange={event => setTag(event.target.value)}
-                        // onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler() }}
+                        placeholder='Search Tag'
+                        onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler(tag) }}
                         onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
                         onBlur={_event => { setListShow(false) }}
                       />
                     </div>
                   </Form.Label>
                   <div className='tags-display'>
+                    <Button
+                      variant="primary"
+                      className='add-button'
+                      onClick={() => clickAddTagHandler(tag)}
+                      disabled={!tag}
+                    >add</Button>
                     {tags.map((tag, index) => (
                       <div key={index} className='display-tag'>
                         <h5 id='tags-display-text'>{tag}</h5>
@@ -370,12 +377,6 @@ const BookRegisterPage = () => {
                         >X</Button>
                       </div>
                     ))}
-                    {/* <Button
-                      variant="primary"
-                      className='add-button'
-                      onClick={() => clickAddTagHandler()}
-                      disabled={!tag}
-                    >add</Button> */}
                   </div>
                   <Overlay
                     show={listShow}
@@ -469,6 +470,12 @@ const BookRegisterPage = () => {
                 </div>
               </Form.Label>
               <div className='questions-display'>
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
                 {questions.map((question, index) => (
                   <div key={index} className='display-tag'>
                     <h5 id='questions-display-text'>{question}</h5>
@@ -480,12 +487,6 @@ const BookRegisterPage = () => {
                     >X</Button>
                   </div>
                 ))}
-                <Button
-                  variant="primary"
-                  className='add-button'
-                  onClick={() => clickAddQuestionHandler()}
-                  disabled={!question}
-                >add</Button>
               </div>
             </Form.Group>
           </Form>
