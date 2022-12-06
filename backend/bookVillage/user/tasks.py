@@ -3,7 +3,6 @@ from celery import shared_task
 from bookVillage.celery import app
 from book.models.book import Book, BookTag, Tag
 from django.contrib.auth.models import User
-import time
 
 
 @app.task
@@ -16,8 +15,6 @@ def recommend_with_tags(subscribed_tags, user_id):
     import pandas as pd
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import linear_kernel
-
-    record = time.time()
 
     book_tags = pd.DataFrame(list(BookTag.objects.all().values()))
     tags = pd.DataFrame(list(Tag.objects.all().values("id", "name")))
