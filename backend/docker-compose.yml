@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  django:
+    container_name : django_backend
+    image: backend:latest
+    volumes:
+      - /etc/letsencrypt/archive/bookvillage.shop/privkey1.pem:/app/ssl/privkey.pem
+      - /etc/letsencrypt/archive/bookvillage.shop/fullchain1.pem:/app/ssl/fullchain.pem
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    depends_on:
+      - redis
+    entrypoint:
+      - sh
+      - run_backend.sh
+  
+  redis:
+    container_name: redis_storage
+    image: redis:5
+    ports:
+      - "6379:6379"

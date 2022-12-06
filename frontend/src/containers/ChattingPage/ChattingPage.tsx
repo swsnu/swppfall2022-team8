@@ -101,7 +101,7 @@ const ChattingPage = () => {
       chatSocket.current = null
     }
 
-    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${room.id}/`)
+    const newSocket = new WebSocket(`wss://bookvillage.shop/ws/chat/${room.id}/`)
 
     chatSocket.current = newSocket
 
@@ -126,7 +126,7 @@ const ChattingPage = () => {
 
     newSocket.addEventListener('close', function (event) {
       if (event.code !== 1000) {
-        console.error('Chat socket closed unexpectedly')
+        console.error(`Chat socket closed unexpectedly (${event.code})`)
       }
     })
   }

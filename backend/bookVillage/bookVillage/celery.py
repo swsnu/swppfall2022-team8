@@ -6,8 +6,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookVillage.settings")
 
 app = Celery(
     "bookVillage",
-    broker="redis://localhost:6379",
-    backend="redis://localhost:6379",
+    broker="redis://redis_storage:6379",
+    backend="redis://redis_storage:6379",
     include=["user.tasks"],
 )
 
