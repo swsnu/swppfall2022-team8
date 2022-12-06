@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import json
 
 
 class Tag(models.Model):
@@ -22,6 +21,8 @@ class Book(models.Model):
     image = models.ImageField(upload_to=book_image_upload_to, blank=True, null=True)
 
     def create_tag_concat(self, tag_names):
+        if hasattr(self, "tagconcat"):
+            self.tagconcat.delete()
         concat = " ".join(tag_names)
         tag_concat = BookTagConcat.objects.create(book=self, tag_concat=concat)
         return tag_concat

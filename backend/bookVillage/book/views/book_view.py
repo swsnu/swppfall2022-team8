@@ -64,6 +64,7 @@ class BookViewSet(viewsets.GenericViewSet):
             for name in tag_data:
                 tag, created = Tag.objects.get_or_create(name=name)
                 BookTag.objects.create(book=book, tag=tag)
+            book.create_tag_concat(tag_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # DELETE /api/book/{book_id}/
