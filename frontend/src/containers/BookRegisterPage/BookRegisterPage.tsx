@@ -408,7 +408,7 @@ const BookRegisterPage = () => {
             <h3>Lend Data</h3>
               <Form.Label><h5>Upload Book Images You Want To Lend</h5></Form.Label>
               {lendImage.length
-                ? <div>
+                ? <div id='lend-image-div'>
                   <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
                     {lendImage.map((image, idx) => (
                       <Carousel.Item key={`lendImage_${idx}`}>
@@ -424,7 +424,8 @@ const BookRegisterPage = () => {
                       </Carousel.Item>
                     ))}
                   </Carousel>
-                  <Button onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <Button id='lendimage-delete-button'variant='outline-danger' onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <br/>
                 </div>
                 : null}
               <Form.Control

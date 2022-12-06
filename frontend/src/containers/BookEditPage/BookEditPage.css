@@ -12,7 +12,7 @@
     border: 0px solid rgb(119, 170, 235);
     display: inline-block;
     text-align: left;
-    width: 1000px
+    width: 1000px;
 }
 
 h1 {
@@ -94,4 +94,28 @@ h1 {
 #register-button {
     text-align: center;
     width: 100%;
+}
+
+#edit-button {
+    max-width: 1000px;
+}
+
+@media (max-width: 1200px) {
+    .book-edit {
+        width: 100%;
+    }
+
+    #edit-images{
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .book-main-info {
+        grid-template-columns: 1fr;
+    }
+
+    .book-detail-info {
+        border: 0px
+    }
 }

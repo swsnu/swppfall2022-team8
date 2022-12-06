@@ -61,11 +61,12 @@ const ChattingRoom = (props: IProps) => {
       <div id='chatting-room'>
         <h2 id='other-users-name'>{othersUsername}</h2>
         <div id="chat-box">
-          <button
+          <Button
+            variant='outline-secondary'
             type="button"
             disabled={!props.chatCursor}
             onClick={() => clickLoadChatHandler()}
-          >&uarr;</button>
+          >more..</Button>
           {chatList.map(chat => {
             const date = new Date(chat.timestamp)
             return (

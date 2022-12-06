@@ -132,6 +132,15 @@
     font-weight: lighter;
 }
 
+#lend-image-div {
+    text-align: center;
+}
+
+#lendimage-delete-button {
+    width: fit-content;
+    margin: 5px auto;
+}
+
 @media (max-width: 1200px) {
     .book-register {
         width: 80%;
