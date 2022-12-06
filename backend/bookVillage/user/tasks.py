@@ -3,6 +3,7 @@ from celery import shared_task
 from bookVillage.celery import app
 from book.models.book import BookTagConcat
 from django.contrib.auth.models import User
+from heapq import nlargest
 
 
 @app.task
@@ -31,9 +32,9 @@ def recommend_with_tags(subscribed_tags, user_id):
     cosine_similarity = linear_kernel(tfidf_matrix[idx], tfidf_matrix)
 
     scores = list(enumerate(cosine_similarity[0]))
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)
-    scores = scores[1:13]  # return 12 books
-    indices = [i[0] for i in scores]
+    scores = list(map(lambda x: (x[1], x[0]), scores))
+    scores = nlargest(13, scores)[1:13]
+    indices = [i[1] for i in scores]
     result = book_tag_concat.iloc[indices]["book_id"]
     book_ids = result.values.tolist()
     print(book_ids)
