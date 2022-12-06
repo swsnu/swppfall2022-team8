@@ -31,15 +31,16 @@ def recommend_with_tags(subscribed_tags, user_id):
     books = books.append(
         {"id": 0, "name": " ".join(subscribed_tags)}, ignore_index=True
     )
+    idx = len(books.index) - 1
 
     tf = TfidfVectorizer(
         analyzer="word", ngram_range=(1, 2), min_df=0, stop_words="english"
     )
-    tfidf_matrix = tf.fit_transform(books["name"])
-    cosine_similarity = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-    idx = len(books.index) - 1
-    scores = list(enumerate(cosine_similarity[idx]))
+    tfidf_matrix = tf.fit_transform(books["name"])
+    cosine_similarity = linear_kernel(tfidf_matrix[idx], tfidf_matrix)
+
+    scores = list(enumerate(cosine_similarity[0]))
     scores = sorted(scores, key=lambda x: x[1], reverse=True)
     scores = scores[1:13]  # return 12 books
     indices = [i[0] for i in scores]
