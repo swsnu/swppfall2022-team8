@@ -1,9 +1,9 @@
 from celery import shared_task
 
 from bookVillage.celery import app
-from book.models.book import BookTagConcat
+from book.models.book import Book, BookTag, Tag
 from django.contrib.auth.models import User
-from heapq import nlargest
+from django.core.cache import cache
 
 
 @app.task
@@ -17,25 +17,34 @@ def recommend_with_tags(subscribed_tags, user_id):
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import linear_kernel
 
-    book_tag_concat = pd.DataFrame(list(BookTagConcat.objects.all().values()))
+    book_tags = pd.DataFrame(list(BookTag.objects.all().values()))
+    tags = pd.DataFrame(list(Tag.objects.all().values("id", "name")))
+    books = pd.DataFrame(list(Book.objects.all().values("id")))
 
-    book_tag_concat = book_tag_concat.append(
-        {"book_id": 0, "tag_concat": " ".join(subscribed_tags)}, ignore_index=True
+    book_tags_df = pd.merge(
+        book_tags, tags, left_on="tag_id", right_on="id", how="inner"
+    )[["book_id", "name"]]
+    book_tags_df = book_tags_df.groupby("book_id")["name"].apply(" ".join).reset_index()
+    books = books.loc[:, books.columns != "brief"]
+    books = pd.merge(books, book_tags_df, left_on="id", right_on="book_id", how="inner")
+
+    books = books.append(
+        {"id": 0, "name": " ".join(subscribed_tags)}, ignore_index=True
     )
-    idx = len(book_tag_concat.index) - 1
+    idx = len(books.index) - 1
 
     tf = TfidfVectorizer(
         analyzer="word", ngram_range=(1, 2), min_df=0, stop_words="english"
     )
 
-    tfidf_matrix = tf.fit_transform(book_tag_concat["tag_concat"])
+    tfidf_matrix = tf.fit_transform(books["name"])
     cosine_similarity = linear_kernel(tfidf_matrix[idx], tfidf_matrix)
 
     scores = list(enumerate(cosine_similarity[0]))
-    scores = list(map(lambda x: (x[1], x[0]), scores))
-    scores = nlargest(13, scores)[1:13]
-    indices = [i[1] for i in scores]
-    result = book_tag_concat.iloc[indices]["book_id"]
+    scores = sorted(scores, key=lambda x: x[1], reverse=True)
+    scores = scores[1:13]  # return 12 books
+    indices = [i[0] for i in scores]
+    result = books.iloc[indices]["id"]
     book_ids = result.values.tolist()
     print(book_ids)
     user = User.objects.get(id=user_id)
