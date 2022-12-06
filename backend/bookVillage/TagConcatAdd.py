@@ -16,5 +16,6 @@ for book in books:
     for tag in tags.all():
         tag_names.append(tag.name)
     book.create_tag_concat(tag_names)
-    print(f"{i}/{count}")
+    if i % 500 == 0:
+        print(f"{i}/{count}")
     i = i + 1
