@@ -26,6 +26,7 @@ def recommend_with_tags(subscribed_tags, user_id):
     book_tags_df = book_tags_df.groupby("book_id")["name"].apply(" ".join).reset_index()
     books = books.loc[:, books.columns != "brief"]
     books = pd.merge(books, book_tags_df, left_on="id", right_on="book_id", how="inner")
+    print(books["name"][3])
 
     books = books.append(
         {"id": 0, "name": " ".join(subscribed_tags)}, ignore_index=True

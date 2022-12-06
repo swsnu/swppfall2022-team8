@@ -21,7 +21,19 @@ class Book(models.Model):
     brief = models.CharField(max_length=200, blank=True, null=False, default="정보 없음")
     image = models.ImageField(upload_to=book_image_upload_to, blank=True, null=True)
 
+    def create_tag_concat(self, tag_names):
+        concat = " ".join(tag_names)
+        tag_concat = BookTagConcat.objects.create(book=self, tag_concat=concat)
+        return tag_concat
+
 
 class BookTag(models.Model):
     book = models.ForeignKey(Book, related_name="booktag", on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, related_name="booktag", on_delete=models.CASCADE)
+
+
+class BookTagConcat(models.Model):
+    book = models.OneToOneField(
+        Book, on_delete=models.CASCADE, related_name="tagconcat", primary_key=True
+    )
+    tag_concat = models.TextField(blank=False, null=False, default=" ")
