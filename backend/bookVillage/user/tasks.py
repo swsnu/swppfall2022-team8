@@ -3,6 +3,7 @@ from celery import shared_task
 from bookVillage.celery import app
 from book.models.book import BookTagConcat
 from django.contrib.auth.models import User
+from django.core.cache import cache
 
 from heapq import nlargest
 
