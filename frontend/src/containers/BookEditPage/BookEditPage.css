@@ -1,21 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Bangers|Cinzel:400,700,900|Lato:100,300,400,700,900|Lobster|Lora:400,700|Mansalva|Muli:200,300,400,600,700,800,900|Open+Sans:300,400,600,700,800|Oswald:200,300,400,500,600,700|Roboto:100,300,400,500,700,900&display=swap');
 
-.book-register {
-    border: 3px solid rgb(119, 170, 235);
+
+
+#breif-summary-description {
+    font-size: small;
+    color: grey;
+    font-weight: normal;
+}
+
+.book-edit {
+    border: 0px solid rgb(119, 170, 235);
     display: inline-block;
     text-align: left;
     width: 1000px
 }
 
-.image-test {
-    width: 200px;
-    height: 300px;
-    margin: 30px auto;
-    border: 1px solid black;
-}  
-
-.book-register h1 {
+h1 {
+    display: inline;
     text-align: center;
+    font-weight: bolder;
     padding-top: 40px;
 }
 
@@ -24,7 +27,7 @@
     margin: 0;
 }
 
-.book-register h5 {
+.book-edit h5 {
     display: inline;
     text-align: center;
     font-weight: bold;
@@ -91,29 +94,4 @@
 #register-button {
     text-align: center;
     width: 100%;
-}
-
-#edit-author {
-  font-weight: 250;
-}
-
-.book-detail-info {
-    display: inline-block;
-    border-left: 2px solid black;
-    padding-top: 30px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 20px;
-    text-align: left;
-    word-break: break-all;
-    word-wrap: break-word;
-}
-
-#edit-button {
-    width: 100%;
-}
-
-.book-main-info {
-    display: grid;
-    grid-template-columns: 300px 1fr;
 }

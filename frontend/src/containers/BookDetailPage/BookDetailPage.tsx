@@ -148,7 +148,7 @@ const BookDetailPage = () => {
               id="detail-request-button"
               onClick={() => navigate(`/book/${id}/request`)}
             >Request</Button>
-            <Button variant="outline-warning  "
+            <Button variant="outline-warning"
               type="button"
               className='detail-page-buttons'
               id="detail-watch-button"

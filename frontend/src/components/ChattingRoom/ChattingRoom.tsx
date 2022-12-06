@@ -81,7 +81,7 @@ const ChattingRoom = (props: IProps) => {
                   }
                 >
                   <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
-                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><>{date.getHours()} : {date.getMinutes()}</></h5>
+                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><> {date.getMonth()} / {date.getDate()}&nbsp; {date.getHours()} : {date.getMinutes()}</></h5>
                 </div>
               </div>
             )

@@ -112,6 +112,7 @@
   font-size: xx-small;
   text-align: left;
   color: grey;
+  margin-top: 2px;
   margin-bottom: 10px;
 }
 
@@ -119,6 +120,7 @@
   font-size: xx-small;
   text-align: right;
   color: grey;
+  margin-top: 2px;
 }
 
 .chat-time-info {
