@@ -49,10 +49,9 @@ const ChattingRoom = (props: IProps) => {
 
   const clickSendChatHandler = () => {
     if (chatInput) {
-      const success = props.sendMessage(chatInput, 'chat')
-      if (success) {
-        setChatInput('')
-      }
+      const message = chatInput.slice()
+      setChatInput('')
+      props.sendMessage(message, 'chat')
     }
   }
 
