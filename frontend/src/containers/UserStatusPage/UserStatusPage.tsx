@@ -114,7 +114,7 @@ const UserStatusPage = () => {
     <div className='page'>
       <NavBar />
       <br />
-      <h1>User Info</h1>
+      <h1>{`${userState.currentUser?.username ?? ''}'s User Info`}</h1>
       <br />
       <br />
       <h3>Lend List</h3>

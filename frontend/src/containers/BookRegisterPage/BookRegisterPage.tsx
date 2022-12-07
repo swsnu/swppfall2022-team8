@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from 'react-router'
 
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
-import { BookType, createBook, fetchQueryBooks, selectBook } from '../../store/slices/book/book'
+import { BookType, createBook, fetchQueryBooks, fetchQueryTags, selectBook } from '../../store/slices/book/book'
 import { createLend, LendType, postImage, selectLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
@@ -49,6 +49,7 @@ const BookRegisterPage = () => {
   const [listTarget, setListTarget] = useState<HTMLElement | null>(null)
   const prevTitleInput = useRef<string>('')
   const [listShow, setListShow] = useState<boolean>(false)
+  const prevTagInput = useRef<string>('')
 
   useInterval(() => {
     if (listTarget === document.activeElement && title !== prevTitleInput.current) {
@@ -57,6 +58,13 @@ const BookRegisterPage = () => {
       }
       setListShow(Boolean(title))
       prevTitleInput.current = title
+    }
+    if (listTarget === document.activeElement && tag !== prevTagInput.current) {
+      if (tag) {
+        dispatch(fetchQueryTags({ name: tag }))
+      }
+      setListShow(Boolean(tag))
+      prevTagInput.current = tag
     }
   }, 200)
 
@@ -103,10 +111,11 @@ const BookRegisterPage = () => {
     setLendImage(newLendImage)
   }
 
-  const clickAddTagHandler = () => {
-    const newTags: string[] = [...tags, tag]
+  const clickAddTagHandler = (name: string) => {
+    const newTags: string[] = [...tags, name]
     setTags(newTags)
     setTag('')
+    setListShow(false)
   }
 
   const clickAddQuestionHandler = () => {
@@ -339,12 +348,24 @@ const BookRegisterPage = () => {
                     <div className='tags-input-button'>
                       <Form.Control
                         id='tags-input'
-                        type='text' value={tag}
+                        type='text'
+                        autoComplete='off'
+                        value={tag}
                         onChange={event => setTag(event.target.value)}
+                        placeholder='Search Tag'
+                        onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler(tag) }}
+                        onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
+                        onBlur={_event => { setListShow(false) }}
                       />
                     </div>
                   </Form.Label>
                   <div className='tags-display'>
+                    <Button
+                      variant="primary"
+                      className='add-button'
+                      onClick={() => clickAddTagHandler(tag)}
+                      disabled={!tag}
+                    >add</Button>
                     {tags.map((tag, index) => (
                       <div key={index} className='display-tag'>
                         <h5 id='tags-display-text'>{tag}</h5>
@@ -356,13 +377,24 @@ const BookRegisterPage = () => {
                         >X</Button>
                       </div>
                     ))}
-                    <Button
-                      variant="primary"
-                      className='add-button'
-                      onClick={() => clickAddTagHandler()}
-                      disabled={!tag}
-                    >add</Button>
                   </div>
+                  <Overlay
+                    show={listShow}
+                    target={listTarget}
+                    placement="top"
+                    container={null}
+                    containerPadding={0}
+                  >
+                    <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
+                      {bookState.tags.map((tag, idx) => (
+                        <ListGroup.Item
+                          key={`tag_${tag.name}_${idx}`}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => { clickAddTagHandler(tag.name) }}
+                        >{tag.name}</ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </Overlay>
                 </InputGroup>
               </>
             }
@@ -438,6 +470,12 @@ const BookRegisterPage = () => {
                 </div>
               </Form.Label>
               <div className='questions-display'>
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
                 {questions.map((question, index) => (
                   <div key={index} className='display-tag'>
                     <h5 id='questions-display-text'>{question}</h5>
@@ -449,12 +487,6 @@ const BookRegisterPage = () => {
                     >X</Button>
                   </div>
                 ))}
-                <Button
-                  variant="primary"
-                  className='add-button'
-                  onClick={() => clickAddQuestionHandler()}
-                  disabled={!question}
-                >add</Button>
               </div>
             </Form.Group>
           </Form>
