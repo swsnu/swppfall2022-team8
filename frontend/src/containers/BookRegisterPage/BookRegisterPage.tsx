@@ -350,6 +350,7 @@ const BookRegisterPage = () => {
                   <Col sm={9}>
                     <Form.Control
                       id='title-input'
+                      autoComplete='off'
                       type="text" placeholder="title"
                       value={title} onChange={event => setTitle(event.target.value)}
                     />
@@ -360,6 +361,7 @@ const BookRegisterPage = () => {
                   <Col>
                     <Form.Control
                       id='author-input'
+                      autoComplete='off'
                       type="text" placeholder='author'
                       value={author} onChange={event => setAuthor(event.target.value)}
                     />
@@ -372,6 +374,7 @@ const BookRegisterPage = () => {
                     <div>
                       <Form.Control
                         id='brief-summary-input'
+                        autoComplete='off'
                         type='text' value={brief}
                         onChange={event => setBrief(event.target.value)}
                       />
@@ -391,7 +394,7 @@ const BookRegisterPage = () => {
                         value={tag}
                         onChange={event => setTag(event.target.value)}
                         placeholder='Search Tag'
-                        onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler(tag) }}
+                        onKeyPress={event => { if (event.key === 'Enter' && tag) clickAddTagHandler(tag) }}
                         onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
                         onBlur={_event => { setListShow(false) }}
                       />
@@ -492,7 +495,9 @@ const BookRegisterPage = () => {
                   <Form.Control
                     as='textarea'
                     id='additional-info-input'
-                    type='text' value={info}
+                    type='text'
+                    autoComplete='off'
+                    value={info}
                     onChange={event => setInfo(event.target.value)}
                   />
                 </div>
@@ -504,7 +509,9 @@ const BookRegisterPage = () => {
                 <div className='questions-input-button'>
                   <Form.Control
                     id='questions-input'
-                    type='text' value={question}
+                    type='text'
+                    autoComplete='off'
+                    value={question}
                     onChange={event => setQuestion(event.target.value)}
                   />
                 </div>

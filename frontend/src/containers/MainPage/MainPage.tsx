@@ -18,14 +18,14 @@ const MainPage = () => {
           <h2 id='welcome-description'>Borrow or lend books each other.</h2>
         </div>
         <div className='image-div'>
-          <img id='welcome-book-image1' src='img/isesuma.jpg' alt='no image'/>
-          <img id='welcome-book-image2' src='img/heun.jpg' alt='no image' />
+          <img id='welcome-book-image1' src='img/bocchi.jfif' alt='no image'/>
+          <img id='welcome-book-image2' src='img/prince.png' alt='no image' />
         </div>
       </div>
       <div id='main-register'>
         <div className='image-div'>
-          <img id='register-book-image1' src='img/hyun.jpeg' alt='no image'/>
-          <img id='register-book-image2' src='img/mom.jpg' alt='no image' />
+          <img id='register-book-image1' src='img/linear.png' alt='no image'/>
+          <img id='register-book-image2' src='img/isesuma.jpg' alt='no image' />
         </div>
         <div>
           <h2 id='register-h2'><b>Register your book and lend it to other people!</b></h2>

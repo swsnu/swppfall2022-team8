@@ -211,7 +211,7 @@ const UserStatusPage = () => {
                 autoComplete='off'
                 value={tag}
                 onChange={event => setTag(event.target.value)}
-                onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler() }}
+                onKeyPress={event => { if (event.key === 'Enter' && tag) clickAddTagHandler() }}
                 onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
                 onBlur={_event => { setListShow(false) }}
               />

@@ -42,9 +42,9 @@ describe('<SearchBar />', () => {
     const tagButton = await screen.findByText('Tag')
     fireEvent.click(tagButton)
     const tagInput = await screen.findByPlaceholderText('Tag search')
-    fireEvent.keyDown(tagInput, { key: 'Ctrl' })
+    fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
     fireEvent.change(tagInput, { target: { value: 'fake_tag1 fake_tag2' } })
-    fireEvent.keyDown(tagInput, { key: 'Enter' })
+    fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.'))
