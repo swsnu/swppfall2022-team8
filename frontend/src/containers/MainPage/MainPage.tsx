@@ -18,13 +18,13 @@ const MainPage = () => {
           <h2 id='welcome-description'>Borrow or lend books each other.</h2>
         </div>
         <div className='image-div'>
-          <img id='welcome-book-image1' src='img/isesuma.jpg' alt='no image'/>
-          <img id='welcome-book-image2' src='img/heun.jpg' alt='no image' />
+          <img id='welcome-book-image1' src='img/isesuma.jfif' alt='no image'/>
+          <img id='welcome-book-image2' src='img/heun.png' alt='no image' />
         </div>
       </div>
       <div id='main-register'>
         <div className='image-div'>
-          <img id='register-book-image1' src='img/hyun.jpeg' alt='no image'/>
+          <img id='register-book-image1' src='img/hyun.png' alt='no image'/>
           <img id='register-book-image2' src='img/mom.jpg' alt='no image' />
         </div>
         <div>
