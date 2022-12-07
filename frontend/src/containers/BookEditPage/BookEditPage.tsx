@@ -115,9 +115,7 @@ const BookEditPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <h1>Book Edit Page</h1>
-      <br />
-      <p>You can only edit lend info.</p>
+      <br/>
       <div className='book-edit'>
         <div className='book-main-info'>
           <div className="image-test">
@@ -141,44 +139,57 @@ const BookEditPage = () => {
 
         <div>
           {oldImages.length > 0 || newImages.length > 0
-            ? <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
-              {oldImages.map((image, idx) => (
+            ? <Carousel
+                activeIndex={lendImageIdx}
+                onSelect={handleSelect}
+                id='edit-images'
+              > {oldImages.map((image, idx) => (
                 <Carousel.Item key={`lendImage_${idx}`}>
                   <img
+                    className='lend-image-carousel'
                     src={image.image}
                     width={'100%'}
                     alt="Image Not Found"
                   />
                   <Carousel.Caption>
-                    <button onClick={() => onOldDeleteHandler(image.id)}>x</button>
+                    <Button
+                      variant='danger'
+                      onClick={() => onOldDeleteHandler(image.id)}
+                    >x</Button>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
               {newImages.map((image, idx) => (
                 <Carousel.Item key={`lendImage_${idx}`}>
                   <img
+                    className='lend-image-carousel'
                     src={URL.createObjectURL(image)}
                     width={'100%'}
                     alt="Image Not Found"
                   />
                   <Carousel.Caption>
-                    <button onClick={() => onNewDeleteHandler(idx)}>x</button>
+                    <Button
+                      variant='danger'
+                      onClick={() => onNewDeleteHandler(idx)}
+                    >x
+                    </Button>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
             </Carousel>
             : null}
-          <input
-            type='file'
-            multiple
-            accept="image/*"
-            onChange={lendImageChangedHandler}
-          />
         </div>
 
         <Form>
           <Form.Group as={Row} className='input-class'>
+            <Form.Control
+              type='file'
+              accept='image/*'
+              onChange={lendImageChangedHandler}
+            />
+            <br/>
             <Form.Label>
+              <br/>
               <h5>Borrowing Cost :</h5>
               <h5 id='h5-cost'>{cost}</h5>
               <br />
@@ -241,6 +252,7 @@ const BookEditPage = () => {
           </Form.Group>
         </Form>
       </div>
+      <br/>
       <Button
         id='edit-button'
         type="button" onClick={() => clickConfirmEditHanler()}

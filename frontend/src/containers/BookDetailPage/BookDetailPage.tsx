@@ -98,16 +98,18 @@ const BookDetailPage = () => {
           <div>
             {lendState.selectedLend?.book_info.tags.slice(tagMin, tagMax).map((tag) => ('#' + tag + ' '))}
             <br />
-            <button
+            <Button
               type="button"
               disabled={!lendState.selectedLend || tagMin <= 0}
               onClick={() => setTagPage(old => old - 1)}
-            >Prev</button>
-            <button
+              id='detail-page-prev'
+            >Prev</Button>
+            <Button
               type="button"
               disabled={!lendState.selectedLend || tagMax >= lendState.selectedLend.book_info.tags.length}
               onClick={() => setTagPage(old => old + 1)}
-            >Next</button>
+              id='detail-page-next'
+            >Next</Button>
           </div>
           <br />
           <div className='addinfo'>

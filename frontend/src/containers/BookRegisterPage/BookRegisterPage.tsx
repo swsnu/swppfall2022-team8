@@ -1,5 +1,5 @@
 import { SetStateAction, useRef, useState } from 'react'
-import { Button, Col, Form, InputGroup, ListGroup, Overlay, Row } from 'react-bootstrap'
+import { Button, ButtonGroup, Col, Form, InputGroup, ListGroup, Overlay, Row, ToggleButton } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router'
 
@@ -68,8 +68,19 @@ const BookRegisterPage = () => {
     }
   }, 200)
 
-  const changeTabHandler = () => {
-    setExistingBook(!existingBook)
+  const clickSearchBookHandler = () => {
+    setExistingBook(true)
+    setTitle('')
+    setAuthor('')
+    setBrief('')
+    setTag('')
+    setTags([])
+    setBookImage(null)
+    setSelectedBook(null)
+  }
+
+  const clickNewBookHandler = () => {
+    setExistingBook(false)
     setTitle('')
     setAuthor('')
     setBrief('')
@@ -243,10 +254,33 @@ const BookRegisterPage = () => {
         <div className='book-register'>
           <br />
           <Form>
-            <h3>Book Data</h3>
-            <Button type='button' onClick={changeTabHandler}>
-              {existingBook ? 'Search Book' : 'Register New Book'}
-            </Button>
+            <div className='select-input'>
+              <h3>Book Data</h3>
+              <ButtonGroup>
+                <ToggleButton
+                  id='radio-1'
+                  type='radio'
+                  variant='outline-success'
+                  name='radio'
+                  value={1}
+                  checked={existingBook}
+                  onChange={() => clickSearchBookHandler()}
+                >
+                  Search Book
+                </ToggleButton>
+                <ToggleButton
+                  id='radio-2'
+                  type='radio'
+                  variant='outline-success'
+                  name='radio'
+                  value={2}
+                  checked={!existingBook}
+                  onChange={() => clickNewBookHandler()}
+                >
+                  Register New Book
+                </ToggleButton>
+              </ButtonGroup>
+            </div>
             {existingBook
               ? <>
                 <Form.Group as={Row} className="input-class" id="title-input-form">
@@ -278,18 +312,22 @@ const BookRegisterPage = () => {
                   </Overlay>
                 </Form.Group>
                 {selectedBook
-                  ? <div>
-                    <img alt='Image Not Found' width={'250px'} src={selectedBook.image} />
-                    <br />
-                    title: {selectedBook.title}
-                    <br />
-                    author: {selectedBook.author}
-                    <br />
-                    brief: {selectedBook.brief}
-                    <br />
-                    tags:
-                    <br />
-                    {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
+                  ? <div className='input-class'>
+                    <div className='book-detail-page'>
+                      <div className='image-test'>
+                        <img alt='Image Not Found' width={'100%'} src={selectedBook.image} />
+                      </div>
+                      <div className='book-detail-info'>
+                        <h1>{selectedBook.title}</h1>
+                        <br />
+                        <h5 id='register-page-author'>written by {selectedBook.author}</h5>
+                        <hr/>
+                        <p className='light-text'>{selectedBook.brief}</p>
+                        <div className='tags-text'>
+                          {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   : null}
               </>
@@ -398,15 +436,16 @@ const BookRegisterPage = () => {
                 </InputGroup>
               </>
             }
-            <h3>Lend Data</h3>
             <Form.Group as={Row} className='input-class'>
+            <h3>Lend Data</h3>
               <Form.Label><h5>Upload Book Images You Want To Lend</h5></Form.Label>
               {lendImage.length
-                ? <div>
+                ? <div id='lend-image-div'>
                   <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
                     {lendImage.map((image, idx) => (
                       <Carousel.Item key={`lendImage_${idx}`}>
                         <img
+                          className='lend-image-carousel'
                           src={URL.createObjectURL(image)}
                           width={'100%'}
                           alt="Image Not Found"
@@ -417,7 +456,8 @@ const BookRegisterPage = () => {
                       </Carousel.Item>
                     ))}
                   </Carousel>
-                  <Button onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <Button id='lendimage-delete-button'variant='outline-danger' onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <br/>
                 </div>
                 : null}
               <Form.Control
