@@ -2,6 +2,7 @@
   border: 2px solid rgb(119, 170, 235);
   display: grid;
   grid-template-columns: 300px 1fr;
+  height: fit-content;
 }
 
 .image-test {
@@ -73,4 +74,12 @@
 .lend-image-carousel:hover {
   filter: brightness(50%);
   cursor: pointer;
+}
+
+#detail-page-prev {
+  margin-right: 5px;
+}
+
+#detail-page-next {
+  margin-left: 5px;
 }

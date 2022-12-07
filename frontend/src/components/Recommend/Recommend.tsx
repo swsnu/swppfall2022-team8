@@ -21,9 +21,13 @@ const Recommend = () => {
     <>
       {userState.recommend.is_outdated
         ? <>
+            <br />
+            <br />
             <Button variant='outline-primary' id='refresh-button' onClick={onClickHandler}>
               Refresh!
             </Button>
+            <br />
+            <br />
             <p>Calculating in progress with changed tags... Please refresh after a while.</p>
           </>
         : !userState.recommend.recommend_list.length

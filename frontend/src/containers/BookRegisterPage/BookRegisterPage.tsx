@@ -1,11 +1,11 @@
 import { SetStateAction, useRef, useState } from 'react'
-import { Button, Col, Form, InputGroup, ListGroup, Overlay, Row } from 'react-bootstrap'
+import { Button, ButtonGroup, Col, Form, InputGroup, ListGroup, Overlay, Row, ToggleButton } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router'
 
 import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
-import { BookType, createBook, fetchQueryBooks, selectBook } from '../../store/slices/book/book'
+import { BookType, createBook, fetchQueryBooks, fetchQueryTags, selectBook } from '../../store/slices/book/book'
 import { createLend, LendType, postImage, selectLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
@@ -49,6 +49,7 @@ const BookRegisterPage = () => {
   const [listTarget, setListTarget] = useState<HTMLElement | null>(null)
   const prevTitleInput = useRef<string>('')
   const [listShow, setListShow] = useState<boolean>(false)
+  const prevTagInput = useRef<string>('')
 
   useInterval(() => {
     if (listTarget === document.activeElement && title !== prevTitleInput.current) {
@@ -58,10 +59,28 @@ const BookRegisterPage = () => {
       setListShow(Boolean(title))
       prevTitleInput.current = title
     }
+    if (listTarget === document.activeElement && tag !== prevTagInput.current) {
+      if (tag) {
+        dispatch(fetchQueryTags({ name: tag }))
+      }
+      setListShow(Boolean(tag))
+      prevTagInput.current = tag
+    }
   }, 200)
 
-  const changeTabHandler = () => {
-    setExistingBook(!existingBook)
+  const clickSearchBookHandler = () => {
+    setExistingBook(true)
+    setTitle('')
+    setAuthor('')
+    setBrief('')
+    setTag('')
+    setTags([])
+    setBookImage(null)
+    setSelectedBook(null)
+  }
+
+  const clickNewBookHandler = () => {
+    setExistingBook(false)
     setTitle('')
     setAuthor('')
     setBrief('')
@@ -103,10 +122,11 @@ const BookRegisterPage = () => {
     setLendImage(newLendImage)
   }
 
-  const clickAddTagHandler = () => {
-    const newTags: string[] = [...tags, tag]
+  const clickAddTagHandler = (name: string) => {
+    const newTags: string[] = [...tags, name]
     setTags(newTags)
     setTag('')
+    setListShow(false)
   }
 
   const clickAddQuestionHandler = () => {
@@ -234,10 +254,33 @@ const BookRegisterPage = () => {
         <div className='book-register'>
           <br />
           <Form>
-            <h3>Book Data</h3>
-            <Button type='button' onClick={changeTabHandler}>
-              {existingBook ? 'Search Book' : 'Register New Book'}
-            </Button>
+            <div className='select-input'>
+              <h3>Book Data</h3>
+              <ButtonGroup>
+                <ToggleButton
+                  id='radio-1'
+                  type='radio'
+                  variant='outline-success'
+                  name='radio'
+                  value={1}
+                  checked={existingBook}
+                  onChange={() => clickSearchBookHandler()}
+                >
+                  Search Book
+                </ToggleButton>
+                <ToggleButton
+                  id='radio-2'
+                  type='radio'
+                  variant='outline-success'
+                  name='radio'
+                  value={2}
+                  checked={!existingBook}
+                  onChange={() => clickNewBookHandler()}
+                >
+                  Register New Book
+                </ToggleButton>
+              </ButtonGroup>
+            </div>
             {existingBook
               ? <>
                 <Form.Group as={Row} className="input-class" id="title-input-form">
@@ -269,18 +312,22 @@ const BookRegisterPage = () => {
                   </Overlay>
                 </Form.Group>
                 {selectedBook
-                  ? <div>
-                    <img alt='Image Not Found' width={'250px'} src={selectedBook.image} />
-                    <br />
-                    title: {selectedBook.title}
-                    <br />
-                    author: {selectedBook.author}
-                    <br />
-                    brief: {selectedBook.brief}
-                    <br />
-                    tags:
-                    <br />
-                    {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
+                  ? <div className='input-class'>
+                    <div className='book-detail-page'>
+                      <div className='image-test'>
+                        <img alt='Image Not Found' width={'100%'} src={selectedBook.image} />
+                      </div>
+                      <div className='book-detail-info'>
+                        <h1>{selectedBook.title}</h1>
+                        <br />
+                        <h5 id='register-page-author'>written by {selectedBook.author}</h5>
+                        <hr/>
+                        <p className='light-text'>{selectedBook.brief}</p>
+                        <div className='tags-text'>
+                          {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   : null}
               </>
@@ -339,12 +386,24 @@ const BookRegisterPage = () => {
                     <div className='tags-input-button'>
                       <Form.Control
                         id='tags-input'
-                        type='text' value={tag}
+                        type='text'
+                        autoComplete='off'
+                        value={tag}
                         onChange={event => setTag(event.target.value)}
+                        placeholder='Search Tag'
+                        onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler(tag) }}
+                        onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
+                        onBlur={_event => { setListShow(false) }}
                       />
                     </div>
                   </Form.Label>
                   <div className='tags-display'>
+                    <Button
+                      variant="primary"
+                      className='add-button'
+                      onClick={() => clickAddTagHandler(tag)}
+                      disabled={!tag}
+                    >add</Button>
                     {tags.map((tag, index) => (
                       <div key={index} className='display-tag'>
                         <h5 id='tags-display-text'>{tag}</h5>
@@ -356,25 +415,37 @@ const BookRegisterPage = () => {
                         >X</Button>
                       </div>
                     ))}
-                    <Button
-                      variant="primary"
-                      className='add-button'
-                      onClick={() => clickAddTagHandler()}
-                      disabled={!tag}
-                    >add</Button>
                   </div>
+                  <Overlay
+                    show={listShow}
+                    target={listTarget}
+                    placement="top"
+                    container={null}
+                    containerPadding={0}
+                  >
+                    <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
+                      {bookState.tags.map((tag, idx) => (
+                        <ListGroup.Item
+                          key={`tag_${tag.name}_${idx}`}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => { clickAddTagHandler(tag.name) }}
+                        >{tag.name}</ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </Overlay>
                 </InputGroup>
               </>
             }
-            <h3>Lend Data</h3>
             <Form.Group as={Row} className='input-class'>
+            <h3>Lend Data</h3>
               <Form.Label><h5>Upload Book Images You Want To Lend</h5></Form.Label>
               {lendImage.length
-                ? <div>
+                ? <div id='lend-image-div'>
                   <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
                     {lendImage.map((image, idx) => (
                       <Carousel.Item key={`lendImage_${idx}`}>
                         <img
+                          className='lend-image-carousel'
                           src={URL.createObjectURL(image)}
                           width={'100%'}
                           alt="Image Not Found"
@@ -385,7 +456,8 @@ const BookRegisterPage = () => {
                       </Carousel.Item>
                     ))}
                   </Carousel>
-                  <Button onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <Button id='lendimage-delete-button'variant='outline-danger' onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <br/>
                 </div>
                 : null}
               <Form.Control
@@ -438,6 +510,12 @@ const BookRegisterPage = () => {
                 </div>
               </Form.Label>
               <div className='questions-display'>
+                <Button
+                  variant="primary"
+                  className='add-button'
+                  onClick={() => clickAddQuestionHandler()}
+                  disabled={!question}
+                >add</Button>
                 {questions.map((question, index) => (
                   <div key={index} className='display-tag'>
                     <h5 id='questions-display-text'>{question}</h5>
@@ -449,12 +527,6 @@ const BookRegisterPage = () => {
                     >X</Button>
                   </div>
                 ))}
-                <Button
-                  variant="primary"
-                  className='add-button'
-                  onClick={() => clickAddQuestionHandler()}
-                  disabled={!question}
-                >add</Button>
               </div>
             </Form.Group>
           </Form>

@@ -29,7 +29,7 @@ const LoginPage = () => {
       <div></div>
       <div></div>
       <div className='login-page'>
-        <p/>
+        <p />
         <h1>Sign in to BookVillage!</h1>
         <br />
         <br />
@@ -38,7 +38,7 @@ const LoginPage = () => {
             <InputGroup as={Row} className='signin'>
               <Form.Label>
                 Username
-                <p/>
+                <p />
                 <Form.Control
                   id="login-username"
                   type='text'
@@ -52,7 +52,7 @@ const LoginPage = () => {
             <InputGroup as={Row} className='signin'>
               <Form.Label>
                 Password
-                <p/>
+                <p />
                 <Form.Control
                   id="login-password"
                   type="password"

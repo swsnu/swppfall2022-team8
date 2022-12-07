@@ -49,10 +49,9 @@ const ChattingRoom = (props: IProps) => {
 
   const clickSendChatHandler = () => {
     if (chatInput) {
-      const success = props.sendMessage(chatInput, 'chat')
-      if (success) {
-        setChatInput('')
-      }
+      const message = chatInput.slice()
+      setChatInput('')
+      props.sendMessage(message, 'chat')
     }
   }
 
@@ -61,11 +60,12 @@ const ChattingRoom = (props: IProps) => {
       <div id='chatting-room'>
         <h2 id='other-users-name'>{othersUsername}</h2>
         <div id="chat-box">
-          <button
+          <Button
+            variant='outline-secondary'
             type="button"
             disabled={!props.chatCursor}
             onClick={() => clickLoadChatHandler()}
-          >&uarr;</button>
+          >more..</Button>
           {chatList.map(chat => {
             const date = new Date(chat.timestamp)
             return (
@@ -81,7 +81,7 @@ const ChattingRoom = (props: IProps) => {
                   }
                 >
                   <p className={`chat-text-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}>{chat.content}</p>
-                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><>{date.getHours()} : {date.getMinutes()}</></h5>
+                  <h5 className={`chat-time-${(chat.rank === 'info') ? 'info' : (chat.author === userID) ? 'me' : 'other'}`}><> {date.getMonth()} / {date.getDate()}&nbsp; {date.getHours()} : {date.getMinutes()}</></h5>
                 </div>
               </div>
             )

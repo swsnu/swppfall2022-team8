@@ -5,23 +5,22 @@
     padding-bottom: 20px;
 }
 
-#breif-summary-description {
-    font-size: small;
-    color: grey;
-    font-weight: normal;
-}
-
-.book-edit {
-    border: 0px solid rgb(119, 170, 235);
+.book-register {
+    border: 3px solid rgb(119, 170, 235);
     display: inline-block;
     text-align: left;
     width: 1000px
 }
 
-h1 {
-    display: inline;
+.image-test {
+    width: 200px;
+    height: 300px;
+    margin: 30px auto;
+    border: 1px solid black;
+}  
+
+.book-register h1 {
     text-align: center;
-    font-weight: bolder;
     padding-top: 40px;
 }
 
@@ -30,7 +29,7 @@ h1 {
     margin: 0;
 }
 
-.book-edit h5 {
+.book-register h5 {
     display: inline;
     text-align: center;
     font-weight: bold;
@@ -99,6 +98,51 @@ h1 {
     width: 100%;
 }
 
-@media (max-width: 1200px) {
+#edit-author {
+  font-weight: 250;
+}
 
+.book-detail-info {
+    display: inline-block;
+    border-left: 2px solid black;
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    text-align: left;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+#edit-button {
+    width: 100%;
+}
+
+.book-main-info {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+}
+
+
+.select-input {
+    text-align: center;
+}
+
+#register-page-author {
+    font-weight: lighter;
+}
+
+#lend-image-div {
+    text-align: center;
+}
+
+#lendimage-delete-button {
+    width: fit-content;
+    margin: 5px auto;
+}
+
+@media (max-width: 1200px) {
+    .book-register {
+        width: 80%;
+    }
 }

@@ -6,7 +6,7 @@ import SignupPage from './SignupPage'
 
 const fakeUser = {
   id: 1,
-  username: 'test_username'
+  username: 'username'
 }
 
 const preloadedState: RootState = rootInitialState
@@ -33,12 +33,12 @@ describe('<SignupPage />', () => {
     const submit = screen.getByText('Submit')
 
     // when
-    fireEvent.change(username, { target: { value: 'test_username' } })
-    await screen.findByDisplayValue('test_username')
-    fireEvent.change(password, { target: { value: 'test_password' } })
-    await screen.findByDisplayValue('test_password')
-    fireEvent.change(confirmPassword, { target: { value: 'test_password' } })
-    const passwords = await screen.findAllByDisplayValue('test_password')
+    fireEvent.change(username, { target: { value: 'username' } })
+    await screen.findByDisplayValue('username')
+    fireEvent.change(password, { target: { value: 'password01' } })
+    await screen.findByDisplayValue('password01')
+    fireEvent.change(confirmPassword, { target: { value: 'password01' } })
+    const passwords = await screen.findAllByDisplayValue('password01')
     expect(passwords.length).toBe(2)
     const fantasyTag = screen.getByText('fantasy')
     fireEvent.click(fantasyTag)
@@ -59,10 +59,10 @@ describe('<SignupPage />', () => {
     const submit = screen.getByText('Submit')
 
     // when
-    fireEvent.change(username, { target: { value: 'test_username' } })
-    await screen.findByDisplayValue('test_username')
-    fireEvent.change(password, { target: { value: 'test_password' } })
-    await screen.findByDisplayValue('test_password')
+    fireEvent.change(username, { target: { value: 'username' } })
+    await screen.findByDisplayValue('username')
+    fireEvent.change(password, { target: { value: 'password01' } })
+    await screen.findByDisplayValue('password01')
     fireEvent.change(confirmPassword, { target: { value: 'test_fail_confirm' } })
     await screen.findByDisplayValue('test_fail_confirm')
     const fantasyTag = screen.getByText('fantasy')
@@ -83,12 +83,12 @@ describe('<SignupPage />', () => {
     const submit = screen.getByText('Submit')
 
     // when
-    fireEvent.change(username, { target: { value: 'test_username' } })
-    await screen.findByDisplayValue('test_username')
-    fireEvent.change(password, { target: { value: 'test_password' } })
-    await screen.findByDisplayValue('test_password')
-    fireEvent.change(confirmPassword, { target: { value: 'test_password' } })
-    const passwords = await screen.findAllByDisplayValue('test_password')
+    fireEvent.change(username, { target: { value: 'username' } })
+    await screen.findByDisplayValue('username')
+    fireEvent.change(password, { target: { value: 'password01' } })
+    await screen.findByDisplayValue('password01')
+    fireEvent.change(confirmPassword, { target: { value: 'password01' } })
+    const passwords = await screen.findAllByDisplayValue('password01')
     expect(passwords.length).toBe(2)
     fireEvent.click(submit)
 
@@ -108,12 +108,12 @@ describe('<SignupPage />', () => {
     const submit = screen.getByText('Submit')
 
     // when
-    fireEvent.change(username, { target: { value: 'test_username' } })
-    await screen.findByDisplayValue('test_username')
-    fireEvent.change(password, { target: { value: 'test_password' } })
-    await screen.findByDisplayValue('test_password')
-    fireEvent.change(confirmPassword, { target: { value: 'test_password' } })
-    const passwords = await screen.findAllByDisplayValue('test_password')
+    fireEvent.change(username, { target: { value: 'username' } })
+    await screen.findByDisplayValue('username')
+    fireEvent.change(password, { target: { value: 'password01' } })
+    await screen.findByDisplayValue('password01')
+    fireEvent.change(confirmPassword, { target: { value: 'password01' } })
+    const passwords = await screen.findAllByDisplayValue('password01')
     expect(passwords.length).toBe(2)
     const fantasyTag = screen.getByText('fantasy')
     fireEvent.click(fantasyTag)
