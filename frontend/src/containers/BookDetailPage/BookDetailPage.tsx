@@ -56,14 +56,14 @@ const BookDetailPage = () => {
         {/* TODO: add image field */}
         <div>
           <div className="image-test">
-          <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
+            <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
           </div>
           <div>
             {lendState.selectedLend?.images?.length
               ? <Carousel
-                  activeIndex={lendImageIdx}
-                  onSelect={handleSelect}
-                >
+                activeIndex={lendImageIdx}
+                onSelect={handleSelect}
+              >
                 {lendState.selectedLend?.images.map((image, idx) => (
                   <Carousel.Item key={`lendImage_${idx}`}>
                     <img
@@ -98,16 +98,18 @@ const BookDetailPage = () => {
           <div>
             {lendState.selectedLend?.book_info.tags.slice(tagMin, tagMax).map((tag) => ('#' + tag + ' '))}
             <br />
-            <button
+            <Button
               type="button"
               disabled={!lendState.selectedLend || tagMin <= 0}
               onClick={() => setTagPage(old => old - 1)}
-            >Prev</button>
-            <button
+              id='detail-page-prev'
+            >Prev</Button>
+            <Button
               type="button"
               disabled={!lendState.selectedLend || tagMax >= lendState.selectedLend.book_info.tags.length}
               onClick={() => setTagPage(old => old + 1)}
-            >Next</button>
+              id='detail-page-next'
+            >Next</Button>
           </div>
           <br />
           <div className='addinfo'>
@@ -148,9 +150,9 @@ const BookDetailPage = () => {
               id="detail-request-button"
               onClick={() => navigate(`/book/${id}/request`)}
             >Request</Button>
-            <Button variant="outline-warning  "
+            <Button variant={`${userState.watch_list.find(watch => watch.id === Number(id)) ? '' : 'outline-'}warning`}
               type="button"
-              className='detail-page-buttons'
+              className={'detail-page-buttons'}
               id="detail-watch-button"
               onClick={() => clickWatchHandler()}
             >Watch</Button>

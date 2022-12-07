@@ -4,9 +4,9 @@
   background-color: white;
   padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: 20px;
+  padding-bottom: 80px;
   border-radius: 20px;
-  min-height: 800px;
+  min-height: 900px;
   min-width: 70vw;
   margin: auto;
   text-align: center;
@@ -50,5 +50,11 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1200px) {
+  .page{
+    padding-bottom: 120px;
   }
 }

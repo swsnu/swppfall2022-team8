@@ -1,3 +1,4 @@
+import { Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { fetchNextUserRooms, RoomType, selectRoom } from '../../store/slices/room/room'
@@ -37,11 +38,12 @@ const ChattingRoomList = (props: IProps) => {
           </div>
         )
       })}
-      <button
+      <Button
+        variant='primary-secondary'
         type="button"
         disabled={!roomState.next}
         onClick={() => clickLoadRoomHandler()}
-      >&darr;</button>
+      >more..</Button>
     </div>
   )
 }
