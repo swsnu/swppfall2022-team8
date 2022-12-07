@@ -3,7 +3,7 @@ const Footer = () => {
     <div className='footer'>
       <br/>
       <br/>
-      Hoshimachi Suisei
+      BookVillage
       <br/>
     </div>
   )

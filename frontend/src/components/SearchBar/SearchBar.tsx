@@ -30,6 +30,7 @@ const SearchBar = (props: IProps) => {
 
   const categories = ['Title', 'Author', 'Tag']
   const dropdowns = [...categories, 'Advanced']
+  const disableSearch = inputs.map(input => input.trim()).every(input => !input)
 
   useEffect(() => {
     const entries = [props.title ?? '', props.author ?? '', props.tag?.join(' ') ?? '']
@@ -115,7 +116,7 @@ const SearchBar = (props: IProps) => {
             id={`search-bar-${category.toLowerCase()}`}
             value={inputs[idx]}
             onChange={event => changeInputHandler(event.target.value, idx)}
-            onKeyDown={event => { if (event.key === 'Enter') clickSearchHandler() }}
+            onKeyPress={event => { if (event.key === 'Enter' && !disableSearch) clickSearchHandler() }}
             {...(
               category === 'Tag'
                 ? {
@@ -164,7 +165,7 @@ const SearchBar = (props: IProps) => {
         <Button
           id="search-button"
           variant="outline-primary"
-          disabled={inputs.map(input => input.trim()).every(input => !input)}
+          disabled={disableSearch}
           onClick={() => clickSearchHandler()}
         >
           Search
