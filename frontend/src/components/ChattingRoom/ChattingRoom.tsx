@@ -28,6 +28,7 @@ const ChattingRoom = (props: IProps) => {
     : props.room.lender_username
 
   const chatList = [...props.oldChatList, ...props.newChatList]
+  const disableChat = !chatInput
 
   // this code scrolls down the chat room when a new chat is added
   useEffect(() => {
@@ -48,11 +49,9 @@ const ChattingRoom = (props: IProps) => {
   }
 
   const clickSendChatHandler = () => {
-    if (chatInput) {
-      const message = chatInput.slice()
-      setChatInput('')
-      props.sendMessage(message, 'chat')
-    }
+    const message = chatInput.slice()
+    setChatInput('')
+    props.sendMessage(message, 'chat')
   }
 
   return (
@@ -94,9 +93,9 @@ const ChattingRoom = (props: IProps) => {
               type='text'
               value={chatInput}
               onChange={event => setChatInput(event.target.value)}
-              onKeyDown={event => { if (event.key === 'Enter') clickSendChatHandler() }}
+              onKeyPress={event => { if (event.key === 'Enter' && !disableChat) clickSendChatHandler() }}
             />
-            <Button id='send-button' onClick={() => clickSendChatHandler()}>
+            <Button id='send-button' disabled={disableChat} onClick={() => clickSendChatHandler()}>
               <FontAwesomeIcon id='paper-plane' icon={faPaperPlane}/>
             </Button>
           </InputGroup>
