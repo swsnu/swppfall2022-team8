@@ -15,6 +15,8 @@ const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
+  const disableLogin = !(username && password)
+
   const clickLoginHandler = () => {
     if (username && password) {
       const data = { username, password }
@@ -42,10 +44,11 @@ const LoginPage = () => {
                 <Form.Control
                   id="login-username"
                   type='text'
+                  autoComplete='off'
                   placeholder='username'
                   value={username}
                   onChange={event => setUsername(event.target.value)}
-                  onKeyDown={event => { if (event.key === 'Enter') clickLoginHandler() }}
+                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) clickLoginHandler() }}
                 />
               </Form.Label>
             </InputGroup>
@@ -56,10 +59,11 @@ const LoginPage = () => {
                 <Form.Control
                   id="login-password"
                   type="password"
+                  autoComplete='off'
                   value={password}
                   placeholder='password'
                   onChange={event => setPassword(event.target.value)}
-                  onKeyDown={event => { if (event.key === 'Enter') clickLoginHandler() }}
+                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) clickLoginHandler() }}
                 />
               </Form.Label>
             </InputGroup>
@@ -68,7 +72,7 @@ const LoginPage = () => {
         <br />
         <div className='signin-buttons'>
           <Button
-            disabled={!(username && password)}
+            disabled={disableLogin}
             onClick={() => clickLoginHandler()}
             id='login-button'
             variant='outline-primary'

@@ -213,7 +213,9 @@ const BookEditPage = () => {
                 <Form.Control
                   as='textarea'
                   id='additional-info-input'
-                  type='text' value={info}
+                  type='text'
+                  autoComplete='off'
+                  value={info}
                   onChange={event => setInfo(event.target.value)}
                 />
               </div>
@@ -225,7 +227,9 @@ const BookEditPage = () => {
               <div className='questions-input-button'>
                 <Form.Control
                   id='questions-input'
-                  type='text' value={question}
+                  type='text'
+                  autoComplete='off'
+                  value={question}
                   onChange={event => setQuestion(event.target.value)}
                 />
               </div>

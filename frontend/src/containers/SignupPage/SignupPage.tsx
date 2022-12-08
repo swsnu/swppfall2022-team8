@@ -18,10 +18,24 @@ const SignupPage = () => {
   const [hintShow2, setHintShow2] = useState<boolean>(false)
   const [hintTarget1, setHintTarget1] = useState<HTMLElement | null>(null)
   const [hintTarget2, setHintTarget2] = useState<HTMLElement | null>(null)
-  const hint1 = 'Username should be minimum 6 alphabets.'
-  const hint2 = 'Password should be minimum 8 characters, at least one alphabet and one number'
 
   const dispatch = useDispatch<AppDispatch>()
+
+  const usernameHint = ['Username should be at least 6 alphabets, numbers, dashes (-), and underscores (_)']
+  const passwordHint = [
+    'Password should contain at least 8 alphabets, numbers, and special characters',
+    'At least one of the above items should be included',
+    '(special character: `~!@#$%&*_^-)'
+  ]
+
+  const alertHints = [
+    usernameHint[0],
+    passwordHint[0] + ', each containing at least one.\n' + passwordHint[2]
+  ]
+  const regexes = [
+    /^[a-zA-Z0-9_-]{6,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[`~!@#$%&*_^-])[A-Za-z\d`~!@#$%&*_^-]{8,}$/
+  ]
 
   const clickSubmitHandler = async () => {
     if (password !== confirmPassword) {
@@ -34,23 +48,20 @@ const SignupPage = () => {
       return
     }
 
-    const exp1: RegExp = /^[a-zA-Z]{6,}$/
-    const exp2: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-    let flag1 = false
-    let flag2 = false
-    if (exp1.test(username)) flag1 = true
-    if (exp2.test(password)) flag2 = true
+    const entries = [username, password]
+    const tests = entries.map((entry, idx) => regexes[idx].test(entry))
 
-    if (flag1 && flag2) {
+    if (tests.every(val => val)) {
       const response = await dispatch(requestSignup({ username, password }))
       if (response.type === `${requestSignup.typePrefix}/fulfilled`) {
         const works = tagExamples.filter((_tag, idx) => tags[idx]).map(tag => dispatch(updateTag({ tag })))
         await Promise.all(works)
       }
     } else {
-      const messageBuffer = []
-      if (!flag1) messageBuffer.push(hint1)
-      if (!flag1) messageBuffer.push(hint2)
+      const messageBuffer: string[] = []
+      tests.forEach((test, idx) => {
+        if (!test) messageBuffer.push(alertHints[idx])
+      })
       alert(messageBuffer.join('\n'))
     }
   }
@@ -76,6 +87,7 @@ const SignupPage = () => {
             <Form.Control
               id='signup-username'
               type='text'
+              autoComplete='off'
               placeholder='username'
               value={username}
               onChange={event => setUsername(event.target.value)}
@@ -92,7 +104,7 @@ const SignupPage = () => {
               <Popover id="hint-username">
                 <Popover.Header as="h3">Username</Popover.Header>
                 <Popover.Body>
-                  &middot; {hint1}<br />
+                  &middot; {usernameHint[0]}
                 </Popover.Body>
               </Popover>
             </Overlay>
@@ -121,7 +133,9 @@ const SignupPage = () => {
               <Popover id="hint-password">
                 <Popover.Header as="h3">Password</Popover.Header>
                 <Popover.Body>
-                  &middot; {hint2}<br />
+                  &middot; {passwordHint[0]}<br />
+                  &middot; {passwordHint[1]}<br /><br />
+                  {passwordHint[2]}
                 </Popover.Body>
               </Popover>
             </Overlay>

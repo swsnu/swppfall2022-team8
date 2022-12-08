@@ -95,6 +95,7 @@ const BookRequestPage = () => {
                 <Form.Control
                   value={answers[idx] ?? ''}
                   type='text'
+                  autoComplete='off'
                   placeholder='answer to the question...'
                   onChange={event => changeAnswerHandler(idx, event.target.value)}
                 />

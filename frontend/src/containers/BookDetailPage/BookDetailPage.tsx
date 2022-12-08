@@ -90,8 +90,8 @@ const BookDetailPage = () => {
           <br />
           <p className='light-text'>{lendState.selectedLend?.book_info.brief}</p>
           {lendState.selectedLend?.status
-            ? <Button active variant='warning'>Borrowed</Button>
-            : <Button active variant='success'>Available</ Button>
+            ? <Button active variant='warning' style={{ cursor: 'default' }}>Borrowed</Button>
+            : <Button active variant='success' style={{ cursor: 'default' }}>Available</ Button>
           }
           <br />
           <br />
