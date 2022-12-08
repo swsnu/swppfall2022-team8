@@ -17,6 +17,7 @@ const BookEditPage = () => {
   const navigate = useNavigate()
   const lendState = useSelector(selectLend)
   const userState = useSelector(selectUser)
+  const [tagVisible, setTagVisible] = useState<boolean>(false)
 
   useEffect(() => {
     (async () => {
@@ -115,7 +116,7 @@ const BookEditPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <br/>
+      <br />
       <div className='book-edit'>
         <div className='book-main-info'>
           <div className="image-test">
@@ -131,7 +132,19 @@ const BookEditPage = () => {
               {lendState.selectedLend?.book_info.brief}
               <br />
               <p />
-              {lendState.selectedLend?.book_info.tags.map((t) => ('#' + t + ' '))}
+              <div>
+                <Button
+                  type="button"
+                  onClick={() => setTagVisible(val => !val)}
+                >{tagVisible ? 'Close Tags' : 'More Tags'}</Button>
+                <br />
+                <div className='info-box'>
+                  {tagVisible
+                    ? lendState.selectedLend?.book_info.tags.map((tag) => ('#' + tag + ' '))
+                    : lendState.selectedLend?.book_info.tags.slice(0, 10).map((tag) => ('#' + tag + ' '))
+                  }
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -140,25 +153,25 @@ const BookEditPage = () => {
         <div>
           {oldImages.length > 0 || newImages.length > 0
             ? <Carousel
-                activeIndex={lendImageIdx}
-                onSelect={handleSelect}
-                id='edit-images'
-              > {oldImages.map((image, idx) => (
-                <Carousel.Item key={`lendImage_${idx}`}>
-                  <img
-                    className='lend-image-carousel'
-                    src={image.image}
-                    width={'100%'}
-                    alt="Image Not Found"
-                  />
-                  <Carousel.Caption>
-                    <Button
-                      variant='danger'
-                      onClick={() => onOldDeleteHandler(image.id)}
-                    >x</Button>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              ))}
+              activeIndex={lendImageIdx}
+              onSelect={handleSelect}
+              id='edit-images'
+            > {oldImages.map((image, idx) => (
+              <Carousel.Item key={`lendImage_${idx}`}>
+                <img
+                  className='lend-image-carousel'
+                  src={image.image}
+                  width={'100%'}
+                  alt="Image Not Found"
+                />
+                <Carousel.Caption>
+                  <Button
+                    variant='danger'
+                    onClick={() => onOldDeleteHandler(image.id)}
+                  >x</Button>
+                </Carousel.Caption>
+              </Carousel.Item>
+            ))}
               {newImages.map((image, idx) => (
                 <Carousel.Item key={`lendImage_${idx}`}>
                   <img
@@ -187,9 +200,9 @@ const BookEditPage = () => {
               accept='image/*'
               onChange={lendImageChangedHandler}
             />
-            <br/>
+            <br />
             <Form.Label>
-              <br/>
+              <br />
               <h5>Borrowing Cost :</h5>
               <h5 id='h5-cost'>{cost}</h5>
               <br />
@@ -256,7 +269,7 @@ const BookEditPage = () => {
           </Form.Group>
         </Form>
       </div>
-      <br/>
+      <br />
       <Button
         id='edit-button'
         type="button" onClick={() => clickConfirmEditHanler()}

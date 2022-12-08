@@ -80,11 +80,6 @@ const SearchBar = (props: IProps) => {
       tag: inputs[2].trim() ? inputs[2].trim().split(' ') : undefined
     }
 
-    if (params.tag && !params.tag.every(tag => /^[0-9A-Za-z-]+$/.test(tag))) {
-      alert('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.')
-      return
-    }
-
     navigate(`/search?${QueryString.stringify(params)}`)
   }
 

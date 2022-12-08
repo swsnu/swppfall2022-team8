@@ -5,3 +5,11 @@
 #chatting-right-button {
     margin-bottom: 0;
 }
+
+.book-detail-info {
+    border: 2px solid rgb(119, 170, 235);
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 15px;
+}
