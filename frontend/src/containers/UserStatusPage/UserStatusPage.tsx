@@ -7,7 +7,6 @@ import { fetchRecommend, fetchTags, fetchWatch, selectUser, updateTag } from '..
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
-import NavBar from '../../components/NavBar/NavBar'
 import { Button, Form, InputGroup, ListGroup, Overlay, Row } from 'react-bootstrap'
 import './UserStatusPage.css'
 import PageButton from '../../components/PageButton/PageButton'
@@ -112,7 +111,6 @@ const UserStatusPage = () => {
 
   return (
     <div className='page'>
-      <NavBar />
       <br />
       <h1>{`${userState.currentUser?.username ?? ''}'s User Info`}</h1>
       <br />

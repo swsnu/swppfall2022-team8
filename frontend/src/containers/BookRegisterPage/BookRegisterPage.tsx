@@ -3,7 +3,6 @@ import { Button, ButtonGroup, Col, Form, InputGroup, ListGroup, Overlay, Row, To
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router'
 
-import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BookType, createBook, fetchQueryBooks, fetchQueryTags, selectBook } from '../../store/slices/book/book'
 import { createLend, LendType, postImage, selectLend } from '../../store/slices/lend/lend'
@@ -11,6 +10,7 @@ import { selectUser } from '../../store/slices/user/user'
 import './BookRegisterPage.css'
 import Carousel from 'react-bootstrap/Carousel'
 import useInterval from '../../utils/useInterval'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 export const maxLendImage = 3
 
@@ -40,6 +40,10 @@ const BookRegisterPage = () => {
   const [existingBook, setExistingBook] = useState(true)
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null)
 
+  const [show, setShow] = useState<boolean>(false)
+  const [header, setHeader] = useState<string>('')
+  const [body, setBody] = useState<string | JSX.Element>('')
+
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const lendState = useSelector(selectLend)
@@ -50,6 +54,8 @@ const BookRegisterPage = () => {
   const prevTitleInput = useRef<string>('')
   const [listShow, setListShow] = useState<boolean>(false)
   const prevTagInput = useRef<string>('')
+
+  const [tagVisible, setTagVisible] = useState<boolean>(false)
 
   useInterval(() => {
     if (listTarget === document.activeElement && title !== prevTitleInput.current) {
@@ -109,7 +115,9 @@ const BookRegisterPage = () => {
     const files = event.target.files
     if (files !== null) {
       if (files.length + lendImage.length > maxLendImage) {
-        alert(`You can only post up to ${maxLendImage} images.`)
+        setHeader('Limit the number of image uploads')
+        setBody(`You can only post up to ${maxLendImage} images.`)
+        setShow(true)
       } else {
         setLendImage(lendImage.concat(Array.from(files)))
       }
@@ -152,16 +160,27 @@ const BookRegisterPage = () => {
     }
 
     const validationCheckList = [bookImage, title, author, brief, tags.length, lendImage.length]
-    const validationMessages = ['book cover image', 'title', 'author', 'brief summary', 'at least one tag', 'at least one lend image']
+    const validationMessages = ['Book cover image', 'Title', 'Author', 'Brief summary', 'At least one tag', 'At least one image of your book']
 
     if (!existingBook && validationCheckList.some(val => !val)) {
-      const messageBuffer = ['Should fill in :']
+      const messageBuffer: JSX.Element[] = [<>You should fill in :</>]
       validationCheckList.forEach((val, idx) => {
         if (!val) {
-          messageBuffer.push(validationMessages[idx])
+          messageBuffer.push(
+            <>
+              <br />
+              &middot; {validationMessages[idx]}
+            </>
+          )
         }
       })
-      alert(messageBuffer.join('\n'))
+      setHeader('Form validation error')
+      setBody(<>{messageBuffer.map((elem, idx) => (
+        <span key={`validation_${idx}`}>
+          {elem}
+        </span>
+      ))}</>)
+      setShow(true)
       return
     }
 
@@ -208,6 +227,13 @@ const BookRegisterPage = () => {
         alert('Error on Register a book (book)')
       }
     } else if (selectedBook) {
+      if (!lendImage.length) {
+        setHeader('Form validation error')
+        setBody('You should attach at least one image of your book.')
+        setShow(true)
+        return
+      }
+
       const lendData = {
         book: selectedBook.id,
         book_info: {
@@ -236,7 +262,9 @@ const BookRegisterPage = () => {
         alert('Error on Register a book (lend)')
       }
     } else {
-      alert('Unexpected Error')
+      setHeader('Form validation error')
+      setBody('You should select a book.')
+      setShow(true)
     }
   }
 
@@ -245,10 +273,7 @@ const BookRegisterPage = () => {
   } else {
     return (
       <div id='register-page'>
-        <div className='nav-bar'>
-          <NavBar />
-        </div>
-        <p />
+        <br />
         <h1>Register Your Book!</h1>
         <p />
         <div className='book-register'>
@@ -265,6 +290,7 @@ const BookRegisterPage = () => {
                   value={1}
                   checked={existingBook}
                   onChange={() => clickSearchBookHandler()}
+                  style={{ zIndex: 0 }}
                 >
                   Search Book
                 </ToggleButton>
@@ -276,6 +302,7 @@ const BookRegisterPage = () => {
                   value={2}
                   checked={!existingBook}
                   onChange={() => clickNewBookHandler()}
+                  style={{ zIndex: 0 }}
                 >
                   Register New Book
                 </ToggleButton>
@@ -323,8 +350,15 @@ const BookRegisterPage = () => {
                         <h5 id='register-page-author'>written by {selectedBook.author}</h5>
                         <hr />
                         <p className='light-text'>{selectedBook.brief}</p>
+                        <Button
+                          type="button"
+                          onClick={() => setTagVisible(val => !val)}
+                        >{tagVisible ? 'Close Tags' : 'More Tags'}</Button>
                         <div className='tags-text'>
-                          {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
+                          {tagVisible
+                            ? selectedBook.tags.map((tag) => ('#' + tag + ' '))
+                            : selectedBook.tags.slice(0, 10).map((tag) => ('#' + tag + ' '))
+                          }
                         </div>
                       </div>
                     </div>
@@ -545,6 +579,12 @@ const BookRegisterPage = () => {
             Register
           </Button>
         </div>
+        <AlertModal
+          header={header}
+          body={body}
+          show={show}
+          hide={() => setShow(false)}
+        />
       </div>
     )
   }

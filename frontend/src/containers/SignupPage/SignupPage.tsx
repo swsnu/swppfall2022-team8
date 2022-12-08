@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Form, InputGroup, Overlay, Popover, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 import { AppDispatch } from '../../store'
 import { requestSignup, updateTag } from '../../store/slices/user/user'
@@ -18,6 +19,10 @@ const SignupPage = () => {
   const [hintShow2, setHintShow2] = useState<boolean>(false)
   const [hintTarget1, setHintTarget1] = useState<HTMLElement | null>(null)
   const [hintTarget2, setHintTarget2] = useState<HTMLElement | null>(null)
+
+  const [show, setShow] = useState<boolean>(false)
+  const [header, setHeader] = useState<string>('')
+  const [body, setBody] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -39,12 +44,16 @@ const SignupPage = () => {
 
   const clickSubmitHandler = async () => {
     if (password !== confirmPassword) {
-      alert('Please check your password.')
+      setHeader('Form validation error')
+      setBody('The password and confirm password are not the same.')
+      setShow(true)
       return
     }
 
     if (tags.every(val => !val)) {
-      alert('Please select at least one tag.')
+      setHeader('Form validation error')
+      setBody('Please select at least one tag.')
+      setShow(true)
       return
     }
 
@@ -62,7 +71,9 @@ const SignupPage = () => {
       tests.forEach((test, idx) => {
         if (!test) messageBuffer.push(alertHints[idx])
       })
-      alert(messageBuffer.join('\n'))
+      setHeader('Form validation error')
+      setBody(messageBuffer.join('\n'))
+      setShow(true)
     }
   }
 
@@ -179,6 +190,12 @@ const SignupPage = () => {
           variant='outline-success'
         >Submit</Button>
       </div>
+      <AlertModal
+        header={header}
+        body={body}
+        show={show}
+        hide={() => setShow(false)}
+      />
     </div>
   )
 }

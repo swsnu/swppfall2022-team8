@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Carousel } from 'react-bootstrap'
-import NavBar from '../../components/NavBar/NavBar'
 import Recommend from '../../components/Recommend/Recommend'
 import RegisterButton from '../../components/RegisterButton/RegisterButton'
 import SearchBar from '../../components/SearchBar/SearchBar'
@@ -9,22 +8,16 @@ import './MainPage.css'
 
 const MainPage = () => {
   const [carouselIdx, setCarouselIdx] = useState(0)
-  const handleSelect = (selectedIndex: number, e: any) => {
-    setCarouselIdx(selectedIndex)
-    const location = document.querySelector('#carousel') as HTMLElement
-    window.scrollTo({ top: location.offsetTop, behavior: 'smooth' })
-  }
   const interval = 3000
 
   return (
-    <div className='page'>
-      <NavBar />
+    <div className='page-no-lr-padding'>
       <div id='main-searchbar'>
         <SearchBar />
       </div>
       <Carousel
         activeIndex={carouselIdx}
-        onSelect={handleSelect}
+        onSelect={(selectedIndex) => setCarouselIdx(selectedIndex)}
         id='carousel'
         variant='dark'
       >
