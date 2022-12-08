@@ -321,7 +321,7 @@ const BookRegisterPage = () => {
                         <h1>{selectedBook.title}</h1>
                         <br />
                         <h5 id='register-page-author'>written by {selectedBook.author}</h5>
-                        <hr/>
+                        <hr />
                         <p className='light-text'>{selectedBook.brief}</p>
                         <div className='tags-text'>
                           {selectedBook.tags.map((tag) => ('#' + tag + ' '))}
@@ -440,7 +440,7 @@ const BookRegisterPage = () => {
               </>
             }
             <Form.Group as={Row} className='input-class'>
-            <h3>Lend Data</h3>
+              <h3>Lend Data</h3>
               <Form.Label><h5>Upload Book Images You Want To Lend</h5></Form.Label>
               {lendImage.length
                 ? <div id='lend-image-div'>
@@ -459,8 +459,8 @@ const BookRegisterPage = () => {
                       </Carousel.Item>
                     ))}
                   </Carousel>
-                  <Button id='lendimage-delete-button'variant='outline-danger' onClick={() => clickDeleteLendImage()}>delete</Button>
-                  <br/>
+                  <Button id='lendimage-delete-button' variant='outline-danger' onClick={() => clickDeleteLendImage()}>delete</Button>
+                  <br />
                 </div>
                 : null}
               <Form.Control
@@ -506,6 +506,7 @@ const BookRegisterPage = () => {
             <Form.Group as={Row} className='input-class' id='questions-input-form'>
               <Form.Label id='questions-text'>
                 <h5>Questions</h5>
+                <p>The questions will be answered when the borrowers request for your book.</p>
                 <div className='questions-input-button'>
                   <Form.Control
                     id='questions-input'

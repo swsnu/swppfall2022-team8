@@ -31,28 +31,10 @@ describe('<SearchBar />', () => {
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/search?author=TEST_AUTHOR'))
   })
-  it('should reject search if tag name is invalid (search by enter key)', async () => {
-    // given
-    globalThis.alert = jest.fn()
-    await act(async () => {
-      renderWithProviders(<SearchBar />, { preloadedState })
-    })
-
-    // when
-    const tagButton = await screen.findByText('Tag')
-    fireEvent.click(tagButton)
-    const tagInput = await screen.findByPlaceholderText('Tag search')
-    fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
-    fireEvent.change(tagInput, { target: { value: 'fake_tag1 fake_tag2' } })
-    fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
-
-    // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.'))
-  })
   it('should handle use case at BookListPage (normal search)', async () => {
     // given
     await act(async () => {
-      renderWithProviders(<SearchBar author={'TEST_AUTHOR'}/>, { preloadedState })
+      renderWithProviders(<SearchBar author={'TEST_AUTHOR'} />, { preloadedState })
     })
 
     // then
@@ -61,7 +43,7 @@ describe('<SearchBar />', () => {
   it('should handle use case at BookListPage (advanced search)', async () => {
     // given
     await act(async () => {
-      renderWithProviders(<SearchBar title={'TEST_TITLE'} tag={['test-tag1', 'test-tag2']}/>, { preloadedState })
+      renderWithProviders(<SearchBar title={'TEST_TITLE'} tag={['test-tag1', 'test-tag2']} />, { preloadedState })
     })
 
     // then

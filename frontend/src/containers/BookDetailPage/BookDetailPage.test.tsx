@@ -191,39 +191,4 @@ describe('<BookDetailPage />', () => {
     // then
     await screen.findByText('Borrowed')
   })
-  it('should handle pseudo-pagination on tag', async () => {
-    // given
-    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({
-      data: fakeLend
-    }))
-    await act(() => {
-      renderWithProviders(<BookDetailPage />, {
-        preloadedState: {
-          ...preloadedState,
-          user: {
-            ...preloadedState.user,
-            currentUser: fakeLender
-          }
-        }
-      })
-    })
-
-    // when
-    await act(async () => {
-      const nextPage = await screen.findByText('Next')
-      fireEvent.click(nextPage)
-    })
-
-    // then
-    await screen.findByText(fakeLend.book_info.tags.slice(10, 20).map(val => `#${val}`).join(' '))
-
-    // when
-    await act(async () => {
-      const prevPage = await screen.findByText('Prev')
-      fireEvent.click(prevPage)
-    })
-
-    // then
-    await screen.findByText(fakeLend.book_info.tags.slice(0, 10).map(val => `#${val}`).join(' '))
-  })
 })

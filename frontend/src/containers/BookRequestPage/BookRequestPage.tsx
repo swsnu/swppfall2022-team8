@@ -71,27 +71,29 @@ const BookRequestPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <br/>
+      <br />
       <div id='request-page'>
         <div>
           <Card
-            style={ { width: '18rem' } }
+            style={{ width: '18rem' }}
             onClick={() => navigate(`/book/${(lendState.selectedLend !== null) ? lendState.selectedLend.id : ''}`)}
             className='book-list-entity'
           >
-            <Card.Img variant='top' src={lendState.selectedLend?.book_info.image} className='book-entity-image'/>
+            <Card.Img variant='top' src={lendState.selectedLend?.book_info.image} className='book-entity-image' />
             <Card.Body>
               <Card.Title>{(lendState.selectedLend != null) ? lendState.selectedLend.book_info.title : ''}</Card.Title>
             </Card.Body>
           </Card>
         </div>
         <Form id='request-form'>
+          <h5>Questions and answers will be sent to the lender.</h5>
+          <br />
           {(lendState.selectedLend != null)
             ? lendState.selectedLend.questions.map((question, idx) => (
               <Form.Group key={`question_${idx}`}>
                 <Form.Label id={`request-question-${idx}`} className='request-question'>Question {idx + 1}: {question}</Form.Label>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <Form.Control
                   value={answers[idx] ?? ''}
                   type='text'
@@ -99,11 +101,11 @@ const BookRequestPage = () => {
                   placeholder='answer to the question...'
                   onChange={event => changeAnswerHandler(idx, event.target.value)}
                 />
-                <br/>
+                <br />
               </Form.Group>
             ))
             : null}
-            <br/>
+          <br />
           <Button
             onClick={() => clickSendButtonHandler()}
             variant='outline-primary'
