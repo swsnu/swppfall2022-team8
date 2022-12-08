@@ -14,8 +14,10 @@ const Recommend = () => {
   }, [dispatch])
 
   useInterval(() => {
-    dispatch(fetchRecommend())
-  }, 1000)
+    if (userState.recommend.is_outdated) {
+      dispatch(fetchRecommend())
+    }
+  }, 500)
 
   return (
     <>
