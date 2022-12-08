@@ -30,6 +30,7 @@ const SearchBar = (props: IProps) => {
 
   const categories = ['Title', 'Author', 'Tag']
   const dropdowns = [...categories, 'Advanced']
+  const disableSearch = inputs.map(input => input.trim()).every(input => !input)
 
   useEffect(() => {
     const entries = [props.title ?? '', props.author ?? '', props.tag?.join(' ') ?? '']
@@ -79,11 +80,6 @@ const SearchBar = (props: IProps) => {
       tag: inputs[2].trim() ? inputs[2].trim().split(' ') : undefined
     }
 
-    if (params.tag && !params.tag.every(tag => /^[0-9A-Za-z-]+$/.test(tag))) {
-      alert('Tag should consist of alpabets/numbers/dashes only,\nand tags should be separated by single space.')
-      return
-    }
-
     navigate(`/search?${QueryString.stringify(params)}`)
   }
 
@@ -115,7 +111,7 @@ const SearchBar = (props: IProps) => {
             id={`search-bar-${category.toLowerCase()}`}
             value={inputs[idx]}
             onChange={event => changeInputHandler(event.target.value, idx)}
-            onKeyDown={event => { if (event.key === 'Enter') clickSearchHandler() }}
+            onKeyPress={event => { if (event.key === 'Enter' && !disableSearch) clickSearchHandler() }}
             {...(
               category === 'Tag'
                 ? {
@@ -164,7 +160,7 @@ const SearchBar = (props: IProps) => {
         <Button
           id="search-button"
           variant="outline-primary"
-          disabled={inputs.map(input => input.trim()).every(input => !input)}
+          disabled={disableSearch}
           onClick={() => clickSearchHandler()}
         >
           Search

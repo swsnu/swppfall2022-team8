@@ -220,6 +220,6 @@ describe('<ChattingRightMenu />', () => {
 
     const qna = screen.getAllByRole('heading')[2]
 
-    expect(qna.innerHTML).toEqual('<b>Answer to question 1</b>')
+    expect(qna.innerHTML).toEqual('<b>A1.</b>')
   })
 })
