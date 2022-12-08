@@ -33,21 +33,23 @@ const BookListPage = () => {
   return (
     <div className='page'>
       <NavBar />
-      <br/>
-      <br/>
+      <br />
+      <br />
       <br />
 
       <SearchBar {...params} />
       <br />
       <h3><b>Result</b></h3>
       <div className='booklist'>
-        { lendState.lends.length
+        {lendState.lends.length
           ? lendState.lends.map(lend => (
             <div key={`lendlist_${lend.id}`} className='booklist-item'>
               <BookListEntity
                 id={lend.id}
                 title={lend.book_info.title}
                 image={lend.book_info.image}
+                owner={lend.owner_username}
+                available={lend.status === null}
               />
             </div>
           ))
@@ -57,9 +59,9 @@ const BookListPage = () => {
       <div>
         <div className='page-button'>
           <PageButton
-          currPage={params.page ? Number(params.page) : 1}
-          numPage={Math.ceil(lendState.count / 12)}
-          handleClick={pageClickHandler}
+            currPage={params.page ? Number(params.page) : 1}
+            numPage={Math.ceil(lendState.count / 12)}
+            handleClick={pageClickHandler}
           />
         </div>
       </div>

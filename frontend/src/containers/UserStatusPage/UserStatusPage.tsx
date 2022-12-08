@@ -126,6 +126,7 @@ const UserStatusPage = () => {
                 id={lend.id}
                 image={lend.book_info.image}
                 title={lend.book_info.title}
+                available={lend.status === null}
               />
             </div>
           ))
@@ -154,6 +155,7 @@ const UserStatusPage = () => {
                 id={borrow.lend_id}
                 image={borrow.image}
                 title={borrow.book_title}
+                available={false}
               />
             </div>
           ))
@@ -211,7 +213,7 @@ const UserStatusPage = () => {
                 autoComplete='off'
                 value={tag}
                 onChange={event => setTag(event.target.value)}
-                onKeyDown={event => { if (event.key === 'Enter') clickAddTagHandler() }}
+                onKeyPress={event => { if (event.key === 'Enter' && tag) clickAddTagHandler() }}
                 onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
                 onBlur={_event => { setListShow(false) }}
               />

@@ -91,6 +91,7 @@ const ChattingRoom = (props: IProps) => {
             <Form.Control
               id='chat-input'
               type='text'
+              autoComplete='off'
               value={chatInput}
               onChange={event => setChatInput(event.target.value)}
               onKeyPress={event => { if (event.key === 'Enter' && !disableChat) clickSendChatHandler() }}

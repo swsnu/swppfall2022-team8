@@ -13,10 +13,7 @@ import './BookDetailPage.css'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
-  const [tagPage, setTagPage] = useState<number>(1)
-
-  const tagMin = 10 * (tagPage - 1)
-  const tagMax = 10 * tagPage
+  const [tagVisible, setTagVisible] = useState<boolean>(false)
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -90,26 +87,23 @@ const BookDetailPage = () => {
           <br />
           <p className='light-text'>{lendState.selectedLend?.book_info.brief}</p>
           {lendState.selectedLend?.status
-            ? <Button active variant='warning'>Borrowed</Button>
-            : <Button active variant='success'>Available</ Button>
+            ? <Button active variant='warning' style={{ cursor: 'default' }}>Borrowed</Button>
+            : <Button active variant='success' style={{ cursor: 'default' }}>Available</ Button>
           }
           <br />
           <br />
           <div>
-            {lendState.selectedLend?.book_info.tags.slice(tagMin, tagMax).map((tag) => ('#' + tag + ' '))}
+            <Button
+              type="button"
+              onClick={() => setTagVisible(val => !val)}
+            >{tagVisible ? 'Close Tags' : 'More Tags'}</Button>
             <br />
-            <Button
-              type="button"
-              disabled={!lendState.selectedLend || tagMin <= 0}
-              onClick={() => setTagPage(old => old - 1)}
-              id='detail-page-prev'
-            >Prev</Button>
-            <Button
-              type="button"
-              disabled={!lendState.selectedLend || tagMax >= lendState.selectedLend.book_info.tags.length}
-              onClick={() => setTagPage(old => old + 1)}
-              id='detail-page-next'
-            >Next</Button>
+            <div className='info-box'>
+              {tagVisible
+                ? lendState.selectedLend?.book_info.tags.map((tag) => ('#' + tag + ' '))
+                : lendState.selectedLend?.book_info.tags.slice(0, 10).map((tag) => ('#' + tag + ' '))
+              }
+            </div>
           </div>
           <br />
           <div className='addinfo'>

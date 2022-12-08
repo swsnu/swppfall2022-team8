@@ -37,6 +37,7 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -79,7 +80,7 @@
 #register-h2 {
     font-size: 45px;
     animation: fadein 2s;
-    text-align: right   ;
+    text-align: right;
 }
 
 #register-book-image1 {
@@ -97,8 +98,8 @@
 }
 
 #main-register-button {
-    margin-left: auto;
-    width: 70%;
+    margin: auto;
+    width: 40%;
 }
 
 @media (max-width: 1200px) {
@@ -107,20 +108,20 @@
         font-size: 28px;
         animation: fadein 3s;
     }
-    
+
     #welcome-h1 {
         font-size: 60px;
         animation: fadein 2s;
     }
-    
+
     .image-div {
         display: grid;
         grid-template-columns: 1fr;
         width: 85%;
         margin: 0 auto;
     }
-    
-    #welcome-book-image1 {        
+
+    #welcome-book-image1 {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
@@ -131,7 +132,7 @@
         animation: fadein 2s;
         padding: auto;
     }
-    
+
     #welcome-book-image2 {
         max-width: 100%;
         max-height: 100%;
@@ -143,20 +144,21 @@
         animation: fadein 3s;
         padding: auto;
     }
-    
+
     @keyframes fadein {
         from {
             opacity: 0;
         }
+
         to {
             opacity: 1;
         }
     }
-    
+
     #mainpage {
         background-color: white;
     }
-    
+
     #main-searchbar {
         margin: auto;
         height: 100px;
@@ -164,7 +166,7 @@
         width: 100vw;
         margin-left: calc(-50vw + 50%);
     }
-    
+
     #main-description {
         display: grid;
         grid-template-columns: 1fr;
@@ -176,7 +178,7 @@
         padding: 100px;
         text-align: left;
     }
-    
+
     #main-register {
         padding: 100px;
         display: grid;
@@ -186,14 +188,14 @@
         margin-left: calc(-50vw + 50%);
         height: fit-content;
     }
-    
+
     #register-h2 {
         margin-top: 30px;
         font-size: 45px;
         animation: fadein 2s;
         text-align: right;
     }
-    
+
     #register-book-image1 {
         max-width: 100%;
         max-height: 100%;
@@ -203,7 +205,7 @@
         margin-right: 20px;
         animation: fadein 5s;
     }
-    
+
     #register-book-image2 {
         max-width: 100%;
         max-height: 100%;
@@ -213,5 +215,5 @@
         margin-right: 20px;
         animation: fadein 6s;
     }
-    
+
 }

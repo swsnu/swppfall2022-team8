@@ -144,10 +144,9 @@ describe('<ChattingRoom />', () => {
 
     // when
     const input = screen.getByRole('textbox')
-    fireEvent.keyDown(input, { key: 'Enter' })
-    fireEvent.keyDown(input, { key: 'Ctrl' })
+    fireEvent.keyPress(input, { key: 'Enter', code: 13, charCode: 13 })
     fireEvent.change(input, { target: { value: 'test-content2' } })
-    fireEvent.keyDown(input, { key: 'Enter' })
+    fireEvent.keyPress(input, { key: 'Enter', code: 13, charCode: 13 })
 
     // then
     await waitFor(() => expect(mockSendMessage).toHaveBeenCalledWith('test-content2', 'chat'))
