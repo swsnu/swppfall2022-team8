@@ -70,7 +70,7 @@ describe('<SignupPage />', () => {
     fireEvent.click(submit)
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Please check your password.'))
+    await screen.findByText('The password and confirm password are not the same.')
   })
   it('should alert error if none of tags is selected', async () => {
     // given
@@ -93,7 +93,7 @@ describe('<SignupPage />', () => {
     fireEvent.click(submit)
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Please select at least one tag.'))
+    await screen.findByText('Please select at least one tag.')
   })
   it('should alert error if something on signup is wrong', async () => {
     // given

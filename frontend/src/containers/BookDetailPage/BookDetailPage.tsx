@@ -5,15 +5,18 @@ import { Collapse } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Carousel from 'react-bootstrap/Carousel'
 
-import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { deleteLend, fetchLend, selectLend } from '../../store/slices/lend/lend'
 import { selectUser, toggleWatch } from '../../store/slices/user/user'
 import './BookDetailPage.css'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 const BookDetailPage = () => {
   const [infoVisible, setInfoVisible] = useState<boolean>(false)
   const [tagVisible, setTagVisible] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(false)
+  const [header, setHeader] = useState<string>('')
+  const [body, setBody] = useState<string>('')
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -39,18 +42,20 @@ const BookDetailPage = () => {
     const response = await dispatch(toggleWatch({ lend_id: Number(id) }))
 
     if (response.payload.created) {
-      alert('Watch Success!')
+      setHeader('Watch success')
+      setBody('You have successfully watched this book!')
+      setShow(true)
     } else {
-      alert('Watch Canceled!')
+      setHeader('Watch canceled')
+      setBody('You have successfully canceled the watch!')
+      setShow(true)
     }
   }
 
   return (
     <div className='page'>
-      <NavBar />
       <br />
       <div className='book-detail-page'>
-        {/* TODO: add image field */}
         <div>
           <div className="image-test">
             <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
@@ -60,6 +65,7 @@ const BookDetailPage = () => {
               ? <Carousel
                 activeIndex={lendImageIdx}
                 onSelect={handleSelect}
+                variant='dark'
               >
                 {lendState.selectedLend?.images.map((image, idx) => (
                   <Carousel.Item key={`lendImage_${idx}`}>
@@ -153,6 +159,12 @@ const BookDetailPage = () => {
           </>
         }
       </div>
+      <AlertModal
+        header={header}
+        body={body}
+        show={show}
+        hide={() => setShow(false)}
+      />
     </div>
   )
 }

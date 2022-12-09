@@ -5,6 +5,17 @@
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 80px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  min-height: 900px;
+  min-width: 70vw;
+  margin: auto;
+  text-align: center;
+}
+
+.page-no-lr-padding {
+  background-color: white;
+  padding-bottom: 80px;
   border-radius: 20px;
   min-height: 900px;
   min-width: 70vw;

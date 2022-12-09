@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Button, Form, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
-import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { deleteImage, fetchLend, postImage, selectLend, updateLend } from '../../store/slices/lend/lend'
 import { selectUser } from '../../store/slices/user/user'
@@ -10,8 +9,11 @@ import Carousel from 'react-bootstrap/Carousel'
 
 import './BookEditPage.css'
 import { maxLendImage } from '../BookRegisterPage/BookRegisterPage'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 const BookEditPage = () => {
+  const [show, setShow] = useState<boolean>(false)
+
   const id = useParams().id as string
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
@@ -67,7 +69,7 @@ const BookEditPage = () => {
     const files = event.target.files
     if (files !== null) {
       if (files.length + oldImages.length + newImages.length > maxLendImage) {
-        alert(`You can only post up to ${maxLendImage} images.`)
+        setShow(true)
       } else {
         setNewImages(newImages.concat(Array.from(files)))
       }
@@ -115,7 +117,6 @@ const BookEditPage = () => {
 
   return (
     <div className='page'>
-      <NavBar />
       <br />
       <div className='book-edit'>
         <div className='book-main-info'>
@@ -155,6 +156,7 @@ const BookEditPage = () => {
             ? <Carousel
               activeIndex={lendImageIdx}
               onSelect={handleSelect}
+              variant="dark"
               id='edit-images'
             > {oldImages.map((image, idx) => (
               <Carousel.Item key={`lendImage_${idx}`}>
@@ -274,6 +276,12 @@ const BookEditPage = () => {
         id='edit-button'
         type="button" onClick={() => clickConfirmEditHanler()}
       >Edit</Button>
+      <AlertModal
+        header={'Limit the number of image uploads'}
+        body={`You can only post up to ${maxLendImage} images.`}
+        show={show}
+        hide={() => setShow(false)}
+      />
     </div>
   )
 }

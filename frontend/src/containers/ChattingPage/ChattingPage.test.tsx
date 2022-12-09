@@ -273,7 +273,7 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm lending?'))
+    await screen.findByText('Are you sure you want to confirm lending?')
     unmount()
   })
   it('should handle lender use case (confirm return)', async () => {
@@ -319,7 +319,7 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm return?'))
+    await screen.findByText('Are you sure you want to confirm return?')
   })
   it('should do nothing if user clicks already selected room', async () => {
     // given
@@ -497,6 +497,10 @@ describe('<ChattingPage />', () => {
     await act(() => {
       fireEvent.click(confirmLendingButton)
     })
+    const confirmButton = await screen.findByText('Confirm')
+    await act(() => {
+      fireEvent.click(confirmButton)
+    })
 
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on create borrow'))
@@ -537,6 +541,10 @@ describe('<ChattingPage />', () => {
     const confirmReturnButton = await screen.findByText('Confirm return')
     await act(() => {
       fireEvent.click(confirmReturnButton)
+    })
+    const confirmButton = await screen.findByText('Confirm')
+    await act(() => {
+      fireEvent.click(confirmButton)
     })
 
     // then
@@ -591,6 +599,10 @@ describe('<ChattingPage />', () => {
     const confirmReturnButton = await screen.findByText('Confirm return')
     await act(() => {
       fireEvent.click(confirmReturnButton)
+    })
+    const confirmButton = await screen.findByText('Confirm')
+    await act(() => {
+      fireEvent.click(confirmButton)
     })
 
     // then
@@ -677,7 +689,7 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm lending?'))
+    await screen.findByText('Are you sure you want to confirm lending?')
   })
   it('should do not return if lender canceled the confirm', async () => {
     // given
@@ -713,6 +725,6 @@ describe('<ChattingPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalledWith('Are you sure you want to confirm return?'))
+    await screen.findByText('Are you sure you want to confirm return?')
   })
 })
