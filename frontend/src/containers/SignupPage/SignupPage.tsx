@@ -22,7 +22,7 @@ const SignupPage = () => {
 
   const [show, setShow] = useState<boolean>(false)
   const [header, setHeader] = useState<string>('')
-  const [body, setBody] = useState<string>('')
+  const [body, setBody] = useState<string | JSX.Element>('')
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -34,8 +34,8 @@ const SignupPage = () => {
   ]
 
   const alertHints = [
-    usernameHint[0],
-    passwordHint[0] + ', each containing at least one.\n' + passwordHint[2]
+    <>{usernameHint[0]}</>,
+    <>{passwordHint[0] + ', each containing at least one.\n'}<br />{passwordHint[2]}</>
   ]
   const regexes = [
     /^[a-zA-Z0-9_-]{6,}$/,
@@ -57,6 +57,7 @@ const SignupPage = () => {
       return
     }
 
+    const fields = ['username', 'password']
     const entries = [username, password]
     const tests = entries.map((entry, idx) => regexes[idx].test(entry))
 
@@ -67,12 +68,21 @@ const SignupPage = () => {
         await Promise.all(works)
       }
     } else {
-      const messageBuffer: string[] = []
+      const messageBuffer: JSX.Element[] = []
+      const validationKeys: string[] = []
       tests.forEach((test, idx) => {
-        if (!test) messageBuffer.push(alertHints[idx])
+        if (!test) {
+          if (messageBuffer.length) messageBuffer.push(<br />)
+          messageBuffer.push(<>&middot; {alertHints[idx]}</>)
+          validationKeys.push(fields[idx])
+        }
       })
       setHeader('Form validation error')
-      setBody(messageBuffer.join('\n'))
+      setBody(<>{messageBuffer.map((val, idx) => (
+        <span key={`validation_${validationKeys[idx]}`}>
+          {val}
+        </span>
+      ))}</>)
       setShow(true)
     }
   }
