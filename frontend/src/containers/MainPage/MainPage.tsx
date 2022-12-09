@@ -6,7 +6,7 @@ import SearchBar from '../../components/SearchBar/SearchBar'
 
 import './MainPage.css'
 
-const interval = 7000
+const interval = 10000
 
 const MainPage = () => {
   const [carouselIdx, setCarouselIdx] = useState(0)
