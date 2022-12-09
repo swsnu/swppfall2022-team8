@@ -1,4 +1,4 @@
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { RootState } from '../../store'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import Recommend from './Recommend'
@@ -39,18 +39,16 @@ const spyRecommendEntity = () => (
 jest.mock('../RecommendEntity/RecommendEntity', () => spyRecommendEntity)
 
 describe('<Recommend />', () => {
-  it('should handle click Button + outdated case', async () => {
+  it('should handle auto fetch', async () => {
     // given
+    jest.useFakeTimers()
     renderWithProviders(<Recommend />, { preloadedState })
-    const button = screen.getByRole('button')
-    const recommendentity = screen.getByTestId('spyRecommendEntity')
 
     // when
-    fireEvent.click(button)
+    jest.runOnlyPendingTimers()
 
     // then
-    expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')
-    await screen.findByText('Refresh!')
+    await screen.findByText('Calculating in progress with changed tags...')
     await waitFor(() => expect(mockDispatch).toHaveBeenCalled())
   })
   it('should render when not outdated and no recommend_list', async () => {
@@ -74,6 +72,7 @@ describe('<Recommend />', () => {
   })
   it('should render when not outdated and recommend_list not empty', async () => {
     // given
+    jest.useFakeTimers()
     renderWithProviders(<Recommend />, {
       preloadedState: {
         ...preloadedState,
@@ -87,6 +86,9 @@ describe('<Recommend />', () => {
       }
     })
     const recommendentity = screen.getByTestId('spyRecommendEntity')
+
+    // when
+    jest.runOnlyPendingTimers()
 
     // then
     expect(recommendentity.innerHTML).toEqual('spyRecommendEntity')

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { fetchRecommend, selectUser } from '../../store/slices/user/user'
@@ -24,6 +25,7 @@ const Recommend = () => {
       {userState.recommend.is_outdated
         ? <>
             <p>Calculating in progress with changed tags...</p>
+            <Spinner animation="border" variant="primary" />
           </>
         : !userState.recommend.recommend_list.length
             ? <p>Please add your preference tag to use recommend system!</p>
