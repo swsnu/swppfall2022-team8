@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import MainPage from './MainPage'
 
 const spyNavBar = () => <p>NavBar</p>
@@ -20,7 +20,9 @@ jest.mock('react-router', () => ({
 }))
 
 describe('<MainPage />', () => {
-  it('should render without error', () => {
+  it('should render without error', async () => {
     render(<MainPage />)
+    const carousel = (await screen.findAllByRole('button'))[0]
+    fireEvent.click(carousel)
   })
 })

@@ -23,18 +23,16 @@ const LoginPage = () => {
   const disableLogin = !(username && password)
 
   const clickLoginHandler = async () => {
-    if (username && password) {
-      const data = { username, password }
-      const response = await dispatch(requestLogin(data))
-      if (response.type === `${requestLogin.typePrefix}/rejected`) {
-        const errorResponse = response as { error: { message: string } }
-        if (errorResponse.error.message === errorPrefix(403)) {
-          setHeader('Authentication error')
-          setBody('Username or Password is wrong')
-          setShow(true)
-        } else {
-          alert('Error on login')
-        }
+    const data = { username, password }
+    const response = await dispatch(requestLogin(data))
+    if (response.type === `${requestLogin.typePrefix}/rejected`) {
+      const errorResponse = response as { error: { message: string } }
+      if (errorResponse.error.message === errorPrefix(403)) {
+        setHeader('Authentication error')
+        setBody('Username or Password is wrong')
+        setShow(true)
+      } else {
+        alert('Error on login')
       }
     }
   }
