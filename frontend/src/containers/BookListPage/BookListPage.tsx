@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router'
 import QueryString from 'qs'
 
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
-import NavBar from '../../components/NavBar/NavBar'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { AppDispatch } from '../../store'
 import { fetchQueryLends, selectLend } from '../../store/slices/lend/lend'
@@ -32,7 +31,6 @@ const BookListPage = () => {
 
   return (
     <div className='page'>
-      <NavBar />
       <br />
       <br />
       <br />

@@ -94,7 +94,7 @@ const ChattingRoom = (props: IProps) => {
               autoComplete='off'
               value={chatInput}
               onChange={event => setChatInput(event.target.value)}
-              onKeyPress={event => { if (event.key === 'Enter' && !disableChat) clickSendChatHandler() }}
+              onKeyPress={event => { if (event.key === 'Enter' && !disableChat) { event.preventDefault(); clickSendChatHandler() } }}
             />
             <Button id='send-button' disabled={disableChat} onClick={() => clickSendChatHandler()}>
               <FontAwesomeIcon id='paper-plane' icon={faPaperPlane}/>

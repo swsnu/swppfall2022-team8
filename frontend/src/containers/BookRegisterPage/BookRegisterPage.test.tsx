@@ -113,8 +113,6 @@ describe('<BookRegisterPage />', () => {
   })
   it('should fill in all the title, author, brief, and tag', async () => {
     // given
-    const alertMessage = ['Should fill in :', 'book cover image', 'author', 'brief summary', 'at least one tag', 'at least one lend image']
-    globalThis.alert = jest.fn()
     const { container } = renderWithProviders(<BookRegisterPage />, {
       preloadedState: {
         ...preloadedState,
@@ -135,7 +133,7 @@ describe('<BookRegisterPage />', () => {
     fireEvent.click(registerButton)
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith(alertMessage.join('\n')))
+    await screen.findByText('Close')
   })
   it('should handle impossible case (logout state)', async () => {
     // given

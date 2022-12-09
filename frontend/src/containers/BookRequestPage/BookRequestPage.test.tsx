@@ -222,7 +222,7 @@ describe('<BookRequestPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('You should fill in all answers.'))
+    await screen.findByText('You should fill in all answers.')
   })
   it('should not be able to request same book twice', async () => {
     // given
@@ -255,6 +255,6 @@ describe('<BookRequestPage />', () => {
     })
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('You cannot request same book twice.'))
+    await screen.findByText('You cannot request same book twice.')
   })
 })

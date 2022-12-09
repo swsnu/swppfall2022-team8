@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { Button, Card, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
-import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { fetchLend, selectLend } from '../../store/slices/lend/lend'
 import { createRoom } from '../../store/slices/room/room'
@@ -13,6 +13,9 @@ import './BookRequestPage.css'
 
 const BookRequestPage = () => {
   const [answers, setAnswers] = useState<string[]>([])
+  const [show, setShow] = useState<boolean>(false)
+  const [header, setHeader] = useState<string>('')
+  const [body, setBody] = useState<string>('')
 
   const id = useParams().id as string
   const navigate = useNavigate()
@@ -49,7 +52,9 @@ const BookRequestPage = () => {
 
     const { questions } = lendState.selectedLend
     if (questions.length !== answers.length || answers.some(val => !val)) {
-      alert('You should fill in all answers.')
+      setHeader('Form validation error')
+      setBody('You should fill in all answers.')
+      setShow(true)
       return
     }
 
@@ -58,7 +63,9 @@ const BookRequestPage = () => {
     if (response.type === `${createRoom.typePrefix}/fulfilled`) {
       navigate('/chat')
     } else {
-      alert('You cannot request same book twice.')
+      setHeader('Chatroom creation error')
+      setBody('You cannot request same book twice.')
+      setShow(true)
     }
   }
 
@@ -70,7 +77,6 @@ const BookRequestPage = () => {
 
   return (
     <div className='page'>
-      <NavBar />
       <br />
       <div id='request-page'>
         <div>
@@ -113,6 +119,12 @@ const BookRequestPage = () => {
           >Send to lender</Button>
         </Form>
       </div>
+      <AlertModal
+        header={header}
+        body={body}
+        show={show}
+        hide={() => setShow(false)}
+      />
     </div>
   )
 }

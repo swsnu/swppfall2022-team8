@@ -51,8 +51,7 @@
     margin: auto;
     height: 100px;
     background-color: dodgerblue;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
+    width: 100%;
 }
 
 #main-description {
@@ -99,7 +98,7 @@
 
 #main-register-button {
     margin: auto;
-    width: 40%;
+    width: fit-content;
 }
 
 @media (max-width: 1200px) {
@@ -163,8 +162,7 @@
         margin: auto;
         height: 100px;
         background-color: dodgerblue;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
+        width: 100%;
     }
 
     #main-description {

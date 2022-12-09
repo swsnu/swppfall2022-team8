@@ -18,6 +18,9 @@ const preloadedLoginState: RootState = {
   }
 }
 
+const spyNavBar = () => <p>NavBar</p>
+jest.mock('../../components/NavBar/NavBar', () => spyNavBar)
+
 const mockNavigate = jest.fn()
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
