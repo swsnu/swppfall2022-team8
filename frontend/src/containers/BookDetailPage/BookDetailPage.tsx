@@ -25,9 +25,6 @@ const BookDetailPage = () => {
   const userState = useSelector(selectUser)
 
   const [lendImageIdx, setLendImageIdx] = useState(0)
-  const handleSelect = (selectedIndex: number, e: any) => {
-    setLendImageIdx(selectedIndex)
-  }
 
   useEffect(() => {
     dispatch(fetchLend(Number(id)))
@@ -64,7 +61,7 @@ const BookDetailPage = () => {
             {lendState.selectedLend?.images?.length
               ? <Carousel
                 activeIndex={lendImageIdx}
-                onSelect={handleSelect}
+                onSelect={selectedIndex => setLendImageIdx(selectedIndex)}
                 variant='dark'
               >
                 {lendState.selectedLend?.images.map((image, idx) => (
