@@ -6,9 +6,10 @@ import SearchBar from '../../components/SearchBar/SearchBar'
 
 import './MainPage.css'
 
+const interval = 7000
+
 const MainPage = () => {
   const [carouselIdx, setCarouselIdx] = useState(0)
-  const interval = 3000
 
   return (
     <div className='page-no-lr-padding'>
@@ -18,6 +19,7 @@ const MainPage = () => {
       <Carousel
         activeIndex={carouselIdx}
         onSelect={(selectedIndex) => setCarouselIdx(selectedIndex)}
+        pause={false}
         id='carousel'
         variant='dark'
       >
