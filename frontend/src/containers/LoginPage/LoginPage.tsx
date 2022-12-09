@@ -48,7 +48,7 @@ const LoginPage = () => {
                   placeholder='username'
                   value={username}
                   onChange={event => setUsername(event.target.value)}
-                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) clickLoginHandler() }}
+                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) { event.preventDefault(); clickLoginHandler() } }}
                 />
               </Form.Label>
             </InputGroup>
@@ -63,7 +63,7 @@ const LoginPage = () => {
                   value={password}
                   placeholder='password'
                   onChange={event => setPassword(event.target.value)}
-                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) clickLoginHandler() }}
+                  onKeyPress={event => { if (event.key === 'Enter' && !disableLogin) { event.preventDefault(); clickLoginHandler() } }}
                 />
               </Form.Label>
             </InputGroup>

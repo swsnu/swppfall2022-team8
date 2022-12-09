@@ -428,7 +428,7 @@ const BookRegisterPage = () => {
                         value={tag}
                         onChange={event => setTag(event.target.value)}
                         placeholder='Search Tag'
-                        onKeyPress={event => { if (event.key === 'Enter' && tag) clickAddTagHandler(tag) }}
+                        onKeyPress={event => { if (event.key === 'Enter' && tag) { event.preventDefault(); clickAddTagHandler(tag) } }}
                         onFocus={event => { setListShow(Boolean(tag)); setListTarget(event.currentTarget) }}
                         onBlur={_event => { setListShow(false) }}
                       />
