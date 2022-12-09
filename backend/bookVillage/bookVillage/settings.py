@@ -14,8 +14,8 @@ import os
 from pathlib import Path
 
 domain = 'bookvillage.shop'
-public_dns = 'ec2-43-201-47-7.ap-northeast-2.compute.amazonaws.com'
-public_ip = '43.201.47.7'
+public_dns = 'ec2-13-125-67-249.ap-northeast-2.compute.amazonaws.com'
+public_ip = '13.125.67.249'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
