@@ -9,7 +9,7 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
     borrower_username = serializers.ReadOnlyField(source="borrower.username")
     book_title = serializers.ReadOnlyField(source="lend_id.book.title")
     lend_cost = serializers.ReadOnlyField(source="lend_id.cost")
-    image = serializers.ReadOnlyField(source="lend_id.book.image.url")
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = BorrowInfo
@@ -25,3 +25,10 @@ class BorrowInfoSerializer(serializers.ModelSerializer):
             "lend_start_time",
             "lend_end_time",
         )
+
+    def get_image(self, borrowInfo):
+        image = borrowInfo.lend_id.book.image
+        if image and hasattr(image, "url"):
+            return image.url
+        else:
+            return None
