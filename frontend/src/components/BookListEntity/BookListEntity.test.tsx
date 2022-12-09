@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import BookListEntity from './BookListEntity'
 
 const mockNavigate = jest.fn()
@@ -20,5 +20,14 @@ describe('<BookListEntity />', () => {
 
     // then
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/book/1'))
+  })
+  it('should render the name of owner', async () => {
+    // given
+    render(
+      <BookListEntity id={1} image='' title='test-title' available={true} owner={'test-owner'} />
+    )
+
+    // then
+    await screen.findByText('Owned by test-owner')
   })
 })

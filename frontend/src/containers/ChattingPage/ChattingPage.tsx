@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 import ChattingRightMenu from '../../components/ChattingRightMenu/ChattingRightMenu'
 import ChattingRoom from '../../components/ChattingRoom/ChattingRoom'
 import ChattingRoomList from '../../components/ChattingRoomList/ChattingRoomList'
-import NavBar from '../../components/NavBar/NavBar'
 import { AppDispatch } from '../../store'
 import { BorrowType, createBorrow, toggleBorrowStatus } from '../../store/slices/borrow/borrow'
 import { fetchLend, LendType } from '../../store/slices/lend/lend'
@@ -32,6 +32,9 @@ const ChattingPage = () => {
   const [borrowed, setBorrowed] = useState<boolean>(false)
   const chatSocket = useRef<WebSocket | null>(null)
   const chatCursor = useRef<string | null>(null)
+
+  const [lendingShow, setLendingShow] = useState<boolean>(false)
+  const [returnShow, setReturnShow] = useState<boolean>(false)
 
   const dispatch = useDispatch<AppDispatch>()
   const roomState = useSelector(selectRoom)
@@ -150,7 +153,7 @@ const ChattingPage = () => {
   const clickConfirmLendingHandler = async () => {
     const confirmLendingMessage = 'You have successfully borrowed this book!'
 
-    if (!currentRoom || !globalThis.confirm('Are you sure you want to confirm lending?')) {
+    if (!currentRoom) {
       return
     }
 
@@ -173,7 +176,7 @@ const ChattingPage = () => {
   const clickConfirmReturnHandler = async () => {
     const confirmReturnMessage = 'You have successfully returned this book!'
 
-    if (!currentRoom || !globalThis.confirm('Are you sure you want to confirm return?')) {
+    if (!currentRoom) {
       return
     }
 
@@ -201,7 +204,6 @@ const ChattingPage = () => {
    */
   return (
     <div className='page'>
-      <NavBar />
       <div id='chatting-page'>
         {/* ChattingRoomList component */}
         <div>
@@ -220,7 +222,7 @@ const ChattingPage = () => {
                 loadMessage={loadMessage}
                 sendMessage={sendMessage}
               />
-            : <p>Select any chatroom and enjoy chatting!</p>
+            : <><br /><h3>Select any chatroom and enjoy chatting!</h3></>
           }
         </div>
         <div>
@@ -230,13 +232,27 @@ const ChattingPage = () => {
                 room={currentRoom}
                 borrowable={borrowable}
                 borrowed={borrowed}
-                clickConfirmLendingHandler={clickConfirmLendingHandler}
-                clickConfirmReturnHandler={clickConfirmReturnHandler}
+                clickConfirmLendingHandler={() => setLendingShow(true)}
+                clickConfirmReturnHandler={() => setReturnShow(true)}
               />
             : null
           }
         </div>
       </div>
+      <AlertModal
+        header='Confirm lending'
+        body='Are you sure you want to confirm lending?'
+        show={lendingShow}
+        hide={() => setLendingShow(false)}
+        handler={clickConfirmLendingHandler}
+      />
+      <AlertModal
+        header='Confirm return'
+        body='Are you sure you want to confirm return?'
+        show={returnShow}
+        hide={() => setReturnShow(false)}
+        handler={clickConfirmReturnHandler}
+      />
     </div>
   )
 }

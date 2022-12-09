@@ -161,14 +161,18 @@ describe('<BookDetailPage />', () => {
       const watchButton = await screen.findByText('Watch')
       fireEvent.click(watchButton)
     })
+
+    // then
+    await screen.findByText('You have successfully watched this book!')
+
+    // when
     await act(async () => {
       const watchButton = await screen.findByText('Watch')
       fireEvent.click(watchButton)
     })
 
     // then
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Watch Success!'))
-    await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Watch Canceled!'))
+    await screen.findByText('You have successfully canceled the watch!')
   })
   it('should display borrow info if the book is borrowed', async () => {
     // given

@@ -12,8 +12,8 @@ export interface IProps {
   room: RoomType
   borrowable: boolean
   borrowed: boolean
-  clickConfirmLendingHandler: () => Promise<void>
-  clickConfirmReturnHandler: () => Promise<void>
+  clickConfirmLendingHandler: () => void
+  clickConfirmReturnHandler: () => void
 }
 
 const ChattingRightMenu = (props: IProps) => {
@@ -26,7 +26,7 @@ const ChattingRightMenu = (props: IProps) => {
 
   useEffect(() => {
     dispatch(fetchLend(props.room.lend_id))
-  })
+  }, [dispatch])
 
   return (
     <div id='chatting-right-menu'>
@@ -40,17 +40,6 @@ const ChattingRightMenu = (props: IProps) => {
         />
         : null
       }
-      <div className='book-detail-info'>
-        {props.room.questions.map((question, idx) => (
-          <div key={`question_and_answer_${idx + 1}`} className='question-list'>
-            {idx ? <br /> : null}
-            <h5><b>Q{idx + 1}.</b></h5>
-            <h5>{question}</h5>
-            <h5><b>A{idx + 1}.</b></h5>
-            <h5>{props.room.answers[idx] ?? ''}</h5>
-          </div>
-        ))}
-      </div>
       <div id='chatting-right-button'>
         {(() => {
           if (isUserLender) {
@@ -71,18 +60,29 @@ const ChattingRightMenu = (props: IProps) => {
                 >Confirm return</Button>
               )
             } else {
-              return <p>You&apos;ve already lent your book to someone!</p>
+              return <h5>You&apos;ve already lent your book to someone!</h5>
             }
           } else {
             if (props.borrowable) {
-              return <p>You can borrow this book!</p>
+              return <h5>You can borrow this book!</h5>
             } else if (props.borrowed) {
-              return <p>You are borrowing this book now!</p>
+              return <h5>You are borrowing this book now!</h5>
             } else {
-              return <p>Someone has already borrowed this book...</p>
+              return <h5>Someone has already borrowed this book...</h5>
             }
           }
         })()}
+      </div>
+      <div className='book-detail-info'>
+        {props.room.questions.map((question, idx) => (
+          <div key={`question_and_answer_${idx + 1}`} className='question-list'>
+            {idx ? <br /> : null}
+            <h5><b>Q{idx + 1}.</b></h5>
+            <h5>{question}</h5>
+            <h5><b>A{idx + 1}.</b></h5>
+            <h5>{props.room.answers[idx] ?? ''}</h5>
+          </div>
+        ))}
       </div>
     </div>
   )
