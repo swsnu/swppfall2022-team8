@@ -25,4 +25,5 @@
 .offcanvas-button {
     margin-right: 0;
     width: fit-content;
+    white-space: nowrap;
 }

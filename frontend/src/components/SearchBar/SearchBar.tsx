@@ -131,14 +131,23 @@ const SearchBar = (props: IProps) => {
           container={null}
           containerPadding={0}
         >
-          <Popover id="hint-tag-hint">
-            <Popover.Header as="h3">Tag Search Hint</Popover.Header>
-            <Popover.Body>
-              &middot; A tag consists of alpabets, numbers, and dashes only.<br />
-              &middot; Tags are separated by single space.<br /><br />
-              Ex&#41; classics science-fiction-fantasy
-            </Popover.Body>
-          </Popover>
+          {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+            <Popover
+              {...props}
+              id="hint-tag-hint"
+              style={{ ...style }}
+              arrowProps={{ ...arrowProps }}
+              placement={placement}
+              popper={{ ...popper }}
+            >
+              <Popover.Header as="h3">Tag Search Hint</Popover.Header>
+              <Popover.Body>
+                &middot; A tag consists of alpabets, numbers, and dashes only.<br />
+                &middot; Tags are separated by single space.<br /><br />
+                Ex&#41; classics science-fiction-fantasy
+              </Popover.Body>
+            </Popover>
+          )}
         </Overlay>
         <Overlay
           show={listShow}
@@ -147,15 +156,20 @@ const SearchBar = (props: IProps) => {
           container={null}
           containerPadding={0}
         >
-          <ListGroup style={{ width: listTarget?.clientWidth ?? 0 }}>
-            {bookState.tags.map((tag, idx) => (
-              <ListGroup.Item
-                key={`tag_${tag.name}_${idx}`}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => { appendTagHandler(tag.name) }}
-              >{tag.name}</ListGroup.Item>
-            ))}
-          </ListGroup>
+          {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+            <ListGroup
+              {...props}
+              style={{ width: listTarget?.clientWidth ?? 0, ...style }}
+            >
+              {bookState.tags.map((tag, idx) => (
+                <ListGroup.Item
+                  key={`tag_${tag.name}_${idx}`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => { appendTagHandler(tag.name) }}
+                >{tag.name}</ListGroup.Item>
+              ))}
+            </ListGroup>
+          )}
         </Overlay>
         <Button
           id="search-button"

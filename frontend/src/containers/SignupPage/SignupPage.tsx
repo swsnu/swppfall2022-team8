@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import AlertModal from '../../components/AlertModal/AlertModal'
 
 import { AppDispatch } from '../../store'
-import { requestSignup, updateTag } from '../../store/slices/user/user'
+import { errorPrefix, requestSignup, updateTag } from '../../store/slices/user/user'
 
 import './SignupPage.css'
 
@@ -66,6 +66,15 @@ const SignupPage = () => {
       if (response.type === `${requestSignup.typePrefix}/fulfilled`) {
         const works = tagExamples.filter((_tag, idx) => tags[idx]).map(tag => dispatch(updateTag({ tag })))
         await Promise.all(works)
+      } else {
+        const errorResponse = response as { error: { message: string } }
+        if (errorResponse.error.message === errorPrefix(409)) {
+          setHeader('Authentication error')
+          setBody('Username is duplicated')
+          setShow(true)
+        } else {
+          alert('Error on signup')
+        }
       }
     } else {
       const messageBuffer: JSX.Element[] = []
@@ -122,12 +131,21 @@ const SignupPage = () => {
               container={null}
               containerPadding={0}
             >
-              <Popover id="hint-username">
-                <Popover.Header as="h3">Username</Popover.Header>
-                <Popover.Body>
-                  &middot; {usernameHint[0]}
-                </Popover.Body>
-              </Popover>
+              {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+                <Popover
+                  {...props}
+                  id="hint-username"
+                  style={{ ...style }}
+                  arrowProps={{ ...arrowProps }}
+                  placement={placement}
+                  popper={{ ...popper }}
+                >
+                  <Popover.Header as="h3">Username</Popover.Header>
+                  <Popover.Body>
+                    &middot; {usernameHint[0]}
+                  </Popover.Body>
+                </Popover>
+              )}
             </Overlay>
           </Form.Label>
         </InputGroup>
@@ -151,14 +169,23 @@ const SignupPage = () => {
               container={null}
               containerPadding={0}
             >
-              <Popover id="hint-password">
-                <Popover.Header as="h3">Password</Popover.Header>
-                <Popover.Body>
-                  &middot; {passwordHint[0]}<br />
-                  &middot; {passwordHint[1]}<br /><br />
-                  {passwordHint[2]}
-                </Popover.Body>
-              </Popover>
+              {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+                <Popover
+                  {...props}
+                  id="hint-password"
+                  style={{ ...style }}
+                  arrowProps={{ ...arrowProps }}
+                  placement={placement}
+                  popper={{ ...popper }}
+                >
+                  <Popover.Header as="h3">Password</Popover.Header>
+                  <Popover.Body>
+                    &middot; {passwordHint[0]}<br />
+                    &middot; {passwordHint[1]}<br /><br />
+                    {passwordHint[2]}
+                  </Popover.Body>
+                </Popover>
+              )}
             </Overlay>
           </Form.Label>
         </InputGroup>

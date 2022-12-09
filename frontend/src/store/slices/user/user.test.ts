@@ -149,15 +149,12 @@ describe('user reducer', () => {
   it('should handle requestSignup error', async () => {
     const mockConsole = jest.fn()
     window.console.error = mockConsole
-    const mockAlert = jest.fn()
-    window.alert = mockAlert
     jest.spyOn(axios, 'post').mockRejectedValue(new Error(errorPrefix(409)))
     const result = await store.dispatch(requestSignup({
       username: 'USER_TEST_USERNAME',
       password: 'USER_TEST_PASSWORD'
     }))
     expect(result.type).toBe(`${requestSignup.typePrefix}/rejected`)
-    expect(mockAlert).toHaveBeenCalled()
     expect(mockConsole).toHaveBeenCalled()
 
     jest.spyOn(axios, 'post').mockRejectedValue({ data: null })
@@ -166,7 +163,6 @@ describe('user reducer', () => {
       password: 'USER_TEST_PASSWORD'
     }))
     expect(result2.type).toBe(`${requestSignup.typePrefix}/rejected`)
-    expect(mockAlert).toHaveBeenCalledTimes(2)
     expect(mockConsole).toHaveBeenCalledTimes(2)
 
     jest.spyOn(axios, 'post').mockResolvedValue({
@@ -179,21 +175,17 @@ describe('user reducer', () => {
       username: 'USER_TEST_USERNAME',
       password: 'USER_TEST_PASSWORD'
     }))
-    expect(mockAlert).toHaveBeenCalledTimes(2)
     expect(mockConsole).toHaveBeenCalledTimes(2)
   })
   it('should handle requestLogin error', async () => {
     const mockConsole = jest.fn()
     window.console.error = mockConsole
-    const mockAlert = jest.fn()
-    window.alert = mockAlert
     jest.spyOn(axios, 'post').mockRejectedValue(new Error(errorPrefix(4)))
     const result = await store.dispatch(requestLogin({
       username: 'USER_TEST_USERNAME',
       password: 'USER_TEST_PASSWORD'
     }))
     expect(result.type).toBe(`${requestLogin.typePrefix}/rejected`)
-    expect(mockAlert).toHaveBeenCalled()
     expect(mockConsole).toHaveBeenCalled()
 
     jest.spyOn(axios, 'post').mockRejectedValue({ data: null })
@@ -202,7 +194,6 @@ describe('user reducer', () => {
       password: 'USER_TEST_PASSWORD'
     }))
     expect(result2.type).toBe(`${requestLogin.typePrefix}/rejected`)
-    expect(mockAlert).toHaveBeenCalledTimes(2)
     expect(mockConsole).toHaveBeenCalledTimes(2)
 
     jest.spyOn(axios, 'post').mockResolvedValue({
@@ -215,21 +206,13 @@ describe('user reducer', () => {
       username: 'USER_TEST_USERNAME',
       password: 'USER_TEST_PASSWORD'
     }))
-    expect(mockAlert).toHaveBeenCalledTimes(2)
     expect(mockConsole).toHaveBeenCalledTimes(2)
-  })
-  it('should handle updateTag error (404)', async () => {
-    console.error = jest.fn()
-    globalThis.alert = jest.fn()
-    jest.spyOn(axios, 'put').mockRejectedValue(new Error(errorPrefix(404)))
-    await store.dispatch(updateTag({ tag: fakeTag }))
-    await waitFor(() => expect(globalThis.alert).toHaveBeenLastCalledWith('The tag does not exist in DB.'))
   })
   it('should handle updateTag error (not 404)', async () => {
     console.error = jest.fn()
     globalThis.alert = jest.fn()
     jest.spyOn(axios, 'put').mockRejectedValue(new Error('mock'))
     await store.dispatch(updateTag({ tag: fakeTag }))
-    await waitFor(() => expect(globalThis.alert).toHaveBeenLastCalledWith('Error on update tags'))
+    await waitFor(() => expect(console.error).toHaveBeenCalled())
   })
 })

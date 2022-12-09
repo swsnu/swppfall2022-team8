@@ -97,7 +97,6 @@ const BookRegisterPage = () => {
   }
 
   const onClickAutoCompleteHandler = (book: BookType) => {
-    console.log(book)
     setSelectedBook(book)
     setTitle(book.title)
     setAuthor(book.author)
@@ -327,15 +326,20 @@ const BookRegisterPage = () => {
                     container={null}
                     containerPadding={0}
                   >
-                    <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
-                      {bookState.books.map((book, idx) => (
-                        <ListGroup.Item
-                          key={`book_${book.title}_${idx}`}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => { onClickAutoCompleteHandler(book); setListShow(false) }}
-                        >{book.title}</ListGroup.Item>
-                      ))}
-                    </ListGroup>
+                    {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+                      <ListGroup
+                        {...props}
+                        style={{ width: (listTarget?.clientWidth ?? 0) / 2, ...style }}
+                      >
+                        {bookState.books.map((book, idx) => (
+                          <ListGroup.Item
+                            key={`book_${book.title}_${idx}`}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => { onClickAutoCompleteHandler(book); setListShow(false) }}
+                          >{book.title}</ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    )}
                   </Overlay>
                 </Form.Group>
                 {selectedBook
@@ -460,15 +464,19 @@ const BookRegisterPage = () => {
                     container={null}
                     containerPadding={0}
                   >
-                    <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
-                      {bookState.tags.map((tag, idx) => (
-                        <ListGroup.Item
-                          key={`tag_${tag.name}_${idx}`}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => { clickAddTagHandler(tag.name) }}
-                        >{tag.name}</ListGroup.Item>
-                      ))}
-                    </ListGroup>
+                    {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+                      <ListGroup
+                        {...props}
+                        style={{ width: (listTarget?.clientWidth ?? 0) / 2, ...style }}>
+                        {bookState.tags.map((tag, idx) => (
+                          <ListGroup.Item
+                            key={`tag_${tag.name}_${idx}`}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => { clickAddTagHandler(tag.name) }}
+                          >{tag.name}</ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    )}
                   </Overlay>
                 </InputGroup>
               </>

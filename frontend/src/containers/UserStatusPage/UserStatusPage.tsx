@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { AppDispatch } from '../../store'
-import { fetchRecommend, fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
+import { errorPrefix, fetchRecommend, fetchTags, fetchWatch, selectUser, updateTag } from '../../store/slices/user/user'
 import { selectLend, fetchUserLends } from '../../store/slices/lend/lend'
 import { selectBorrow, fetchUserBorrows } from '../../store/slices/borrow/borrow'
 import BookListEntity from '../../components/BookListEntity/BookListEntity'
@@ -12,6 +12,7 @@ import './UserStatusPage.css'
 import PageButton from '../../components/PageButton/PageButton'
 import useInterval from '../../utils/useInterval'
 import { fetchQueryTags, selectBook } from '../../store/slices/book/book'
+import AlertModal from '../../components/AlertModal/AlertModal'
 
 const UserStatusPage = () => {
   const [lendPage, setLendPage] = useState<number>(1)
@@ -30,6 +31,8 @@ const UserStatusPage = () => {
   const [listShow, setListShow] = useState<boolean>(false)
   const [listTarget, setListTarget] = useState<HTMLElement | null>(null)
   const prevTagInput = useRef<string>('')
+
+  const [show, setShow] = useState<boolean>(false)
 
   const borrowList = borrowState.userBorrows.filter((borrow, idx) => borrow.active)
 
@@ -80,7 +83,12 @@ const UserStatusPage = () => {
       setTags(newTags)
       setTag('')
     } else {
-      alert('Error on add tag')
+      const errorResponse = response as { error: { message: string } }
+      if (errorResponse.error.message === errorPrefix(404)) {
+        setShow(true)
+      } else {
+        alert('Error on add tag')
+      }
     }
   }
 
@@ -243,19 +251,29 @@ const UserStatusPage = () => {
             container={null}
             containerPadding={0}
           >
-            <ListGroup style={{ width: (listTarget?.clientWidth ?? 0) / 2 }}>
-              {bookState.tags.map((tag, idx) => (
-                <ListGroup.Item
-                  key={`tag_${tag.name}_${idx}`}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => { setTag(tag.name); setListShow(false) }}
-                >{tag.name}</ListGroup.Item>
-              ))}
-            </ListGroup>
+            {({ placement, arrowProps, show: _show, popper, style, ...props }) => (
+              <ListGroup
+                {...props}
+                style={{ width: (listTarget?.clientWidth ?? 0) / 2, ...style }}
+              >
+                {bookState.tags.map((tag, idx) => (
+                  <ListGroup.Item
+                    key={`tag_${tag.name}_${idx}`}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => { setTag(tag.name); setListShow(false) }}
+                  >{tag.name}</ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
           </Overlay>
         </InputGroup>
       </Form>
-
+      <AlertModal
+        header="Tag add error"
+        body="The tag does not exist in DB."
+        show={show}
+        hide={() => setShow(false)}
+      />
     </div>
   )
 }
