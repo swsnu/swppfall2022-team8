@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { Button } from 'react-bootstrap'
+import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { fetchRecommend, selectUser } from '../../store/slices/user/user'
+import useInterval from '../../utils/useInterval'
 import RecommendEntity from '../RecommendEntity/RecommendEntity'
 
 const Recommend = () => {
@@ -13,22 +14,18 @@ const Recommend = () => {
     dispatch(fetchRecommend())
   }, [dispatch])
 
-  const onClickHandler = () => {
-    dispatch(fetchRecommend())
-  }
+  useInterval(() => {
+    if (userState.recommend.is_outdated) {
+      dispatch(fetchRecommend())
+    }
+  }, 500)
 
   return (
     <>
       {userState.recommend.is_outdated
         ? <>
-            <br />
-            <br />
-            <Button variant='outline-primary' id='refresh-button' onClick={onClickHandler}>
-              Refresh!
-            </Button>
-            <br />
-            <br />
-            <p>Calculating in progress with changed tags... Please refresh after a while.</p>
+            <p>Calculating in progress with changed tags...</p>
+            <Spinner animation="border" variant="primary" />
           </>
         : !userState.recommend.recommend_list.length
             ? <p>Please add your preference tag to use recommend system!</p>
