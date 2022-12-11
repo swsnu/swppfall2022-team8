@@ -119,6 +119,7 @@ const BookRegisterPage = () => {
         setShow(true)
       } else {
         setLendImage(lendImage.concat(Array.from(files)))
+        setLendImageIdx(lendImage.length)
       }
     }
   }
@@ -372,7 +373,7 @@ const BookRegisterPage = () => {
               : <>
                 <Form.Group as={Row} className="input-class" id="title-input-form">
                   {bookImage && (
-                    <div>
+                    <div className='image-test2'>
                       <img alt='Image Not Found' width={'250px'} src={URL.createObjectURL(bookImage)} />
                     </div>
                   )}
@@ -486,13 +487,12 @@ const BookRegisterPage = () => {
               <Form.Label><h5>Upload Book Images You Want To Lend</h5></Form.Label>
               {lendImage.length
                 ? <div id='lend-image-div'>
-                  <Carousel activeIndex={lendImageIdx} onSelect={handleSelect}>
+                  <Carousel activeIndex={lendImageIdx} onSelect={handleSelect} variant="dark">
                     {lendImage.map((image, idx) => (
                       <Carousel.Item key={`lendImage_${idx}`}>
                         <img
                           className='lend-image-carousel'
                           src={URL.createObjectURL(image)}
-                          width={'100%'}
                           alt="Image Not Found"
                         />
                         <Carousel.Caption>

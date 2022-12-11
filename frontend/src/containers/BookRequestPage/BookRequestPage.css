@@ -23,3 +23,9 @@
 #request-send-button {
     margin-bottom: 0;
 }
+
+@media only screen and (max-width: 550px) {
+    #request-page {
+        display: block;
+    }
+}
