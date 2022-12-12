@@ -72,6 +72,13 @@ for j in range(len(books)):
     for tag_id in current_tags_list["tag_id"]:
         tag, created = Tag.objects.get_or_create(id=tag_id + 1)
         BookTag.objects.create(book=book, tag=tag)
+        
+    image_url = books["image_url"][i]
+    temp_file = download(image_url)
+    file_name = "{urlparse}.{ext}".format(
+        urlparse=urlparse(image_url).path.split("/")[-1].split(".")[0],
+        ext=urlparse(image_url).path.split("/")[-1].split(".")[1],
+    )
 
     lend = LendInfo(
         book=book,
