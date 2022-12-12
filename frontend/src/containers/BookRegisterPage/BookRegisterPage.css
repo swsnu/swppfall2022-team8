@@ -25,7 +25,13 @@ h3 {
     height: 300px;
     margin: 30px auto;
     border: 1px solid black;
-}  
+}
+
+.image-test2 {
+    display: block;
+    align-items: center;
+    text-align: center;
+}
 
 .book-register h1 {
     text-align: center;
@@ -140,13 +146,20 @@ h3 {
     font-weight: lighter;
 }
 
-#lend-image-div {
-    text-align: center;
-}
-
 #lendimage-delete-button {
     width: fit-content;
     margin: 5px auto;
+}
+
+#lend-image-div {
+    align-items: center;
+    text-align: center;
+    display: block;
+}
+
+#lend-image-div img {
+    max-width: 100%;
+    max-height: 80vh;
 }
 
 @media (max-width: 1200px) {

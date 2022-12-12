@@ -14,7 +14,7 @@ const BookListEntity = (props: IProps) => {
   const navigate = useNavigate()
 
   return (
-    <Card style={{ width: '18rem' }} onClick={() => navigate(`/book/${props.id}`)} className='book-list-entity' >
+    <Card onClick={() => navigate(`/book/${props.id}`)} className='book-list-entity' >
       <Card.Img variant='top' src={props.image} className='book-entity-image' />
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>

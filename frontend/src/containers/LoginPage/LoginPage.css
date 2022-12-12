@@ -25,7 +25,8 @@ h1 {
 }
 
 .signin {
-    margin: auto;
+    margin: 0 10px;
+    padding-left: var(--bs-gutter-x);
 }
 
 .signin-buttons {

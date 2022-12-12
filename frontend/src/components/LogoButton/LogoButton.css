@@ -42,3 +42,13 @@
 #logo{
     float: left;
 }
+
+@media only screen and (max-width: 550px) {
+    .logo .book-image{
+        font-size: 30px;
+    }
+    
+    .logo h3{
+        font-size: 25px;
+    }
+}

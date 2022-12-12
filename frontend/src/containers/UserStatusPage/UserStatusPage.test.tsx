@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 import axios from 'axios'
 import { act } from 'react-dom/test-utils'
 import { RootState } from '../../store'
+import { errorPrefix } from '../../store/slices/user/user'
 import { renderWithProviders, rootInitialState } from '../../test-utils/mock'
 import UserStatusPage from './UserStatusPage'
 
@@ -284,7 +285,7 @@ describe('<UserStatusPage />', () => {
     // then
     await waitFor(() => expect(globalThis.alert).toHaveBeenCalledWith('Error on delete tag'))
   })
-  it('should handle error on delete tag', async () => {
+  it('should handle error on add tag', async () => {
     // given
     console.error = jest.fn()
     globalThis.alert = jest.fn()
@@ -476,5 +477,213 @@ describe('<UserStatusPage />', () => {
     fireEvent.click(lendPage)
     fireEvent.click(borrowPage)
     fireEvent.click(watchPage)
+  })
+  it('should handle autocomplete', async () => {
+    // given
+    jest.useFakeTimers()
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const parsedUrl = url.split('/')
+      const op = parsedUrl[2]
+      if (op === 'book') {
+        return Promise.resolve({
+          data: [
+            { id: 12, name: fakeUpdateTag }
+          ]
+        })
+      }
+      if (op === 'lend') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
+      } else if (op === 'borrow') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
+      } else { // op === user
+        const op2 = parsedUrl[3]
+        if (op2 === 'tag') {
+          return Promise.resolve({ data: [fakeTag] })
+        } else { // op2 === watch
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
+        }
+      }
+    })
+    jest.spyOn(axios, 'put').mockImplementation((url, data) => {
+      const typedData = data as ToggleTagRequestType
+      const tag = typedData.tag
+      if (typeof tag === 'string') {
+        return Promise.resolve({
+          data: { tag: fakeUpdateTag, created: true }
+        })
+      } else {
+        return Promise.resolve({
+          data: { tag: fakeTag, created: false }
+        })
+      }
+    })
+
+    await act(() => {
+      renderWithProviders(<UserStatusPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          }
+        }
+      })
+    })
+    jest.runOnlyPendingTimers()
+    await act(async () => {
+      const tagInput = await screen.findByRole('textbox')
+      fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
+    })
+
+    // when
+    await act(async () => {
+      const tagInput = await screen.findByRole('textbox')
+      tagInput.focus()
+      tagInput.blur()
+      tagInput.focus()
+      fireEvent.change(tagInput, { target: { value: fakeUpdateTag.slice(0, 1) } })
+      jest.runOnlyPendingTimers()
+    })
+
+    // then
+    const completeElem = await screen.findByText(fakeUpdateTag)
+
+    // when
+    await act(async () => {
+      fireEvent.mouseDown(completeElem)
+      fireEvent.click(completeElem)
+    })
+    await act(async () => {
+      const tagInput = await screen.findByRole('textbox')
+      fireEvent.keyPress(tagInput, { key: 'Enter', code: 13, charCode: 13 })
+    })
+    jest.runOnlyPendingTimers()
+
+    // then
+    await waitFor(() => expect(completeElem).not.toBeInTheDocument())
+
+    // when
+    await act(async () => {
+      const tagInput = await screen.findByRole('textbox')
+      fireEvent.change(tagInput, { target: { value: fakeUpdateTag } })
+    })
+    await act(async () => {
+      const tagAddButton = await screen.findByText('add')
+      fireEvent.click(tagAddButton)
+    })
+
+    // then
+    const tags = await screen.findAllByText(fakeUpdateTag)
+    expect(tags.length).toEqual(1)
+  })
+  it('should handle 404 error', async () => {
+    jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+      const parsedUrl = url.split('/')
+      const op = parsedUrl[2]
+      if (op === 'book') {
+        return Promise.resolve({
+          data: [
+            { id: 12, name: fakeUpdateTag }
+          ]
+        })
+      }
+      if (op === 'lend') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeLend]
+          }
+        })
+      } else if (op === 'borrow') {
+        return Promise.resolve({
+          data: {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [fakeBorrow]
+          }
+        })
+      } else { // op === user
+        const op2 = parsedUrl[3]
+        if (op2 === 'tag') {
+          return Promise.resolve({ data: [fakeTag] })
+        } else { // op2 === watch
+          return Promise.resolve({
+            data: {
+              count: 1,
+              next: null,
+              previous: null,
+              results: [fakeLend]
+            }
+          })
+        }
+      }
+    })
+    jest.spyOn(axios, 'put').mockImplementation((url, data) => {
+      const typedData = data as ToggleTagRequestType
+      const tag = typedData.tag
+      if (typeof tag === 'string') {
+        return Promise.reject(new Error(errorPrefix(404)))
+      } else {
+        return Promise.resolve({
+          data: { tag: fakeTag, created: false }
+        })
+      }
+    })
+
+    await act(() => {
+      renderWithProviders(<UserStatusPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeUser
+          }
+        }
+      })
+    })
+
+    // when
+    await act(async () => {
+      const tagInput = await screen.findByRole('textbox')
+      fireEvent.change(tagInput, { target: { value: fakeUpdateTag } })
+    })
+    await act(async () => {
+      const tagAddButton = await screen.findByText('add')
+      fireEvent.click(tagAddButton)
+    })
+
+    // then
+    const modalMessage = await screen.findByText('The tag does not exist in DB.')
+
+    // when
+    const closeButton = await screen.findByText('Close')
+    fireEvent.click(closeButton)
+
+    // then
+    await waitFor(() => expect(modalMessage).not.toBeInTheDocument())
   })
 })
