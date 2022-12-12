@@ -76,7 +76,22 @@
   cursor: pointer;
 }
 
-@media only screen and (max-width: 550px) {
+#lend-image-div {
+  align-items: center;
+  text-align: center;
+  display: block;
+}
+
+#lend-image-div img {
+  max-width: 100%;
+  max-height: 80vh;
+}
+
+@media only screen and (max-width: 1200px) {
+  #lend-image-div img {
+      max-height: 50vh !important;
+  }
+
   .book-detail-page {
     display: block;
   }

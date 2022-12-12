@@ -128,35 +128,33 @@ const BookEditPage = () => {
   }
 
   return (
-    <div className='page'>
+    <div id='edit-page'>
       <br />
       <div className='book-edit'>
         <div className='book-main-info'>
           <div className="image-test">
             <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
           </div>
-          <div className='input-class'>
-            <div className='book-detail-info'>
-              <h1>{lendState.selectedLend?.book_info.title}</h1>
+          <div className='book-detail-info'>
+            <h1>{lendState.selectedLend?.book_info.title}</h1>
+            <br />
+            <h5 id='edit-author'>written by {lendState.selectedLend?.book_info.author}</h5>
+            <br />
+            <p />
+            {lendState.selectedLend?.book_info.brief}
+            <br />
+            <p />
+            <div>
+              <Button
+                type="button"
+                onClick={() => setTagVisible(val => !val)}
+              >{tagVisible ? 'Close Tags' : 'More Tags'}</Button>
               <br />
-              <h5 id='edit-author'>written by {lendState.selectedLend?.book_info.author}</h5>
-              <br />
-              <p />
-              {lendState.selectedLend?.book_info.brief}
-              <br />
-              <p />
-              <div>
-                <Button
-                  type="button"
-                  onClick={() => setTagVisible(val => !val)}
-                >{tagVisible ? 'Close Tags' : 'More Tags'}</Button>
-                <br />
-                <div className='info-box'>
-                  {tagVisible
-                    ? lendState.selectedLend?.book_info.tags.map((tag) => ('#' + tag + ' '))
-                    : lendState.selectedLend?.book_info.tags.slice(0, 10).map((tag) => ('#' + tag + ' '))
-                  }
-                </div>
+              <div className='info-box'>
+                {tagVisible
+                  ? lendState.selectedLend?.book_info.tags.map((tag) => ('#' + tag + ' '))
+                  : lendState.selectedLend?.book_info.tags.slice(0, 10).map((tag) => ('#' + tag + ' '))
+                }
               </div>
             </div>
           </div>
@@ -282,12 +280,12 @@ const BookEditPage = () => {
             </div>
           </Form.Group>
         </Form>
+        <Button
+          id='edit-button'
+          type="button" onClick={() => clickConfirmEditHanler()}
+        >Edit</Button>
       </div>
       <br />
-      <Button
-        id='edit-button'
-        type="button" onClick={() => clickConfirmEditHanler()}
-      >Edit</Button>
       <AlertModal
         header={header}
         body={body}
