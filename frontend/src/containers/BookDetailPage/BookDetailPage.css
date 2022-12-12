@@ -75,3 +75,9 @@
   filter: brightness(50%);
   cursor: pointer;
 }
+
+@media only screen and (max-width: 550px) {
+  .book-detail-page {
+    display: block;
+  }
+}

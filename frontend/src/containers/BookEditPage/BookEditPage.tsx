@@ -13,6 +13,8 @@ import AlertModal from '../../components/AlertModal/AlertModal'
 
 const BookEditPage = () => {
   const [show, setShow] = useState<boolean>(false)
+  const [header, setHeader] = useState<string>('')
+  const [body, setBody] = useState<string | JSX.Element>('')
 
   const id = useParams().id as string
   const dispatch = useDispatch<AppDispatch>()
@@ -69,9 +71,12 @@ const BookEditPage = () => {
     const files = event.target.files
     if (files !== null) {
       if (files.length + oldImages.length + newImages.length > maxLendImage) {
+        setHeader('Limit the number of image uploads')
+        setBody(`You can only post up to ${maxLendImage} images.`)
         setShow(true)
       } else {
         setNewImages(newImages.concat(Array.from(files)))
+        setLendImageIdx(oldImages.length + newImages.length)
       }
     }
   }
@@ -90,6 +95,13 @@ const BookEditPage = () => {
 
   const clickConfirmEditHanler = async () => {
     if (lendState.selectedLend != null) {
+      if (!(oldImages.length + newImages.length)) {
+        setHeader('Form validation error')
+        setBody('You should attach at least one image of your book.')
+        setShow(true)
+        return
+      }
+
       const lendData = {
         id: lendState.selectedLend.id,
         book: lendState.selectedLend.book,
@@ -153,45 +165,45 @@ const BookEditPage = () => {
 
         <div>
           {oldImages.length > 0 || newImages.length > 0
-            ? <Carousel
-              activeIndex={lendImageIdx}
-              onSelect={handleSelect}
-              variant="dark"
-              id='edit-images'
-            > {oldImages.map((image, idx) => (
-              <Carousel.Item key={`lendImage_${idx}`}>
-                <img
-                  className='lend-image-carousel'
-                  src={image.image}
-                  width={'100%'}
-                  alt="Image Not Found"
-                />
-                <Carousel.Caption>
-                  <Button
-                    variant='danger'
-                    onClick={() => onOldDeleteHandler(image.id)}
-                  >x</Button>
-                </Carousel.Caption>
-              </Carousel.Item>
-            ))}
-              {newImages.map((image, idx) => (
-                <Carousel.Item key={`lendImage_${idx}`}>
-                  <img
-                    className='lend-image-carousel'
-                    src={URL.createObjectURL(image)}
-                    width={'100%'}
-                    alt="Image Not Found"
-                  />
-                  <Carousel.Caption>
-                    <Button
-                      variant='danger'
-                      onClick={() => onNewDeleteHandler(idx)}
-                    >x
-                    </Button>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              ))}
-            </Carousel>
+            ? <div id='lend-image-div'>
+                <Carousel
+                  activeIndex={lendImageIdx}
+                  onSelect={handleSelect}
+                  variant="dark"
+                  id='edit-images'
+                > {oldImages.map((image, idx) => (
+                  <Carousel.Item key={`lendImage_${idx}`}>
+                    <img
+                      className='lend-image-carousel'
+                      src={image.image}
+                      alt="Image Not Found"
+                    />
+                    <Carousel.Caption>
+                      <Button
+                        variant='danger'
+                        onClick={() => onOldDeleteHandler(image.id)}
+                      >x</Button>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                ))}
+                  {newImages.map((image, idx) => (
+                    <Carousel.Item key={`lendImage_${idx}`}>
+                      <img
+                        className='lend-image-carousel'
+                        src={URL.createObjectURL(image)}
+                        alt="Image Not Found"
+                      />
+                      <Carousel.Caption>
+                        <Button
+                          variant='danger'
+                          onClick={() => onNewDeleteHandler(idx)}
+                        >x
+                        </Button>
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              </div>
             : null}
         </div>
 
@@ -277,8 +289,8 @@ const BookEditPage = () => {
         type="button" onClick={() => clickConfirmEditHanler()}
       >Edit</Button>
       <AlertModal
-        header={'Limit the number of image uploads'}
-        body={`You can only post up to ${maxLendImage} images.`}
+        header={header}
+        body={body}
         show={show}
         hide={() => setShow(false)}
       />

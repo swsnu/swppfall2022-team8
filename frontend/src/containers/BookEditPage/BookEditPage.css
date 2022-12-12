@@ -100,22 +100,8 @@ h1 {
     max-width: 1000px;
 }
 
-@media (max-width: 1200px) {
+@media only screen and (max-width: 550px) {
     .book-edit {
-        width: 100%;
-    }
-
-    #edit-images{
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-
-    .book-main-info {
-        grid-template-columns: 1fr;
-    }
-
-    .book-detail-info {
-        border: 0px
+      display: block;
     }
 }

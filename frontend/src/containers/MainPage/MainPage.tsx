@@ -23,9 +23,9 @@ const MainPage = () => {
         id='carousel'
         variant='dark'
       >
-        <Carousel.Item interval={interval}>
+        <Carousel.Item interval={interval} className="carousel-item">
           <div id='main-description'>
-            <div>
+            <div className='description-div'>
               <h1 id='welcome-h1'><b>Welcome to BookVillage!</b></h1>
               <h2 id='welcome-description'>Borrow or lend books each other.</h2>
             </div>
@@ -35,16 +35,14 @@ const MainPage = () => {
             </div>
           </div>
         </Carousel.Item>
-        <Carousel.Item interval={interval}>
+        <Carousel.Item interval={interval} className="carousel-item">
           <div id='main-register'>
             <div className='image-div'>
               <img id='register-book-image1' src='img/linear.png' alt='no image' />
               <img id='register-book-image2' src='img/isesuma.jpg' alt='no image' />
             </div>
-            <div>
+            <div className='description-div'>
               <h2 id='register-h2'><b>Register your book and lend it to other people!</b></h2>
-              <br />
-              <br />
               <div id='main-register-button'><RegisterButton /></div>
             </div>
           </div>
