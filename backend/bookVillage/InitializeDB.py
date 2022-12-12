@@ -16,7 +16,7 @@ tags = pd.read_csv("./bookDatas/tags.csv")
 
 from book.models.book import Tag, Book, BookTag
 from django.contrib.auth.models import User
-from book.models.lend_info import LendInfo
+from book.models.lend_info import LendImage, LendInfo
 
 # Please flush DB first by command
 # python manage.py flush
@@ -32,7 +32,7 @@ for i in range(len(tags)):
     tag.save()
     print(tag.name)
 
-user = User.objects.create_user(username="MockUser", password="password")
+user = User.objects.create_user(username="admin", password="password")
 user.save()
 
 from io import BytesIO
@@ -73,9 +73,21 @@ for i in range(len(books)):
         BookTag.objects.create(book=book, tag=tag)
 
     lend = LendInfo(
-        book=book, owner=user, cost=1000, additional="DEFAULT", questions=["Default"]
+        book=book,
+        owner=user,
+        cost=1000,
+        additional="DEFAULT",
+        questions=[
+            "Where do you live?",
+            "Would you like to borrow the book by delivery service, or directly?",
+        ],
     )
     lend.save()
+
+    lendImage = LendImage(lend=lend)
+    lendImage.save()
+    lendImage.image.save(file_name, File(temp_file))
+
     print(str(lend.id) + "/10000")
 
 # Book info : title, author, tag, brief
