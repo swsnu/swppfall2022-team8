@@ -29,7 +29,11 @@ const fakeLend = {
   questions: ['REQUEST_TEST_QUESTION'],
   cost: 3000,
   additional: 'REQUEST_TEST_ADDITIONAL',
-  status: null
+  status: null,
+  images: [
+    { id: 5, image: 'REQUEST_TEST_IMAGE_1' },
+    { id: 6, image: 'REQUEST_TEST_IMAGE_2' }
+  ]
 }
 
 const mockNavigate = jest.fn()
@@ -172,7 +176,14 @@ describe('<BookDetailPage />', () => {
     })
 
     // then
-    await screen.findByText('You have successfully canceled the watch!')
+    const modalMessage = await screen.findByText('You have successfully canceled the watch!')
+
+    // when
+    const closeButton = await screen.findByText('Close')
+    fireEvent.click(closeButton)
+
+    // then
+    await waitFor(() => expect(modalMessage).not.toBeInTheDocument())
   })
   it('should display borrow info if the book is borrowed', async () => {
     // given
@@ -194,5 +205,34 @@ describe('<BookDetailPage />', () => {
 
     // then
     await screen.findByText('Borrowed')
+  })
+  it('should handle buttons', async () => {
+    // given
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({
+      data: fakeLend
+    }))
+    await act(() => {
+      renderWithProviders(<BookDetailPage />, {
+        preloadedState: {
+          ...preloadedState,
+          user: {
+            ...preloadedState.user,
+            currentUser: fakeLender
+          }
+        }
+      })
+    })
+
+    // when
+    await act(async () => {
+      const carousel = (await screen.findAllByRole('button'))[0]
+      fireEvent.click(carousel)
+    })
+
+    // when
+    await act(async () => {
+      const moreTag = (await screen.findAllByRole('button'))[5]
+      fireEvent.click(moreTag)
+    })
   })
 })

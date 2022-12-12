@@ -222,7 +222,14 @@ describe('<BookRequestPage />', () => {
     })
 
     // then
-    await screen.findByText('You should fill in all answers.')
+    const modalMessage = await screen.findByText('You should fill in all answers.')
+
+    // when
+    const closeButton = await screen.findByText('Close')
+    fireEvent.click(closeButton)
+
+    // then
+    await waitFor(() => expect(modalMessage).not.toBeInTheDocument())
   })
   it('should not be able to request same book twice', async () => {
     // given

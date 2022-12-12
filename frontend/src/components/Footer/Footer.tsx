@@ -3,7 +3,10 @@ const Footer = () => {
     <div className='footer'>
       <br/>
       <br/>
-      BookVillage
+      Powered by BookVillage team, ipomoea-nil, Src77, SB1491 and Pabiya,
+      <br/>
+      with love for Hoshimachi Suisei and Kurosawa Ruby.
+      <br/>
       <br/>
     </div>
   )

@@ -207,9 +207,12 @@ const ChattingPage = () => {
       <div id='chatting-page'>
         {/* ChattingRoomList component */}
         <div>
-          <ChattingRoomList
-            enterRoom={enterRoom}
-          />
+          {roomState.rooms.length
+            ? <ChattingRoomList
+                enterRoom={enterRoom}
+              />
+            : <h5><br />A chat room is created when someone requests your book or you requests someone&apos;s book.</h5>
+          }
         </div>
         {/* ChattingRoom component */}
         <div>

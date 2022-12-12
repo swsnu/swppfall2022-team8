@@ -5,3 +5,9 @@
     border: 2px solid rgb(199, 199, 199);
     border-radius: 15px;
 }
+
+@media only screen and (max-width: 550px) {
+    .booklist {
+        display: block;
+    }
+}
