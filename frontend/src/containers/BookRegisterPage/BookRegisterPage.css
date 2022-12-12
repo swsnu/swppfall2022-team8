@@ -17,7 +17,7 @@ h3 {
     border-radius: 9px;
     display: inline-block;
     text-align: left;
-    width: 1000px
+    width: 1000px;
 }
 
 .image-test {
@@ -162,8 +162,23 @@ h3 {
     max-height: 80vh;
 }
 
-@media (max-width: 1200px) {
+@media only screen and (max-width: 1200px) {
     .book-register {
         width: 80%;
+    }
+    .book-main-info {
+        display: block;
+    }
+    .book-detail-page {
+      display: block;
+    }
+    .input-class {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    #lend-image-div img {
+        max-height: 50vh;
     }
 }

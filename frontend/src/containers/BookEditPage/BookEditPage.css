@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Bangers|Cinzel:400,700,900|Lato:100,300,400,700,900|Lobster|Lora:400,700|Mansalva|Muli:200,300,400,600,700,800,900|Open+Sans:300,400,600,700,800|Oswald:200,300,400,500,600,700|Roboto:100,300,400,500,700,900&display=swap');
 
-
+#edit-page {
+    background-color: white;
+    padding-bottom: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
 
 #breif-summary-description {
     font-size: small;
@@ -9,10 +14,16 @@
 }
 
 .book-edit {
-    border: 0px solid rgb(119, 170, 235);
+    border: 3px solid rgb(119, 170, 235);
+    border-radius: 9px;
     display: inline-block;
     text-align: left;
     width: 1000px;
+}
+
+.book-main-info {
+    display: grid;
+    grid-template-columns: 300px 1fr;
 }
 
 h1 {
@@ -100,8 +111,22 @@ h1 {
     max-width: 1000px;
 }
 
-@media only screen and (max-width: 550px) {
+#lend-image-div {
+    align-items: center;
+    text-align: center;
+    display: block;
+}
+  
+#lend-image-div img {
+    max-width: 100%;
+    max-height: 80vh;
+}
+
+@media only screen and (max-width: 1200px) {
     .book-edit {
-      display: block;
+        width: 80%;
+    }
+    .book-main-info {
+        display: block;
     }
 }
