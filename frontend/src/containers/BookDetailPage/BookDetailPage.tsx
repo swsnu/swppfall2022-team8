@@ -57,7 +57,7 @@ const BookDetailPage = () => {
           <div className="image-test">
             <img alt='Image Not Found' width={'100%'} src={lendState.selectedLend?.book_info.image} />
           </div>
-          <div>
+          <div id='lend-image-div'>
             {lendState.selectedLend?.images?.length
               ? <Carousel
                 activeIndex={lendImageIdx}
@@ -69,7 +69,6 @@ const BookDetailPage = () => {
                     <img
                       className='lend-image-carousel'
                       src={image.image}
-                      width={'100%'}
                       alt="Image Not Found"
                     />
                     <Carousel.Caption>
