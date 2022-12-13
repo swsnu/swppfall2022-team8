@@ -84,6 +84,7 @@ const BookEditPage = () => {
   const onOldDeleteHandler = (imageId: number) => {
     setDeletedImages([...deletedImages, imageId])
     const newOldImages = oldImages.filter(image => image.id !== imageId)
+    setLendImageIdx(lendImageIdx % (oldImages.length + newImages.length - 1))
     setOldImages(newOldImages)
   }
 
@@ -164,44 +165,44 @@ const BookEditPage = () => {
         <div>
           {oldImages.length > 0 || newImages.length > 0
             ? <div id='lend-image-div'>
-                <Carousel
-                  activeIndex={lendImageIdx}
-                  onSelect={handleSelect}
-                  variant="dark"
-                  id='edit-images'
-                > {oldImages.map((image, idx) => (
+              <Carousel
+                activeIndex={lendImageIdx}
+                onSelect={handleSelect}
+                variant="dark"
+                id='edit-images'
+              > {oldImages.map((image, idx) => (
+                <Carousel.Item key={`lendImage_${idx}`}>
+                  <img
+                    className='lend-image-carousel'
+                    src={image.image}
+                    alt="Image Not Found"
+                  />
+                  <Carousel.Caption>
+                    <Button
+                      variant='danger'
+                      onClick={() => onOldDeleteHandler(image.id)}
+                    >x</Button>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+                {newImages.map((image, idx) => (
                   <Carousel.Item key={`lendImage_${idx}`}>
                     <img
                       className='lend-image-carousel'
-                      src={image.image}
+                      src={URL.createObjectURL(image)}
                       alt="Image Not Found"
                     />
                     <Carousel.Caption>
                       <Button
                         variant='danger'
-                        onClick={() => onOldDeleteHandler(image.id)}
-                      >x</Button>
+                        onClick={() => onNewDeleteHandler(idx)}
+                      >x
+                      </Button>
                     </Carousel.Caption>
                   </Carousel.Item>
                 ))}
-                  {newImages.map((image, idx) => (
-                    <Carousel.Item key={`lendImage_${idx}`}>
-                      <img
-                        className='lend-image-carousel'
-                        src={URL.createObjectURL(image)}
-                        alt="Image Not Found"
-                      />
-                      <Carousel.Caption>
-                        <Button
-                          variant='danger'
-                          onClick={() => onNewDeleteHandler(idx)}
-                        >x
-                        </Button>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                  ))}
-                </Carousel>
-              </div>
+              </Carousel>
+            </div>
             : null}
         </div>
 
