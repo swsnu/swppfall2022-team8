@@ -21,7 +21,7 @@ class BookViewSet(viewsets.GenericViewSet):
         books = (
             self.get_queryset()
             .extra(select={"length": "Length(title)"})
-            .order_by("title")
+            .order_by("length")
             .filter(title__istartswith=title)
         )
         books = books[:7]
