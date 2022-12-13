@@ -84,6 +84,7 @@ const BookEditPage = () => {
   const onOldDeleteHandler = (imageId: number) => {
     setDeletedImages([...deletedImages, imageId])
     const newOldImages = oldImages.filter(image => image.id !== imageId)
+    setLendImageIdx(lendImageIdx % (oldImages.length + newImages.length - 1))
     setOldImages(newOldImages)
   }
 
@@ -210,6 +211,7 @@ const BookEditPage = () => {
             <Form.Control
               type='file'
               accept='image/*'
+              multiple
               onChange={lendImageChangedHandler}
             />
             <br />
