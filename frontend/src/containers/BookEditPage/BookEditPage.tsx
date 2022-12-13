@@ -211,6 +211,7 @@ const BookEditPage = () => {
             <Form.Control
               type='file'
               accept='image/*'
+              multiple
               onChange={lendImageChangedHandler}
             />
             <br />
