@@ -131,6 +131,10 @@ const BookRegisterPage = () => {
   }
 
   const clickAddTagHandler = (name: string) => {
+    if (tags.find(val => val === tag)) {
+      setTag('')
+      return
+    }
     const newTags: string[] = [...tags, name]
     setTags(newTags)
     setTag('')

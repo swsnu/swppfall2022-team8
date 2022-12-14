@@ -151,11 +151,11 @@ const ChattingPage = () => {
    * Click event handlers
    */
   const clickConfirmLendingHandler = async () => {
-    const confirmLendingMessage = 'You have successfully borrowed this book!'
-
     if (!currentRoom) {
       return
     }
+
+    const confirmLendingMessage = `'${currentRoom.borrower_username}' have successfully borrowed this book!`
 
     const data = {
       borrower: currentRoom.borrower,
@@ -174,11 +174,11 @@ const ChattingPage = () => {
   }
 
   const clickConfirmReturnHandler = async () => {
-    const confirmReturnMessage = 'You have successfully returned this book!'
-
     if (!currentRoom) {
       return
     }
+
+    const confirmReturnMessage = `'${currentRoom.borrower_username}' have successfully returned this book!`
 
     const response = await dispatch(fetchLend(currentRoom.lend_id))
 
